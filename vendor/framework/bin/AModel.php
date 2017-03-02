@@ -11,7 +11,8 @@ use framework\bin\database\ADBException;
  *
  * @author zhaocj
  */
-abstract class AModel {
+abstract class AModel
+{
 
     public $model = null;
     protected $tableName = '';
@@ -23,22 +24,25 @@ abstract class AModel {
 
     /**
      *
-     * @param String $linkName            
+     * @param String $linkName
      */
-    public function __construct($linkName = '') {
+    public function __construct($linkName = '')
+    {
 
         if (!empty($linkName)) {
             $this->linkName = $linkName;
         }
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->disconnect();
     }
 
-    private function initDBConfig() {
+    private function initDBConfig()
+    {
 
-        $this->_db_config = App :: base()->database;
+        $this->_db_config = App:: base()->database;
 
         if (empty($this->linkName)) {
             throw new ADBException("Model linkName:'{$this->linkName}' is empty!");
@@ -52,7 +56,8 @@ abstract class AModel {
     /**
      * 初始化类
      */
-    public function init() {
+    public function init()
+    {
         //如果已经初始化了，就不在初始化连接信息
         if (!empty($this->model)) {
             return;
@@ -60,7 +65,7 @@ abstract class AModel {
 
         $this->initDBConfig();
 
-        $databaseConfig = App :: base()->database;
+        $databaseConfig = App:: base()->database;
         // 获得当前数据库类型，默认数据库类型为Mysql
         $modelClass = $this->getDatabaseType($this->linkName);
         $this->model = new $modelClass($databaseConfig[$this->linkName]);
@@ -77,16 +82,18 @@ abstract class AModel {
     }
 
     // 获得子类的表名
-    protected function tableName() {
+    protected function tableName()
+    {
         return $this->tableName;
     }
 
     /**
      *
-     * @param String $linkName            
+     * @param String $linkName
      * @return Object
      */
-    public static function getModel($linkName) {
+    public static function getModel($linkName)
+    {
         $modelClass = "ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
         return new $modelClass($linkName);
     }
@@ -95,7 +102,8 @@ abstract class AModel {
      * (non-PHPdoc) @see ADatabase::queryStr()
      */
 
-    protected function query($strSQL) {
+    protected function query($strSQL)
+    {
         $this->init();
         return $this->model->query($strSQL);
     }
@@ -104,17 +112,20 @@ abstract class AModel {
      * (non-PHPdoc) @see Database::query()
      */
 
-    protected function queryRow($strSQL) {
+    protected function queryRow($strSQL)
+    {
         $this->init();
         return $this->model->queryRow($strSQL);
     }
 
-    protected function queryAll($strSQL) {
+    protected function queryAll($strSQL)
+    {
         $this->init();
         return $this->model->queryAll($strSQL);
     }
 
-    protected function setDbname($dbname) {
+    protected function setDbname($dbname)
+    {
         $this->dbname = $dbname;
     }
 
@@ -122,7 +133,8 @@ abstract class AModel {
      * (non-PHPdoc) @see Database::delete()
      */
 
-    protected function delete($condition, $tableName = '', $limitString = '') {
+    protected function delete($condition, $tableName = '', $limitString = '')
+    {
 
         $this->init();
         if ($tableName != '') {
@@ -135,7 +147,8 @@ abstract class AModel {
     /**
      * 开启数据库事务
      */
-    protected function startAffair() {
+    protected function startAffair()
+    {
         $this->init();
         $this->model->startAffair();
     }
@@ -143,7 +156,8 @@ abstract class AModel {
     /**
      * 事务回滚
      */
-    protected function rollBack() {
+    protected function rollBack()
+    {
         $this->init();
         $this->model->rollBack();
     }
@@ -151,17 +165,19 @@ abstract class AModel {
     /**
      * 事务提交
      */
-    protected function commit() {
+    protected function commit()
+    {
         $this->init();
         $this->model->commit();
     }
 
     /**
      *
-     * @param Array $param            
-     * @param string $type            
+     * @param Array $param
+     * @param string $type
      */
-    protected function fetchJoin($param, $type = 'leftJoin') {
+    protected function fetchJoin($param, $type = 'leftJoin')
+    {
         $this->init();
         return $this->model->fetchJoin($param, $type);
     }
@@ -170,7 +186,8 @@ abstract class AModel {
      * 查询一条数据 @see Database::fetch()
      */
 
-    protected function fetch($tableName, $condition = array(), $feild = '*', $orderBy = '', $groupBy = '') {
+    protected function fetch($tableName, $condition = array(), $feild = '*', $orderBy = '', $groupBy = '')
+    {
         $this->init();
         $this->setTableName($tableName);
         return $this->model->fetch($this->getTableName(), $condition, $feild, $orderBy, $groupBy);
@@ -180,7 +197,8 @@ abstract class AModel {
      * 获得当前查询条件下的所有数据 @see Database::fetchAll()
      */
 
-    protected function fetchAll($tableName, $condition = array(), $feild = '*', $orderBy = '', $limitString = '1000', $groupBy = '') {
+    protected function fetchAll($tableName, $condition = array(), $feild = '*', $orderBy = '', $limitString = '1000', $groupBy = '')
+    {
         $this->init();
         $this->setTableName($tableName);
         return $this->model->fetchAll($this->getTableName(), $condition, $feild, $orderBy, $limitString, $groupBy);
@@ -188,19 +206,20 @@ abstract class AModel {
 
     /**
      * 不需要填写$tableName参数的用法,新增$condition可以直接写where后面的语句
-     * 
-     * @param type $condition            
-     * @param type $feild            
+     *
+     * @param type $condition
+     * @param type $feild
      * @return type array
      */
-    protected function find($condition = '', $feild = '*', $orderBy = '', $groupBy = '') {
+    protected function find($condition = '', $feild = '*', $orderBy = '', $groupBy = '')
+    {
         $this->init();
         //  echo get_class($this->model);
         return $this->model->fetch($this->getTableName(), $condition, $feild, $orderBy, $groupBy);
     }
 
     /**
-     * 
+     *
      * @param type $condition
      * @param type $feild
      * @param type $orderBy
@@ -208,7 +227,8 @@ abstract class AModel {
      * @param type $groupBy
      * @return type
      */
-    protected function findAll($condition = '', $feild = '*', $orderBy = '', $limitString = '', $groupBy = '') {
+    protected function findAll($condition = '', $feild = '*', $orderBy = '', $limitString = '', $groupBy = '')
+    {
         $this->init();
         if (!is_array($condition)) {
             if (FALSE === strpos(strtolower($condition), 'limit') && empty($limitString)) {
@@ -219,13 +239,14 @@ abstract class AModel {
     }
 
     /**
-     * 
+     *
      * @param type $feild
      * @param type $tableName
      * @param type $ignore
      * @return type
      */
-    protected function add($feild, $tableName = '', $ignore = false) {
+    protected function add($feild, $tableName = '', $ignore = false)
+    {
         $this->init();
         if ($tableName !== '') {
             $this->setTableName($tableName);
@@ -235,12 +256,13 @@ abstract class AModel {
     }
 
     /**
-     * 
+     *
      * @param type $feild
      * @param type $tableName
      * @return type
      */
-    protected function replace($feild, $tableName = '') {
+    protected function replace($feild, $tableName = '')
+    {
         $this->init();
         if ($tableName !== '') {
             $this->setTableName($tableName);
@@ -250,12 +272,13 @@ abstract class AModel {
     }
 
     /**
-     * 
+     *
      * @param type $feild
      * @param type $tableName
      * @return type
      */
-    protected function replaceBatch($feild, $tableName = '') {
+    protected function replaceBatch($feild, $tableName = '')
+    {
         $this->init();
         if ($tableName !== '') {
             $this->setTableName($tableName);
@@ -268,7 +291,8 @@ abstract class AModel {
      * 批量插入数据 @see Database::addBatch()
      */
 
-    protected function addBatch($data, $tableName = '', $ignore = false) {
+    protected function addBatch($data, $tableName = '', $ignore = false)
+    {
 
         if (empty($data)) {
             return true;
@@ -285,7 +309,8 @@ abstract class AModel {
      * @see Database::update()
      */
 
-    protected function update($feild, $condition = '', $tableName = '', $limit = 0) {
+    protected function update($feild, $condition = '', $tableName = '', $limit = 0)
+    {
         $this->init();
         if ($tableName != '') {
             $this->setTableName($tableName);
@@ -299,24 +324,27 @@ abstract class AModel {
      *
      * @see Database::disconnect()
      */
-    protected function disconnect() {
+    protected function disconnect()
+    {
 
         if (is_object($this->model)) {
             $this->model->disconnect();
         }
     }
 
-    protected function setLinkName($linkName) {
+    protected function setLinkName($linkName)
+    {
         $this->linkName = $linkName;
     }
 
     /**
      * 方法用来获取私有属性
      *
-     * @param String $property            
+     * @param String $property
      * @return Object
      */
-    protected function __get($property) {
+    protected function __get($property)
+    {
         if (isset($this->$property)) {
             return $this->$property;
         }
@@ -326,10 +354,11 @@ abstract class AModel {
     /**
      * 修改数据库连接
      *
-     * @param String $linkName            
-     * @param String $newlink            
+     * @param String $linkName
+     * @param String $newlink
      */
-    protected function createConnection($linkName = null, $newlink = false) {
+    protected function createConnection($linkName = null, $newlink = false)
+    {
         if (empty($this->model)) {
 // 获得当前数据库类型，默认数据库类型为Mysql
             $modelClass = $this->getDatabaseType($linkName);
@@ -341,10 +370,11 @@ abstract class AModel {
 
     /**
      *
-     * @param String $property            
-     * @param String $value            
+     * @param String $property
+     * @param String $value
      */
-    protected function __set($property, $value) {
+    protected function __set($property, $value)
+    {
         $this->$property = $value;
     }
 
@@ -352,14 +382,15 @@ abstract class AModel {
      * 返回结果集数目 @condition 可以是where后面的条件 也可以是数组array('字段'=>'值')
      */
 
-    protected function count($condition = '', $tableName = '') {
+    protected function count($condition = '', $tableName = '')
+    {
         $this->init();
         if ($tableName != '') {
             $this->setTableName($tableName);
         }
 
         $result = $this->model->fetch($this->getTableName(), $condition, ' count(*) as count ');
-        $count = ( isset($result ['count']) ) ? $result ['count'] : 0;
+        $count = (isset($result ['count'])) ? $result ['count'] : 0;
         return $count;
     }
 
@@ -367,7 +398,8 @@ abstract class AModel {
      * 检查所给条件存不存在
      */
 
-    protected function exists($condition = '', $tableName = '') {
+    protected function exists($condition = '', $tableName = '')
+    {
         $this->init();
         if ($tableName != '') {
             $this->setTableName($tableName);
@@ -387,7 +419,8 @@ abstract class AModel {
      *            'limit'=> 查询条数LIMIT,默认为空字符串。如果有值，则只需要加上需要条数如： '0,10'-从第0条开始，向后查询10条
      *            )
      */
-    protected function getPagedData($param, $countNum, $tableName = '') {
+    protected function getPagedData($param, $countNum, $tableName = '')
+    {
         $this->init();
         if ($tableName != '') {
             $this->setTableName($tableName);
@@ -407,10 +440,11 @@ abstract class AModel {
     /**
      * 给定数组返回指定键对应的值，默认用$defaultType代替
      *
-     * @param Array $param            
-     * @param String $key            
+     * @param Array $param
+     * @param String $key
      */
-    protected function setDefaultValueByKey($param, $key, $defaultType = '') {
+    protected function setDefaultValueByKey($param, $key, $defaultType = '')
+    {
         return isset($param [$key]) ? $param [$key] : $defaultType;
     }
 
@@ -418,37 +452,41 @@ abstract class AModel {
      *
      * @return String $tablename
      */
-    public function getTableName() {
+    public function getTableName()
+    {
         return $this->tableName;
     }
 
     /**
      *
-     * @param String $model            
+     * @param String $model
      */
-    protected function setModel($model) {
+    protected function setModel($model)
+    {
         $this->model = $model;
     }
 
     /**
      * 设置表名
      *
-     * @param String $tableName            
+     * @param String $tableName
      */
-    protected function setTableName($tableName) {
+    protected function setTableName($tableName)
+    {
         $this->tableName = $tableName;
     }
 
     /**
      * 获得当前数据库类型，默认数据库类型为Mysql
      */
-    private function getDatabaseType($linkName) {
+    private function getDatabaseType($linkName)
+    {
 
 // 获得当前数据库类型，默认数据库类型为Mysql
         if (empty($this->_db_config [$linkName] ['DATABASE_TYPE'])) {
             $this->_db_config [$linkName] ['DATABASE_TYPE'] = 'Mysql';
         }
-        return __NAMESPACE__."\database\ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
+        return __NAMESPACE__ . "\database\ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
     }
 
 }

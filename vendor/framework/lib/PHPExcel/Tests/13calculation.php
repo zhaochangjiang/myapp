@@ -35,16 +35,16 @@ require_once '../Classes/PHPExcel.php';
 
 
 // List functions
-echo date('H:i:s') , " List implemented functions" , PHP_EOL;
+echo date('H:i:s'), " List implemented functions", PHP_EOL;
 $objCalc = PHPExcel_Calculation::getInstance();
 print_r($objCalc->listFunctionNames());
 
 // Create new PHPExcel object
-echo date('H:i:s') , " Create new PHPExcel object" , PHP_EOL;
+echo date('H:i:s'), " Create new PHPExcel object", PHP_EOL;
 $objPHPExcel = new PHPExcel();
 
 // Add some data, we will use some formulas here
-echo date('H:i:s') , " Add some data and formulas" , PHP_EOL;
+echo date('H:i:s'), " Add some data and formulas", PHP_EOL;
 $objPHPExcel->getActiveSheet()->setCellValue('A14', 'Count:');
 $objPHPExcel->getActiveSheet()->setCellValue('A15', 'Sum:');
 $objPHPExcel->getActiveSheet()->setCellValue('A16', 'Max:');
@@ -185,27 +185,28 @@ $objPHPExcel->getActiveSheet()->setCellValue('F23', '=MODE(B2:C12)');
 
 
 // Calculated data
-echo date('H:i:s') , " Calculated data" , PHP_EOL;
+echo date('H:i:s'), " Calculated data", PHP_EOL;
 for ($col = 'B'; $col != 'G'; ++$col) {
-    for($row = 14; $row <= 41; ++$row) {
-        if ((!is_null($formula = $objPHPExcel->getActiveSheet()->getCell($col.$row)->getValue())) &&
-			($formula[0] == '=')) {
-            echo 'Value of ' , $col , $row , ' [' , $formula , ']: ' ,
-                               $objPHPExcel->getActiveSheet()->getCell($col.$row)->getCalculatedValue() . PHP_EOL;
+    for ($row = 14; $row <= 41; ++$row) {
+        if ((!is_null($formula = $objPHPExcel->getActiveSheet()->getCell($col . $row)->getValue())) &&
+            ($formula[0] == '=')
+        ) {
+            echo 'Value of ', $col, $row, ' [', $formula, ']: ',
+                $objPHPExcel->getActiveSheet()->getCell($col . $row)->getCalculatedValue() . PHP_EOL;
         }
     }
 }
 
 
 // Save Excel 2007 file
-echo date('H:i:s') , " Write to Excel2007 format" , PHP_EOL;
+echo date('H:i:s'), " Write to Excel2007 format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save(str_replace('.php', '.xlsx', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xlsx', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.xlsx', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done" , PHP_EOL;
+echo date('H:i:s'), " Done", PHP_EOL;

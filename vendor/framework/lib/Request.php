@@ -22,7 +22,8 @@ namespace framework\lib;
  * cookies - Cookie parameters
  * files - Uploaded files
  */
-class Request {
+class Request
+{
 
     /**
      * @var string URL being requested
@@ -120,7 +121,8 @@ class Request {
      *
      * @param array $config Request configuration
      */
-    public function __construct($config = array()) {
+    public function __construct($config = array())
+    {
         // Default properties
         if (empty($config)) {
             $config = array(
@@ -154,7 +156,8 @@ class Request {
      *
      * @param array $properties Array of request properties
      */
-    public function init($properties = array()) {
+    public function init($properties = array())
+    {
         foreach ($properties as $name => $value) {
             $this->$name = $value;
         }
@@ -178,7 +181,8 @@ class Request {
      * @param string $url URL string
      * @return array Query parameters
      */
-    public static function parseQuery($url) {
+    public static function parseQuery($url)
+    {
         $params = array();
 
         $args = parse_url($url);
@@ -194,7 +198,8 @@ class Request {
      *
      * @return string
      */
-    private function getMethod() {
+    private function getMethod()
+    {
         if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
             return $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
         } elseif (isset($_REQUEST['_method'])) {
@@ -209,7 +214,8 @@ class Request {
      *
      * @return string IP address
      */
-    private function getProxyIpAddress() {
+    private function getProxyIpAddress()
+    {
         static $forwarded = array(
             'HTTP_CLIENT_IP',
             'HTTP_X_FORWARDED_FOR',
@@ -240,12 +246,10 @@ class Request {
      * @param string $default Default value to substitute
      * @return string Server variable value
      */
-    public function getVar($var, $default = '') {
+    public function getVar($var, $default = '')
+    {
         return isset($_SERVER[$var]) ? $_SERVER[$var] : $default;
     }
-
-
-
 
 
     /**
@@ -254,17 +258,18 @@ class Request {
      * Accepts six parameter, or you can submit an associative
      * array in the first parameter containing all the values.
      *
-     * @access	public
-     * @param	mixed
-     * @param	string	the value of the cookie
-     * @param	string	the number of seconds until expiration
-     * @param	string	the cookie domain.  Usually:  .yourdomain.com
-     * @param	string	the cookie path
-     * @param	string	the cookie prefix
-     * @param	bool	true makes the cookie secure
-     * @return	void
+     * @access    public
+     * @param    mixed
+     * @param    string    the value of the cookie
+     * @param    string    the number of seconds until expiration
+     * @param    string    the cookie domain.  Usually:  .yourdomain.com
+     * @param    string    the cookie path
+     * @param    string    the cookie prefix
+     * @param    bool    true makes the cookie secure
+     * @return    void
      */
-    public function set_cookie($name = '', $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = FALSE) {
+    public function set_cookie($name = '', $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = FALSE)
+    {
         if (is_array($name)) {
             // always leave 'name' in last place, as the loop will break otherwise, due to $$item
             foreach (array('value', 'expire', 'domain', 'path', 'prefix', 'secure', 'name') as $item) {
@@ -290,7 +295,7 @@ class Request {
         }
 
         if (!is_numeric($expire)) {
-            $expire = time()+3600;
+            $expire = time() + 3600;
         } else {
             $expire = ($expire > 0) ? time() + $expire : 0;
         }

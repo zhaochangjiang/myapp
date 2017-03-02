@@ -13,19 +13,22 @@ namespace communal\models\admin;
  * @date 2016-12-30
  * @author changjiang
  */
-class ModelSwitch extends \framework\bin\AModel {
+class ModelSwitch extends \framework\bin\AModel
+{
 
     protected $linkName = 'admin';
 
-    public function tableName() {
+    public function tableName()
+    {
         return '`{{switch}}`';
     }
 
     /**
-     * 
+     *
      * @return type
      */
-    public function getAllShowSwitch() {
+    public function getAllShowSwitch()
+    {
         return $this->findAll(array('is_show' => 'yes'));
     }
 

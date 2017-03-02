@@ -2,6 +2,7 @@
 namespace framework\lib\captcha;
 
 use framework\bin\ABaseApplication;
+
 /**
  * CCaptcha class file.
  *
@@ -88,13 +89,11 @@ class CCaptcha
      */
     public function run()
     {
-        if(self::checkRequirements('imagick')||self::checkRequirements('gd'))
-        {
+        if (self::checkRequirements('imagick') || self::checkRequirements('gd')) {
             $this->renderImage();
             $this->registerClientScript();
-        }
-        else
-                throw new CException(Yii::t('yii','GD with FreeType or ImageMagick PHP extensions are required.'));
+        } else
+            throw new CException(Yii::t('yii', 'GD with FreeType or ImageMagick PHP extensions are required.'));
     }
 
     /**
@@ -102,12 +101,12 @@ class CCaptcha
      */
     protected function renderImage()
     {
-        if(!isset($this->imageOptions['id']))
-                $this->imageOptions['id'] = $this->getId();
+        if (!isset($this->imageOptions['id']))
+            $this->imageOptions['id'] = $this->getId();
 
-        $url = $this->getController()->createUrl($this->captchaAction,array('v'=>uniqid()));
-        $alt = isset($this->imageOptions['alt'])?$this->imageOptions['alt']:'';
-        echo CHtml::image($url,$alt,$this->imageOptions);
+        $url = $this->getController()->createUrl($this->captchaAction, array('v' => uniqid()));
+        $alt = isset($this->imageOptions['alt']) ? $this->imageOptions['alt'] : '';
+        echo CHtml::image($url, $alt, $this->imageOptions);
     }
 
     /**
@@ -115,35 +114,34 @@ class CCaptcha
      */
     public function registerClientScript()
     {
-        $cs  = Yii::app()->clientScript;
-        $id  = $this->imageOptions['id'];
-        $url = $this->getController()->createUrl($this->captchaAction,array(CCaptchaAction::REFRESH_GET_VAR=>true));
+        $cs = Yii::app()->clientScript;
+        $id = $this->imageOptions['id'];
+        $url = $this->getController()->createUrl($this->captchaAction, array(CCaptchaAction::REFRESH_GET_VAR => true));
 
         $js = "";
-        if($this->showRefreshButton)
-        {
+        if ($this->showRefreshButton) {
             // reserve a place in the registered script so that any enclosing button js code appears after the captcha js
-            $cs->registerScript('Yii.CCaptcha#'.$id,'// dummy');
-            $label         = $this->buttonLabel===null?Yii::t('yii','Get a new code'):$this->buttonLabel;
-            $options       = $this->buttonOptions;
-            if(isset($options['id'])) $buttonID      = $options['id'];
-            else $buttonID      = $options['id'] = $id.'_button';
-            if($this->buttonType==='button')
-                    $html          = CHtml::button($label,$options);
-            else $html          = CHtml::link($label,$url,$options);
-            $js            = "jQuery('#$id').after(".CJSON::encode($html).");";
-            $selector      = "#$buttonID";
+            $cs->registerScript('Yii.CCaptcha#' . $id, '// dummy');
+            $label = $this->buttonLabel === null ? Yii::t('yii', 'Get a new code') : $this->buttonLabel;
+            $options = $this->buttonOptions;
+            if (isset($options['id'])) $buttonID = $options['id'];
+            else $buttonID = $options['id'] = $id . '_button';
+            if ($this->buttonType === 'button')
+                $html = CHtml::button($label, $options);
+            else $html = CHtml::link($label, $url, $options);
+            $js = "jQuery('#$id').after(" . CJSON::encode($html) . ");";
+            $selector = "#$buttonID";
         }
 
-        if($this->clickableImage)
-                $selector = isset($selector)?"$selector, #$id":"#$id";
+        if ($this->clickableImage)
+            $selector = isset($selector) ? "$selector, #$id" : "#$id";
 
-        if(!isset($selector)) return;
+        if (!isset($selector)) return;
 
-        $js.="
+        $js .= "
 jQuery(document).on('click', '$selector', function(){
 	jQuery.ajax({
-		url: ".CJSON::encode($url).",
+		url: " . CJSON::encode($url) . ",
 		dataType: 'json',
 		cache: false,
 		success: function(data) {
@@ -154,7 +152,7 @@ jQuery(document).on('click', '$selector', function(){
 	return false;
 });
 ";
-        $cs->registerScript('Yii.CCaptcha#'.$id,$js);
+        $cs->registerScript('Yii.CCaptcha#' . $id, $js);
     }
 
     /**
@@ -168,25 +166,21 @@ jQuery(document).on('click', '$selector', function(){
      */
     public static function checkRequirements($extension = null)
     {
-        if(extension_loaded('imagick'))
-        {
-            $imagick        = new Imagick();
+        if (extension_loaded('imagick')) {
+            $imagick = new Imagick();
             $imagickFormats = $imagick->queryFormats('PNG');
         }
-        if(extension_loaded('gd'))
-        {
+        if (extension_loaded('gd')) {
             $gdInfo = gd_info();
         }
-        if($extension===null)
-        {
-            if(isset($imagickFormats)&&in_array('PNG',$imagickFormats))
-                    return true;
-            if(isset($gdInfo)&&$gdInfo['FreeType Support']) return true;
-        }
-        elseif($extension=='imagick'&&isset($imagickFormats)&&in_array('PNG',$imagickFormats))
+        if ($extension === null) {
+            if (isset($imagickFormats) && in_array('PNG', $imagickFormats))
                 return true;
-        elseif($extension=='gd'&&isset($gdInfo)&&$gdInfo['FreeType Support'])
-                return true;
+            if (isset($gdInfo) && $gdInfo['FreeType Support']) return true;
+        } elseif ($extension == 'imagick' && isset($imagickFormats) && in_array('PNG', $imagickFormats))
+            return true;
+        elseif ($extension == 'gd' && isset($gdInfo) && $gdInfo['FreeType Support'])
+            return true;
         return false;
     }
 
@@ -221,7 +215,7 @@ jQuery(document).on('click', '$selector', function(){
  * </ol>
  *
  * @property string $verifyCode The verification code.
- *          
+ *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @package system.web.widgets.captcha
  * @since 1.0
@@ -275,7 +269,7 @@ class CCaptchaAction
      *
      * @var integer the font color. For example, 0x55FF00. Defaults to 0x2040A0 (blue color).
      */
-    public $foreColor   = 0x2040A0;
+    public $foreColor = 0x2040A0;
     //public $foreColor = 0x55FF00;
     /**
      *
@@ -300,7 +294,7 @@ class CCaptchaAction
      * @var integer the offset between characters. Defaults to -2. You can adjust this property
      *      in order to decrease or increase the readability of the captcha.
      * @since 1.1.7
-     *       
+     *
      */
     public $offset = -1;
 
@@ -337,9 +331,9 @@ class CCaptchaAction
     public function run($isCreateCode = false)
     {
         $code = '';
-        if($isCreateCode)   // AJAX request for regenerating code
+        if ($isCreateCode)   // AJAX request for regenerating code
         {
-            require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'../CJSON.php';
+            require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../CJSON.php';
             /*
               $string = CJSON::encode ( array (
               'hash1' => $this->generateValidationHash ( $code ),
@@ -351,9 +345,7 @@ class CCaptchaAction
 
               ); */
             $code = $this->getVerifyCode(true);
-        }
-        else
-        {
+        } else {
             $code = $this->getVerifyCode();
         }
 
@@ -365,13 +357,13 @@ class CCaptchaAction
      * Generates a hash code that can be used for client side validation.
      *
      * @param string $code
-     *        	the CAPTCHA code
+     *            the CAPTCHA code
      * @return string a hash code generated from the CAPTCHA code
      * @since 1.1.7
      */
     public function generateValidationHash($code)
     {
-        for($h = 0,$i = strlen($code)-1; $i>=0; --$i) $h += ord($code [$i]);
+        for ($h = 0, $i = strlen($code) - 1; $i >= 0; --$i) $h += ord($code [$i]);
         return $h;
     }
 
@@ -379,25 +371,23 @@ class CCaptchaAction
      * Gets the verification code.
      *
      * @param boolean $regenerate
-     *        	whether the verification code should be regenerated.
+     *            whether the verification code should be regenerated.
      * @return string the verification code.
      */
     public function getVerifyCode($regenerate = false)
     {
 
-        if($this->fixedVerifyCode!==null)
-        {
+        if ($this->fixedVerifyCode !== null) {
             return $this->fixedVerifyCode;
         }
-        $key            = $this->getSessionKey();
+        $key = $this->getSessionKey();
         $sessionCaptcha = ABaseApplication::getSession($key);
-        if(empty($sessionCaptcha)||$regenerate)
-        {
+        if (empty($sessionCaptcha) || $regenerate) {
             //生成验证码字符串
             $sessionCaptcha = $this->generateVerifyCode();
             ABaseApplication::setSessionArray(array(
-                $key         =>$sessionCaptcha,
-                "{$key}count"=>1,
+                $key => $sessionCaptcha,
+                "{$key}count" => 1,
             ));
         }
 
@@ -408,21 +398,20 @@ class CCaptchaAction
      * Validates the input to see if it matches the generated code.
      *
      * @param string $input
-     *        	user input
+     *            user input
      * @param boolean $caseSensitive
-     *        	whether the comparison should be case-sensitive
+     *            whether the comparison should be case-sensitive
      * @return boolean whether the input is valid
      */
-    public function validate($input,$caseSensitive = false)
+    public function validate($input, $caseSensitive = false)
     {
-        $code          = $this->getVerifyCode();
-        $valid         = $caseSensitive?($input===$code):strcasecmp($input,$code)===0;
-        $session       = ABaseApplication::getSession();
-        $name          = $this->getSessionKey().'count';
-        $authcodeCount = $session [$name]+1;
-        ABaseApplication::setSession($name,$authcodeCount);
-        if($authcodeCount>$this->testLimit&&$this->testLimit>0)
-        {
+        $code = $this->getVerifyCode();
+        $valid = $caseSensitive ? ($input === $code) : strcasecmp($input, $code) === 0;
+        $session = ABaseApplication::getSession();
+        $name = $this->getSessionKey() . 'count';
+        $authcodeCount = $session [$name] + 1;
+        ABaseApplication::setSession($name, $authcodeCount);
+        if ($authcodeCount > $this->testLimit && $this->testLimit > 0) {
             $code = $this->getVerifyCode(true);
         }
         return $valid;
@@ -435,19 +424,18 @@ class CCaptchaAction
      */
     protected function generateVerifyCode()
     {
-        if($this->minLength<3) $this->minLength = 3;
-        if($this->maxLength>20) $this->maxLength = 20;
-        if($this->minLength>$this->maxLength)
-                $this->maxLength = $this->minLength;
-        $length          = mt_rand($this->minLength,$this->maxLength);
-        $letters         = 'b6c$9df8@ghjkl?5m&3np7q4rs2t1vwxyz!';
-        $vowels          = 'aeiu';
-        $code            = '';
-        for($i = 0; $i<$length; ++$i)
-        {
-            if($i%2&&mt_rand(0,10)>2||!($i%2)&&mt_rand(0,10)>9)
-                    $code .= $vowels [mt_rand(0,3)];
-            else $code .= $letters [mt_rand(0,34)];
+        if ($this->minLength < 3) $this->minLength = 3;
+        if ($this->maxLength > 20) $this->maxLength = 20;
+        if ($this->minLength > $this->maxLength)
+            $this->maxLength = $this->minLength;
+        $length = mt_rand($this->minLength, $this->maxLength);
+        $letters = 'b6c$9df8@ghjkl?5m&3np7q4rs2t1vwxyz!';
+        $vowels = 'aeiu';
+        $code = '';
+        for ($i = 0; $i < $length; ++$i) {
+            if ($i % 2 && mt_rand(0, 10) > 2 || !($i % 2) && mt_rand(0, 10) > 9)
+                $code .= $vowels [mt_rand(0, 3)];
+            else $code .= $letters [mt_rand(0, 34)];
         }
         return $code;
     }
@@ -467,16 +455,13 @@ class CCaptchaAction
      * Renders the CAPTCHA image based on the code using library specified in the {@link $backend} property.
      *
      * @param string $code
-     *        	the verification code
+     *            the verification code
      */
     protected function renderImage($code)
     {
-        if($this->backend===null&&CCaptcha::checkRequirements('imagick')||$this->backend==='imagick')
-        {
+        if ($this->backend === null && CCaptcha::checkRequirements('imagick') || $this->backend === 'imagick') {
             $this->renderImageImagick($code);
-        }
-        else if($this->backend===null&&CCaptcha::checkRequirements('gd')||$this->backend==='gd')
-        {
+        } else if ($this->backend === null && CCaptcha::checkRequirements('gd') || $this->backend === 'gd') {
             $this->renderImageGD($code);
         }
     }
@@ -485,62 +470,59 @@ class CCaptchaAction
      * Renders the CAPTCHA image based on the code using GD library.
      *
      * @param string $code
-     *        	the verification code
+     *            the verification code
      * @since 1.1.13
      */
     protected function renderImageGD($code)
     {
 
         // 新建一个真彩色图像
-        $image = imagecreatetruecolor($this->width,$this->height);
+        $image = imagecreatetruecolor($this->width, $this->height);
 
         //为一幅图像分配颜色
-        $backColor = imagecolorallocate($image,(int)($this->backColor%0x1000000/0x10000),(int)($this->backColor%0x10000/0x100),$this->backColor%0x100);
+        $backColor = imagecolorallocate($image, (int)($this->backColor % 0x1000000 / 0x10000), (int)($this->backColor % 0x10000 / 0x100), $this->backColor % 0x100);
 
         //画一矩形并填充
-        imagefilledrectangle($image,0,0,$this->width,$this->height,$backColor);
+        imagefilledrectangle($image, 0, 0, $this->width, $this->height, $backColor);
 
         //取消图像颜色的分配
-        imagecolordeallocate($image,$backColor);
+        imagecolordeallocate($image, $backColor);
 
-        if($this->transparent)
-        {
+        if ($this->transparent) {
             //将某个颜色定义为透明色
-            imagecolortransparent($image,$backColor);
+            imagecolortransparent($image, $backColor);
         }
 
         //为一幅图像分配颜色
-        $foreColor = imagecolorallocate($image,(int)($this->foreColor%0x1000000/0x10000),(int)($this->foreColor%0x10000/0x100),$this->foreColor%0x100);
+        $foreColor = imagecolorallocate($image, (int)($this->foreColor % 0x1000000 / 0x10000), (int)($this->foreColor % 0x10000 / 0x100), $this->foreColor % 0x100);
 
-        if($this->fontFile===null)
-                $this->fontFile = dirname(__FILE__).'/Duality.ttf';
+        if ($this->fontFile === null)
+            $this->fontFile = dirname(__FILE__) . '/Duality.ttf';
 
         $length = strlen($code);
-        $box    = imagettfbbox(30,0,$this->fontFile,$code);
-        $w      = $box [4]-$box [0]+$this->offset*($length-1);
-        $h      = $box [1]-$box [5];
-        $scale  = min(($this->width-$this->padding*2)/$w,($this->height-$this->padding*2)/$h);
-        $x      = 10;
-        $y      = round($this->height*27/40);
-        for($i = 0; $i<$length; ++$i)
-        {
-            $fontSize = (int)(rand(26,32)*$scale*0.8);
-            $angle    = rand(- 10,10);
-            $letter   = $code [$i];
-            $box      = imagettftext($image,$fontSize,$angle,$x,$y,$foreColor,$this->fontFile,$letter);
-            $x        = $box [2]+$this->offset;
+        $box = imagettfbbox(30, 0, $this->fontFile, $code);
+        $w = $box [4] - $box [0] + $this->offset * ($length - 1);
+        $h = $box [1] - $box [5];
+        $scale = min(($this->width - $this->padding * 2) / $w, ($this->height - $this->padding * 2) / $h);
+        $x = 10;
+        $y = round($this->height * 27 / 40);
+        for ($i = 0; $i < $length; ++$i) {
+            $fontSize = (int)(rand(26, 32) * $scale * 0.8);
+            $angle = rand(-10, 10);
+            $letter = $code [$i];
+            $box = imagettftext($image, $fontSize, $angle, $x, $y, $foreColor, $this->fontFile, $letter);
+            $x = $box [2] + $this->offset;
         }
-        $len = rand(6,8);
-        for($i = 0; $i<$len; $i++)
-        {
-            $c1         = intval($this->foreColor%0x1000000/0x10000);
-            $c2         = intval($this->foreColor%0x10000/0x100);
-            $c3         = intval($this->foreColor%0x100);
-           //    stop($c1.'|'.$c2.'|'.$c3);
-            $foreColorS = imagecolorallocate($image,rand($c1-20,$c1+40),rand($c2-35,$c2+50),rand($c3-50,$c3+35));
-            imageline($image,rand(0,$w),rand(0,$h),rand(0,$w),rand(0,$h),$foreColorS);
+        $len = rand(6, 8);
+        for ($i = 0; $i < $len; $i++) {
+            $c1 = intval($this->foreColor % 0x1000000 / 0x10000);
+            $c2 = intval($this->foreColor % 0x10000 / 0x100);
+            $c3 = intval($this->foreColor % 0x100);
+            //    stop($c1.'|'.$c2.'|'.$c3);
+            $foreColorS = imagecolorallocate($image, rand($c1 - 20, $c1 + 40), rand($c2 - 35, $c2 + 50), rand($c3 - 50, $c3 + 35));
+            imageline($image, rand(0, $w), rand(0, $h), rand(0, $w), rand(0, $h), $foreColorS);
         }
-        imagecolordeallocate($image,$foreColor);
+        imagecolordeallocate($image, $foreColor);
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -554,33 +536,32 @@ class CCaptchaAction
      * Renders the CAPTCHA image based on the code using ImageMagick library.
      *
      * @param string $code
-     *        	the verification code
+     *            the verification code
      * @since 1.1.13
      */
     protected function renderImageImagick($code)
     {
 
-        $backColor = new ImagickPixel('#'.dechex($this->backColor));
-        $foreColor = new ImagickPixel('#'.dechex($this->foreColor));
+        $backColor = new ImagickPixel('#' . dechex($this->backColor));
+        $foreColor = new ImagickPixel('#' . dechex($this->foreColor));
 
         $image = new Imagick ();
-        $image->newImage($this->width,$this->height,$backColor);
+        $image->newImage($this->width, $this->height, $backColor);
 
-        if($this->fontFile===null)
-        {
-            $this->fontFile = dirname(__FILE__).'/Duality.ttf';
+        if ($this->fontFile === null) {
+            $this->fontFile = dirname(__FILE__) . '/Duality.ttf';
         }
-        $draw        = new ImagickDraw ();
+        $draw = new ImagickDraw ();
         $draw->setFont($this->fontFile);
         $draw->setFontSize(30);
-        $fontMetrics = $image->queryFontMetrics($draw,$code);
+        $fontMetrics = $image->queryFontMetrics($draw, $code);
 
         $length = strlen($code);
-        $w      = (int)($fontMetrics ['textWidth'])-8+$this->offset*($length-1);
-        $h      = (int)($fontMetrics ['textHeight'])-8;
-        $scale  = min(($this->width-$this->padding*2)/$w,($this->height-$this->padding*2)/$h);
-        $x      = 10;
-        $y      = round($this->height*27/40);
+        $w = (int)($fontMetrics ['textWidth']) - 8 + $this->offset * ($length - 1);
+        $h = (int)($fontMetrics ['textHeight']) - 8;
+        $scale = min(($this->width - $this->padding * 2) / $w, ($this->height - $this->padding * 2) / $h);
+        $x = 10;
+        $y = round($this->height * 27 / 40);
 
 //
 //        stop(2313);
@@ -607,16 +588,14 @@ class CCaptchaAction
 //        $image->drawImage($draw);
 
 
-
-        for($i = 0; $i<$length; ++$i)
-        {
-            $draw        = new ImagickDraw ();
+        for ($i = 0; $i < $length; ++$i) {
+            $draw = new ImagickDraw ();
             $draw->setFont($this->fontFile);
-            $draw->setFontSize((int)(rand(26,32)*$scale*0.8));
+            $draw->setFontSize((int)(rand(26, 32) * $scale * 0.8));
             $draw->setFillColor($foreColor);
-            $image->annotateImage($draw,$x,$y,rand(- 10,10),$code [$i]);
-            $fontMetrics = $image->queryFontMetrics($draw,$code [$i]);
-            $x += (int)($fontMetrics ['textWidth'])+$this->offset;
+            $image->annotateImage($draw, $x, $y, rand(-10, 10), $code [$i]);
+            $fontMetrics = $image->queryFontMetrics($draw, $code [$i]);
+            $x += (int)($fontMetrics ['textWidth']) + $this->offset;
         }
 
         header('Pragma: public');

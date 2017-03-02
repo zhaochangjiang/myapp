@@ -35,61 +35,61 @@ require_once '../Classes/PHPExcel.php';
 
 
 // Create new PHPExcel object
-echo date('H:i:s') , " Create new PHPExcel object" , PHP_EOL;
+echo date('H:i:s'), " Create new PHPExcel object", PHP_EOL;
 $objPHPExcel = new PHPExcel();
 
 // Set document properties
-echo date('H:i:s') , " Set document properties" , PHP_EOL;
+echo date('H:i:s'), " Set document properties", PHP_EOL;
 $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
-							 ->setLastModifiedBy("Maarten Balliauw")
-							 ->setTitle("Office 2007 XLSX Test Document")
-							 ->setSubject("Office 2007 XLSX Test Document")
-							 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-							 ->setKeywords("office 2007 openxml php")
-							 ->setCategory("Test result file");
+    ->setLastModifiedBy("Maarten Balliauw")
+    ->setTitle("Office 2007 XLSX Test Document")
+    ->setSubject("Office 2007 XLSX Test Document")
+    ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Test result file");
 
 
 // Add some data
-echo date('H:i:s') , " Add some data" , PHP_EOL;
+echo date('H:i:s'), " Add some data", PHP_EOL;
 $objPHPExcel->setActiveSheetIndex(0);
 
 $sharedStyle1 = new PHPExcel_Style();
 $sharedStyle2 = new PHPExcel_Style();
 
 $sharedStyle1->applyFromArray(
-	array('fill' 	=> array(
-								'type'		=> PHPExcel_Style_Fill::FILL_SOLID,
-								'color'		=> array('argb' => 'FFCCFFCC')
-							),
-		  'borders' => array(
-								'bottom'	=> array('style' => PHPExcel_Style_Border::BORDER_THIN),
-								'right'		=> array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
-							)
-		 ));
+    array('fill' => array(
+        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+        'color' => array('argb' => 'FFCCFFCC')
+    ),
+        'borders' => array(
+            'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+            'right' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+        )
+    ));
 
 $sharedStyle2->applyFromArray(
-	array('fill' 	=> array(
-								'type'		=> PHPExcel_Style_Fill::FILL_SOLID,
-								'color'		=> array('argb' => 'FFFFFF00')
-							),
-		  'borders' => array(
-								'bottom'	=> array('style' => PHPExcel_Style_Border::BORDER_THIN),
-								'right'		=> array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
-							)
-		 ));
+    array('fill' => array(
+        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+        'color' => array('argb' => 'FFFFFF00')
+    ),
+        'borders' => array(
+            'bottom' => array('style' => PHPExcel_Style_Border::BORDER_THIN),
+            'right' => array('style' => PHPExcel_Style_Border::BORDER_MEDIUM)
+        )
+    ));
 
 $objPHPExcel->getActiveSheet()->setSharedStyle($sharedStyle1, "A1:T100");
 $objPHPExcel->getActiveSheet()->setSharedStyle($sharedStyle2, "C5:R95");
 
 // Save Excel 2007 file
-echo date('H:i:s') , " Write to Excel2007 format" , PHP_EOL;
+echo date('H:i:s'), " Write to Excel2007 format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save(str_replace('.php', '.xlsx', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xlsx', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.xlsx', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done writing file" , PHP_EOL;
+echo date('H:i:s'), " Done writing file", PHP_EOL;

@@ -1,18 +1,18 @@
 <?php
 
-  namespace frontend\common;
+namespace frontend\common;
 
-  use frontend\common\ControllerFrontend;
+use frontend\common\ControllerFrontend;
 
-  /**
-   * 用户中心操作基类
-   *
-   * @author zhaocj
-   */
-  class ControllerUserCommon extends ControllerFrontend
-  {
+/**
+ * 用户中心操作基类
+ *
+ * @author zhaocj
+ */
+class ControllerUserCommon extends ControllerFrontend
+{
 
-      protected $layout = 'user';
+    protected $layout = 'user';
 
-  }
+}
   

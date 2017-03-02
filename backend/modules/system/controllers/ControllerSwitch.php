@@ -10,12 +10,14 @@ use communal\lib\SystemSwitch;
  *
  * @author zhaocj
  */
-class ControllerSwitch extends ControllerBackend {
+class ControllerSwitch extends ControllerBackend
+{
 
     /**
      * 获得网站开关
      */
-    public function actionWebsite() {
+    public function actionWebsite()
+    {
         $systemSwitch = new SystemSwitch();
         $data = $systemSwitch->getAllShowSwitch();
         $this->data = $this->formatTreeData($data);
@@ -33,7 +35,8 @@ class ControllerSwitch extends ControllerBackend {
      * 格式化数据,变成数组格式
      * @param type $data
      */
-    private function formatTreeData($data) {
+    private function formatTreeData($data)
+    {
         if (empty($data)) {
             return array();
         }
@@ -59,7 +62,8 @@ class ControllerSwitch extends ControllerBackend {
         return array('maxSize' => $maxSize, 'nodeList' => $topNodeList);
     }
 
-    private function getChildNode($data, $result, $step) {
+    private function getChildNode($data, $result, $step)
+    {
         if (empty($data)) {
             return array();
         }

@@ -1,81 +1,80 @@
 <?php
 
-  namespace client\common;
+namespace client\common;
 
-  use ArrayObject;
+use ArrayObject;
 
-  /**
-   * Description of ClientResultData
-   *
-   * @author zhaocj
-   */
-  class ClientResultData
-  {
+/**
+ * Description of ClientResultData
+ *
+ * @author zhaocj
+ */
+class ClientResultData
+{
 
-      public $code      = 200;
-      public $message   = '';
-      public $data      = null;
-      public $sessionid = '';
+    public $code = 200;
+    public $message = '';
+    public $data = null;
+    public $sessionid = '';
 
-      public static function getInstance()
-      {
-          return new ClientResultData();
-      }
+    public static function getInstance()
+    {
+        return new ClientResultData();
+    }
 
-      function getSessionid()
-      {
-          return $this->sessionid;
-      }
+    function getSessionid()
+    {
+        return $this->sessionid;
+    }
 
-      function setSessionid($sessionid)
-      {
-          $this->sessionid = $sessionid;
-      }
+    function setSessionid($sessionid)
+    {
+        $this->sessionid = $sessionid;
+    }
 
-      function getCode()
-      {
+    function getCode()
+    {
 
-          return $this->code;
-      }
+        return $this->code;
+    }
 
-      function getMessage()
-      {
-          return $this->message;
-      }
+    function getMessage()
+    {
+        return $this->message;
+    }
 
-      function getData()
-      {
-          return $this->data;
-      }
+    function getData()
+    {
+        return $this->data;
+    }
 
-      function setCode($code)
-      {
-          $this->code = $code;
-      }
+    function setCode($code)
+    {
+        $this->code = $code;
+    }
 
-      function setMessage($message)
-      {
-          $this->message = $message;
-      }
+    function setMessage($message)
+    {
+        $this->message = $message;
+    }
 
-      function setData($data)
-      {
-          $this->data = $data;
-      }
+    function setData($data)
+    {
+        $this->data = $data;
+    }
 
-      /**
-       * 
-       * @param type $result
-       */
-      public function setResult($result)
-      {
-          foreach ($result as $key => $value)
-          {
-              //    xmp($key);
-              $function = 'set' . ucfirst($key);
-              $this->$function($value);
-          }
-      }
+    /**
+     *
+     * @param type $result
+     */
+    public function setResult($result)
+    {
+        foreach ($result as $key => $value) {
+            //    xmp($key);
+            $function = 'set' . ucfirst($key);
+            $this->$function($value);
+        }
+    }
 
-  }
+}
   

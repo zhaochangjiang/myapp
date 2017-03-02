@@ -1,82 +1,76 @@
 <?php
 
-  namespace backend\common\blocks;
+namespace backend\common\blocks;
 
-  use framework\bin\Ablocker;
-  use communal\models\admin\permit\ModelPermitGroup;
-  use \ArrayIterator;
-  use communal\common\UtilsBootStrapFileUpload;
-  
-  /**
-   * Description of newPHPClass
-   *
-   * @author zhaocj
-   */
-  class BlockUploadImageFile extends Ablocker
-  {
+use framework\bin\Ablocker;
+use communal\models\admin\permit\ModelPermitGroup;
+use \ArrayIterator;
+use communal\common\UtilsBootStrapFileUpload;
 
-      var $uploadParam;
+/**
+ * Description of newPHPClass
+ *
+ * @author zhaocj
+ */
+class BlockUploadImageFile extends Ablocker
+{
 
-      public function getJonUploadParam()
-      {
-          // print_r($this->uploadParam);
-          foreach ($this->uploadParam as $key => $value)
-          {
-              if ($value === '')
-              {
-                  unset($this->uploadParam->$key);
-              }
-          }
-          return json_encode($this->uploadParam);
-      }
+    var $uploadParam;
 
-      /**
-       * 
-       */
-      public function run()
-      {
-          //  $modelPermitGroup = new ModelPermitGroup;
-          $id = $this->controllerObject->data['data']['id'];
-          switch ($this->controllerObject->data['doType'])
-          {
-              case 'add':
-                  $id = $this->controllerObject->data['data']['uppid'];
-                  break;
-              default:
-                  break;
-          }
+    public function getJonUploadParam()
+    {
+        // print_r($this->uploadParam);
+        foreach ($this->uploadParam as $key => $value) {
+            if ($value === '') {
+                unset($this->uploadParam->$key);
+            }
+        }
+        return json_encode($this->uploadParam);
+    }
 
-          $this->uploadParam = new UtilsBootStrapFileUpload();
-          $this->uploadParam->setUploadUrl($this->params['uploadUrl']);
-          $this->uploadParam->setInitialPreviewShowDelete(true);
+    /**
+     *
+     */
+    public function run()
+    {
+        //  $modelPermitGroup = new ModelPermitGroup;
+        $id = $this->controllerObject->data['data']['id'];
+        switch ($this->controllerObject->data['doType']) {
+            case 'add':
+                $id = $this->controllerObject->data['data']['uppid'];
+                break;
+            default:
+                break;
+        }
 
-          foreach ((array) $this->params['initialPreview'] as $value)
-          {
-             
-              $this->uploadParam->setInitialEveryPreview($value['pictureViewLocate'], $value['pictureViewConfig']);
-          }
+        $this->uploadParam = new UtilsBootStrapFileUpload();
+        $this->uploadParam->setUploadUrl($this->params['uploadUrl']);
+        $this->uploadParam->setInitialPreviewShowDelete(true);
 
-          $this->uploadParam = $this->_deleteObjectNullProperty($this->uploadParam);
+        foreach ((array)$this->params['initialPreview'] as $value) {
 
-          $this->render();
-      }
+            $this->uploadParam->setInitialEveryPreview($value['pictureViewLocate'], $value['pictureViewConfig']);
+        }
 
-      /**
-       * 删除对象中的空属性
-       * @param type $object
-       */
-      private function _deleteObjectNullProperty($object)
-      {
-          $objectContent = new ArrayIterator($object);
-          foreach ($objectContent as $key => $value)
-          {
-              if ($value === null)
-              {
-                  unset($objectContent[$key]);
-              }
-          }
-          return $objectContent;
-      }
+        $this->uploadParam = $this->_deleteObjectNullProperty($this->uploadParam);
 
-  }
+        $this->render();
+    }
+
+    /**
+     * 删除对象中的空属性
+     * @param type $object
+     */
+    private function _deleteObjectNullProperty($object)
+    {
+        $objectContent = new ArrayIterator($object);
+        foreach ($objectContent as $key => $value) {
+            if ($value === null) {
+                unset($objectContent[$key]);
+            }
+        }
+        return $objectContent;
+    }
+
+}
   

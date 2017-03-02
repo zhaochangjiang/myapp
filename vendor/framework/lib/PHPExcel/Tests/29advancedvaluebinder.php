@@ -35,39 +35,39 @@ require_once '../Classes/PHPExcel.php';
 
 
 // Set timezone
-echo date('H:i:s') , " Set timezone" , PHP_EOL;
+echo date('H:i:s'), " Set timezone", PHP_EOL;
 date_default_timezone_set('UTC');
 
 // Set value binder
-echo date('H:i:s') , " Set value binder" , PHP_EOL;
-PHPExcel_Cell::setValueBinder( new PHPExcel_Cell_AdvancedValueBinder() );
+echo date('H:i:s'), " Set value binder", PHP_EOL;
+PHPExcel_Cell::setValueBinder(new PHPExcel_Cell_AdvancedValueBinder());
 
 // Create new PHPExcel object
-echo date('H:i:s') , " Create new PHPExcel object" , PHP_EOL;
+echo date('H:i:s'), " Create new PHPExcel object", PHP_EOL;
 $objPHPExcel = new PHPExcel();
 
 // Set document properties
-echo date('H:i:s') , " Set document properties" , PHP_EOL;
+echo date('H:i:s'), " Set document properties", PHP_EOL;
 $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
-							 ->setLastModifiedBy("Maarten Balliauw")
-							 ->setTitle("Office 2007 XLSX Test Document")
-							 ->setSubject("Office 2007 XLSX Test Document")
-							 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-							 ->setKeywords("office 2007 openxml php")
-							 ->setCategory("Test result file");
+    ->setLastModifiedBy("Maarten Balliauw")
+    ->setTitle("Office 2007 XLSX Test Document")
+    ->setSubject("Office 2007 XLSX Test Document")
+    ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Test result file");
 
 // Set default font
-echo date('H:i:s') , " Set default font" , PHP_EOL;
+echo date('H:i:s'), " Set default font", PHP_EOL;
 $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setName('Arial');
 $objPHPExcel->getActiveSheet()->getDefaultStyle()->getFont()->setSize(10);
 
 // Set column widths
-echo date('H:i:s') , " Set column widths" , PHP_EOL;
+echo date('H:i:s'), " Set column widths", PHP_EOL;
 $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(14);
 
 // Add some data, resembling some different data types
-echo date('H:i:s') , " Add some data" , PHP_EOL;
+echo date('H:i:s'), " Add some data", PHP_EOL;
 $objPHPExcel->getActiveSheet()->setCellValue('A1', 'String value:');
 $objPHPExcel->getActiveSheet()->setCellValue('B1', 'Mark Baker');
 
@@ -132,7 +132,7 @@ $objPHPExcel->getActiveSheet()->setCellValue('A21', 'Formula:');
 $objPHPExcel->getActiveSheet()->setCellValue('B21', '=SUM(B2:B9)');
 
 // Rename worksheet
-echo date('H:i:s') , " Rename worksheet" , PHP_EOL;
+echo date('H:i:s'), " Rename worksheet", PHP_EOL;
 $objPHPExcel->getActiveSheet()->setTitle('Advanced value binder');
 
 
@@ -141,14 +141,14 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 
 // Save Excel 2007 file
-echo date('H:i:s') , " Write to Excel5 format" , PHP_EOL;
+echo date('H:i:s'), " Write to Excel5 format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 $objWriter->save(str_replace('.php', '.xls', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xls', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.xls', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done writing file" , PHP_EOL;
+echo date('H:i:s'), " Done writing file", PHP_EOL;

@@ -1,24 +1,23 @@
 <?php
 
-  namespace backend\modules\dashboard\controllers;
+namespace backend\modules\dashboard\controllers;
 
-  use backend\common\ControllerBackend;
+use backend\common\ControllerBackend;
 
-  /**
-   * Description of IndexController
-   *
-   * @author zhaocj
-   */
-  class ControllerSite extends ControllerBackend
-  {
+/**
+ * Description of IndexController
+ *
+ * @author zhaocj
+ */
+class ControllerSite extends ControllerBackend
+{
 
-     
 
-      function actionIndex()
-      {
+    function actionIndex()
+    {
 
-          $this->render();
-      }
+        $this->render();
+    }
 
-  }
+}
   

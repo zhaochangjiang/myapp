@@ -1,22 +1,22 @@
 <?php
 
-  namespace backend\modules\automatically\controllers;
+namespace backend\modules\automatically\controllers;
 
-  use backend\common\ControllerBackend;
+use backend\common\ControllerBackend;
 
-  /**
-   * Description of ControllerCreate
-   *
-   * @author zhaocj
-   */
-  class ControllerCreate extends ControllerBackend
-  {
+/**
+ * Description of ControllerCreate
+ *
+ * @author zhaocj
+ */
+class ControllerCreate extends ControllerBackend
+{
 
-      public function actionIndex()
-      {
+    public function actionIndex()
+    {
 
-          $this->render();
-      }
+        $this->render();
+    }
 
-  }
+}
   

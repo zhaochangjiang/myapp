@@ -7,7 +7,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,29 +22,32 @@
  * @package log4php
  * @subpackage helpers
  */
-class LoggerMDCPatternConverter extends LoggerPatternConverter {
+class LoggerMDCPatternConverter extends LoggerPatternConverter
+{
 
-	/**
-	 * @var string
-	 */
-	private $key;
+    /**
+     * @var string
+     */
+    private $key;
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $formattingInfo
-	 * @param string $key
-	 */
-	public function __construct($formattingInfo, $key) {
-		parent::__construct($formattingInfo);
-		$this->key = $key;
-	}
+    /**
+     * Constructor
+     *
+     * @param string $formattingInfo
+     * @param string $key
+     */
+    public function __construct($formattingInfo, $key)
+    {
+        parent::__construct($formattingInfo);
+        $this->key = $key;
+    }
 
-	/**
-	 * @param LoggerLoggingEvent $event
-	 * @return string
-	 */
-	public function convert($event) {
-		return $event->getMDC($this->key);
-	}
+    /**
+     * @param LoggerLoggingEvent $event
+     * @return string
+     */
+    public function convert($event)
+    {
+        return $event->getMDC($this->key);
+    }
 }

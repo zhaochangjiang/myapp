@@ -49,22 +49,22 @@ for writing to Excel2007:
 */
 
 // Create new PHPExcel object
-echo date('H:i:s') , " Create new PHPExcel object" , PHP_EOL;
+echo date('H:i:s'), " Create new PHPExcel object", PHP_EOL;
 $objPHPExcel = new PHPExcel();
 
 // Set document properties
-echo date('H:i:s') , " Set properties" , PHP_EOL;
+echo date('H:i:s'), " Set properties", PHP_EOL;
 $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
-							 ->setLastModifiedBy("Maarten Balliauw")
-							 ->setTitle("Office 2007 XLSX Test Document")
-							 ->setSubject("Office 2007 XLSX Test Document")
-							 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-							 ->setKeywords("office 2007 openxml php")
-							 ->setCategory("Test result file");
+    ->setLastModifiedBy("Maarten Balliauw")
+    ->setTitle("Office 2007 XLSX Test Document")
+    ->setSubject("Office 2007 XLSX Test Document")
+    ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Test result file");
 
 
 // Create a first sheet
-echo date('H:i:s') , " Add data" , PHP_EOL;
+echo date('H:i:s'), " Add data", PHP_EOL;
 $objPHPExcel->setActiveSheetIndex(0);
 $objPHPExcel->getActiveSheet()->setCellValue('A1', "Firstname");
 $objPHPExcel->getActiveSheet()->setCellValue('B1', "Lastname");
@@ -74,34 +74,34 @@ $objPHPExcel->getActiveSheet()->setCellValue('E1', "Is Client ?");
 
 
 // Hide "Phone" and "fax" column
-echo date('H:i:s') , " Hide 'Phone' and 'fax' columns" , PHP_EOL;
+echo date('H:i:s'), " Hide 'Phone' and 'fax' columns", PHP_EOL;
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setVisible(false);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setVisible(false);
 
 
 // Set outline levels
-echo date('H:i:s') , " Set outline levels" , PHP_EOL;
+echo date('H:i:s'), " Set outline levels", PHP_EOL;
 $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setOutlineLevel(1)
-                                                       ->setVisible(false)
-                                                       ->setCollapsed(true);
+    ->setVisible(false)
+    ->setCollapsed(true);
 
 // Freeze panes
-echo date('H:i:s') , " Freeze panes" , PHP_EOL;
+echo date('H:i:s'), " Freeze panes", PHP_EOL;
 $objPHPExcel->getActiveSheet()->freezePane('A2');
 
 
 // Rows to repeat at top
-echo date('H:i:s') , " Rows to repeat at top" , PHP_EOL;
+echo date('H:i:s'), " Rows to repeat at top", PHP_EOL;
 $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
 
 
 // Add data
 for ($i = 2; $i <= 5000; $i++) {
-	$objPHPExcel->getActiveSheet()->setCellValue('A' . $i, "FName $i")
-	                              ->setCellValue('B' . $i, "LName $i")
-	                              ->setCellValue('C' . $i, "PhoneNo $i")
-	                              ->setCellValue('D' . $i, "FaxNo $i")
-	                              ->setCellValue('E' . $i, true);
+    $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, "FName $i")
+        ->setCellValue('B' . $i, "LName $i")
+        ->setCellValue('C' . $i, "PhoneNo $i")
+        ->setCellValue('D' . $i, "FaxNo $i")
+        ->setCellValue('E' . $i, true);
 }
 
 
@@ -110,14 +110,14 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 
 // Save Excel 5 file
-echo date('H:i:s') , " Write to Excel5 format" , PHP_EOL;
+echo date('H:i:s'), " Write to Excel5 format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 $objWriter->save(str_replace('.php', '.xls', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xls', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.xls', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done writing file" , PHP_EOL;
+echo date('H:i:s'), " Done writing file", PHP_EOL;

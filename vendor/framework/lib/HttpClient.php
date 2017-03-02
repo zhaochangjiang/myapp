@@ -13,35 +13,35 @@ class HttpClient
     var $port;
     var $path;
     var $method;
-    var $postdata         = '';
-    var $cookies          = array();
+    var $postdata = '';
+    var $cookies = array();
     var $referer;
-    var $accept           = 'text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*';
-    var $accept_encoding  = 'gzip';
-    var $accept_language  = 'en-us';
-    var $user_agent       = 'Incutio HttpClient v0.9';
+    var $accept = 'text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*';
+    var $accept_encoding = 'gzip';
+    var $accept_language = 'en-us';
+    var $user_agent = 'Incutio HttpClient v0.9';
     // Options
-    var $timeout          = 20;
-    var $use_gzip         = true;
-    var $persist_cookies  = true;  // If true, received cookies are placed in the $this->cookies array ready for the next request
+    var $timeout = 20;
+    var $use_gzip = true;
+    var $persist_cookies = true;  // If true, received cookies are placed in the $this->cookies array ready for the next request
     // Note: This currently ignores the cookie path (and time) completely. Time is not important, 
     //       but path could possibly lead to security problems.
     var $persist_referers = true; // For each request, sends path of last request as referer
-    var $debug            = false;
+    var $debug = false;
     var $handle_redirects = true; // Auaomtically redirect if Location or URI header is found
-    var $max_redirects    = 5;
-    var $headers_only     = false;    // If true, stops receiving once headers have been read.
+    var $max_redirects = 5;
+    var $headers_only = false;    // If true, stops receiving once headers have been read.
     // Basic authorization variables
     var $username;
     var $password;
     // Response vars
     var $status;
-    var $headers          = array();
-    var $content          = '';
+    var $headers = array();
+    var $content = '';
     var $errormsg;
     // Tracker variables
-    var $redirect_count   = 0;
-    var $cookie_host      = '';
+    var $redirect_count = 0;
+    var $cookie_host = '';
 
     function HttpClient($host, $port = 80)
     {
@@ -51,10 +51,9 @@ class HttpClient
 
     function get($path, $data = false)
     {
-        $this->path   = $path;
+        $this->path = $path;
         $this->method = 'GET';
-        if ($data)
-        {
+        if ($data) {
             $this->path .= '?' . $this->buildQueryString($data);
         }
         return $this->doRequest();
@@ -62,8 +61,8 @@ class HttpClient
 
     function post($path, $data)
     {
-        $this->path     = $path;
-        $this->method   = 'POST';
+        $this->path = $path;
+        $this->method = 'POST';
         $this->postdata = $this->buildQueryString($data);
         return $this->doRequest();
     }
@@ -71,27 +70,19 @@ class HttpClient
     function buildQueryString($data)
     {
         $querystring = '';
-        if (is_array($data))
-        {
+        if (is_array($data)) {
             // Change data in to postable data
-            foreach ($data as $key => $val)
-            {
-                if (is_array($val))
-                {
-                    foreach ($val as $val2)
-                    {
+            foreach ($data as $key => $val) {
+                if (is_array($val)) {
+                    foreach ($val as $val2) {
                         $querystring .= urlencode($key) . '=' . urlencode($val2) . '&';
                     }
-                }
-                else
-                {
+                } else {
                     $querystring .= urlencode($key) . '=' . urlencode($val) . '&';
                 }
             }
             $querystring = substr($querystring, 0, -1); // Eliminate unnecessary &
-        }
-        else
-        {
+        } else {
             $querystring = $data;
         }
         return $querystring;
@@ -100,11 +91,9 @@ class HttpClient
     function doRequest()
     {
         // Performs the actual HTTP request, returning true or false depending on outcome
-        if (!$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout))
-        {
+        if (!$fp = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout)) {
             // Set error message
-            switch ($errno)
-            {
+            switch ($errno) {
                 case -3:
                     $this->errormsg = 'Socket creation failed (-3)';
                 case -4:
@@ -119,69 +108,56 @@ class HttpClient
             return false;
         }
         socket_set_timeout($fp, $this->timeout);
-        $request        = $this->buildRequest();
+        $request = $this->buildRequest();
         $this->debug('Request', $request);
         fwrite($fp, $request);
         // Reset all the variables that should not persist between requests
-        $this->headers  = array();
-        $this->content  = '';
+        $this->headers = array();
+        $this->content = '';
         $this->errormsg = '';
         // Set a couple of flags
-        $inHeaders      = true;
-        $atStart        = true;
+        $inHeaders = true;
+        $atStart = true;
         // Now start reading back the response
-        while (!feof($fp))
-        {
+        while (!feof($fp)) {
             $line = fgets($fp, 4096);
-            if ($atStart)
-            {
+            if ($atStart) {
                 // Deal with first line of returned data
                 $atStart = false;
-                if (!preg_match('/HTTP\/(\\d\\.\\d)\\s*(\\d+)\\s*(.*)/', $line, $m))
-                {
+                if (!preg_match('/HTTP\/(\\d\\.\\d)\\s*(\\d+)\\s*(.*)/', $line, $m)) {
                     $this->errormsg = "Status code line invalid: " . htmlentities($line);
                     $this->debug($this->errormsg);
                     return false;
                 }
-                $http_version  = $m[1]; // not used
-                $this->status  = $m[2];
+                $http_version = $m[1]; // not used
+                $this->status = $m[2];
                 $status_string = $m[3]; // not used
                 $this->debug(trim($line));
                 continue;
             }
-            if ($inHeaders)
-            {
-                if (trim($line) == '')
-                {
+            if ($inHeaders) {
+                if (trim($line) == '') {
                     $inHeaders = false;
                     $this->debug('Received Headers', $this->headers);
-                    if ($this->headers_only)
-                    {
+                    if ($this->headers_only) {
                         break; // Skip the rest of the input
                     }
                     continue;
                 }
-                if (!preg_match('/([^:]+):\\s*(.*)/', $line, $m))
-                {
+                if (!preg_match('/([^:]+):\\s*(.*)/', $line, $m)) {
                     // Skip to the next header
                     continue;
                 }
                 $key = strtolower(trim($m[1]));
                 $val = trim($m[2]);
                 // Deal with the possibility of multiple headers of same name
-                if (isset($this->headers[$key]))
-                {
-                    if (is_array($this->headers[$key]))
-                    {
+                if (isset($this->headers[$key])) {
+                    if (is_array($this->headers[$key])) {
                         $this->headers[$key][] = $val;
-                    }
-                    else
-                    {
+                    } else {
                         $this->headers[$key] = array($this->headers[$key], $val);
                     }
-                }
-                else
-                {
+                } else {
                     $this->headers[$key] = $val;
                 }
                 continue;
@@ -191,24 +167,19 @@ class HttpClient
         }
         fclose($fp);
         // If data is compressed, uncompress it
-        if (isset($this->headers['content-encoding']) && $this->headers['content-encoding'] == 'gzip')
-        {
+        if (isset($this->headers['content-encoding']) && $this->headers['content-encoding'] == 'gzip') {
             $this->debug('Content is gzip encoded, unzipping it');
             $this->content = substr($this->content, 10); // See http://www.php.net/manual/en/function.gzencode.php
             $this->content = gzinflate($this->content);
         }
         // If $persist_cookies, deal with any cookies
-        if ($this->persist_cookies && isset($this->headers['set-cookie']) && $this->host == $this->cookie_host)
-        {
+        if ($this->persist_cookies && isset($this->headers['set-cookie']) && $this->host == $this->cookie_host) {
             $cookies = $this->headers['set-cookie'];
-            if (!is_array($cookies))
-            {
+            if (!is_array($cookies)) {
                 $cookies = array($cookies);
             }
-            foreach ($cookies as $cookie)
-            {
-                if (preg_match('/([^=]+)=([^;]+);/', $cookie, $m))
-                {
+            foreach ($cookies as $cookie) {
+                if (preg_match('/([^=]+)=([^;]+);/', $cookie, $m)) {
                     $this->cookies[$m[1]] = $m[2];
                 }
             }
@@ -216,25 +187,21 @@ class HttpClient
             $this->cookie_host = $this->host;
         }
         // If $persist_referers, set the referer ready for the next request
-        if ($this->persist_referers)
-        {
+        if ($this->persist_referers) {
             $this->debug('Persisting referer: ' . $this->getRequestURL());
             $this->referer = $this->getRequestURL();
         }
         // Finally, if handle_redirects and a redirect is sent, do that
-        if ($this->handle_redirects)
-        {
-            if (++$this->redirect_count >= $this->max_redirects)
-            {
-                $this->errormsg       = 'Number of redirects exceeded maximum (' . $this->max_redirects . ')';
+        if ($this->handle_redirects) {
+            if (++$this->redirect_count >= $this->max_redirects) {
+                $this->errormsg = 'Number of redirects exceeded maximum (' . $this->max_redirects . ')';
                 $this->debug($this->errormsg);
                 $this->redirect_count = 0;
                 return false;
             }
             $location = isset($this->headers['location']) ? $this->headers['location'] : '';
-            $uri      = isset($this->headers['uri']) ? $this->headers['uri'] : '';
-            if ($location || $uri)
-            {
+            $uri = isset($this->headers['uri']) ? $this->headers['uri'] : '';
+            if ($location || $uri) {
                 $url = parse_url($location . $uri);
                 // This will FAIL if redirect is to a different site
                 return $this->get($url['path']);
@@ -245,38 +212,32 @@ class HttpClient
 
     function buildRequest()
     {
-        $headers   = array();
+        $headers = array();
         $headers[] = "{$this->method} {$this->path} HTTP/1.0"; // Using 1.1 leads to all manner of problems, such as "chunked" encoding
         $headers[] = "Host: {$this->host}";
         $headers[] = "User-Agent: {$this->user_agent}";
         $headers[] = "Accept: {$this->accept}";
-        if ($this->use_gzip)
-        {
+        if ($this->use_gzip) {
             $headers[] = "Accept-encoding: {$this->accept_encoding}";
         }
         $headers[] = "Accept-language: {$this->accept_language}";
-        if ($this->referer)
-        {
+        if ($this->referer) {
             $headers[] = "Referer: {$this->referer}";
         }
         // Cookies
-        if ($this->cookies)
-        {
+        if ($this->cookies) {
             $cookie = 'Cookie: ';
-            foreach ($this->cookies as $key => $value)
-            {
+            foreach ($this->cookies as $key => $value) {
                 $cookie .= "$key=$value; ";
             }
             $headers[] = $cookie;
         }
         // Basic authentication
-        if ($this->username && $this->password)
-        {
+        if ($this->username && $this->password) {
             $headers[] = 'Authorization: BASIC ' . base64_encode($this->username . ':' . $this->password);
         }
         // If this is a POST, set the content type and length
-        if ($this->postdata)
-        {
+        if ($this->postdata) {
             $headers[] = 'Content-Type: application/x-www-form-urlencoded';
             $headers[] = 'Content-Length: ' . strlen($this->postdata);
         }
@@ -302,12 +263,9 @@ class HttpClient
     function getHeader($header)
     {
         $header = strtolower($header);
-        if (isset($this->headers[$header]))
-        {
+        if (isset($this->headers[$header])) {
             return $this->headers[$header];
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -325,8 +283,7 @@ class HttpClient
     function getRequestURL()
     {
         $url = 'http://' . $this->host;
-        if ($this->port != 80)
-        {
+        if ($this->port != 80) {
             $url .= ':' . $this->port;
         }
         $url .= $this->path;
@@ -389,11 +346,11 @@ class HttpClient
     // "Quick" static methods
     public static function quickGet($url)
     {
-        $curl   = curl_init($url);
+        $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_HEADER, 0); // 过滤HTTP头
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); // 显示输出结果
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //证书认证
-        
+
         //curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);//严格认证
         //curl_setopt($curl, CURLOPT_CAINFO,$cacert_url);//证书地址
         $result = curl_exec($curl);
@@ -403,7 +360,7 @@ class HttpClient
 
     public static function quickPost($url, $data)
     {
-        $curl         = curl_init($url);
+        $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //SSL证书认证
         //curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);//严格认证
         //curl_setopt($curl, CURLOPT_CAINFO,$cacert_url);//证书地址
@@ -420,11 +377,9 @@ class HttpClient
 
     function debug($msg, $object = false)
     {
-        if ($this->debug)
-        {
+        if ($this->debug) {
             print '<div style="border: 1px solid red; padding: 0.5em; margin: 0.5em;"><strong>HttpClient Debug:</strong> ' . $msg;
-            if ($object)
-            {
+            if ($object) {
                 ob_start();
                 print_r($object);
                 $content = htmlentities(ob_get_contents());

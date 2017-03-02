@@ -1,8 +1,8 @@
 <?php
-  $urlString = $this->createUrl(array(
-      $this->controllerObject->controllerString,
-      'getchild',
-      $this->controllerObject->moduleString));
+$urlString = $this->createUrl(array(
+    $this->controllerObject->controllerString,
+    'getchild',
+    $this->controllerObject->moduleString));
 ?>
 
 <script type="text/javascript">
@@ -20,7 +20,7 @@
                 s += '<option  value="' + data[p].category_id + '">' + data[p].category_label + '</option>';
             }
             o.parents('.selectuppid').after('<div class="col-lg-3 selectuppid"> <select class="form-control" name="uppid[]"  loadUrl="' + '<?php echo $urlString; ?> ' + '" onchange="changeSelectedUid($(this));
-                    ">' + s + '</select></div>');
+            ">' + s + '</select></div>');
             //       loadShow.loadClose();
         });
     }
@@ -28,52 +28,44 @@
 <div class="col-lg-10">
     <div class="row">
         <?php
-          $count     = count($this->data['data']);
+        $count = count($this->data['data']);
 
-          foreach ($this->data['data'] as $value)
-          {
-              $i++;
-              $optionString = '';
-              foreach ($value['permitList'] as $k => $v)
-              {
-                  $selectString = '';
-                  $nameFlag     = true;
-                  switch ($this->controllerObject->data['doType'])
-                  {
-                      case 'update':
-                          if ($v['category_id'] == $value['nowId'] && $count == $i)
-                          {
-                              $nameFlag = false;
-                              continue;
-                          }
-                          if ($v['category_id'] == $value['nowId'] && $count != $i)
-                          {
-                              $selectString = ' selected="selected"';
-                          }
-                          break;
-                      default:
-                          if ($v['category_id'] == $value ['nowId'])
-                          {
-                              $selectString = ' selected="selected"';
-                          }
+        foreach ($this->data['data'] as $value) {
+            $i++;
+            $optionString = '';
+            foreach ($value['permitList'] as $k => $v) {
+                $selectString = '';
+                $nameFlag = true;
+                switch ($this->controllerObject->data['doType']) {
+                    case 'update':
+                        if ($v['category_id'] == $value['nowId'] && $count == $i) {
+                            $nameFlag = false;
+                            continue;
+                        }
+                        if ($v['category_id'] == $value['nowId'] && $count != $i) {
+                            $selectString = ' selected="selected"';
+                        }
+                        break;
+                    default:
+                        if ($v['category_id'] == $value ['nowId']) {
+                            $selectString = ' selected="selected"';
+                        }
 
-                          break;
-                  }
-                  if ($nameFlag)
-                  {
-                      $optionString.= '<option ' . $selectString . ' value="' . $v['category_id'] . '">' . $v['category_label'] . '</option>';
-                  }
-              }
-              if (!empty($optionString))
-              {
-                  echo '<div class="col-lg-3 selectuppid"> 
+                        break;
+                }
+                if ($nameFlag) {
+                    $optionString .= '<option ' . $selectString . ' value="' . $v['category_id'] . '">' . $v['category_label'] . '</option>';
+                }
+            }
+            if (!empty($optionString)) {
+                echo '<div class="col-lg-3 selectuppid">
         <select class="form-control" name="uppid[]" loadUrl="' . $urlString . '" onchange="changeSelectedUid($(this));
       ">
         <option value="">--请选择--</option>
         ' . $optionString . '</select>
         </div>';
-              }
-          }
+            }
+        }
         ?>
     </div>
 </div>

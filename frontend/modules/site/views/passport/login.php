@@ -1,7 +1,8 @@
 <?php
 
 use communal\common\UtilsFormFormat;
-?>      
+
+?>
 <script type="text/javascript">
     function hideorshowSubmitButton(o1) {
 
@@ -33,12 +34,12 @@ use communal\common\UtilsFormFormat;
         UtilsFormFormat::open($this->createUrl(array($this->controllerString, 'iframe' . ucfirst($this->action), $this->moduleString), $urlParamArray));
         ?>
         <div class="form-group mb-lg">
-            <div class="alert alert-danger" style="display: none;" >
+            <div class="alert alert-danger" style="display: none;">
                 <p class="m-none text-semibold h6"></p>
             </div>
             <label>用户名</label>
             <div class="input-group input-group-icon">
-                <input name="username" placeholder="邮箱/手机" value="" type="text" class="form-control input-lg" />
+                <input name="username" placeholder="邮箱/手机" value="" type="text" class="form-control input-lg"/>
                 <span class="input-group-addon">
                     <span class="icon icon-lg">
                         <i class="fa fa-user"></i>
@@ -54,7 +55,7 @@ use communal\common\UtilsFormFormat;
                 ?>" class="pull-right">忘记密码?</a>
             </div>
             <div class="input-group input-group-icon">
-                <input name="password" placeholder="密码" type="password" class="form-control input-lg" />
+                <input name="password" placeholder="密码" type="password" class="form-control input-lg"/>
                 <span class="input-group-addon">
                     <span class="icon icon-lg">
                         <i class="fa fa-lock"></i>
@@ -71,7 +72,8 @@ use communal\common\UtilsFormFormat;
             </div>
             <div class="col-sm-4 text-right">
                 <button type="submit" class="btn btn-primary" id="submitiframes" onclick="hideorshowSubmitButton();
-                        return;" >登录</button>
+                        return;">登录
+                </button>
             </div>
         </div>
         <span class="mt-lg mb-lg line-thru text-center text-uppercase">
@@ -84,11 +86,11 @@ use communal\common\UtilsFormFormat;
         </div>
         -->
         <p class="text-center">还没有账号? <a href="<?php
-                                         echo $this->createUrl(array($this->controllerString, 'register',$this->moduleString)
-                                                 , array(
-                                             'goto' => $this->data['goto']));
-                                         ?>">注册</a> </p>
-            <?php echo UtilsFormFormat::close(); ?>
+            echo $this->createUrl(array($this->controllerString, 'register', $this->moduleString)
+                , array(
+                    'goto' => $this->data['goto']));
+            ?>">注册</a></p>
+        <?php echo UtilsFormFormat::close(); ?>
     </div>
 </div>
 

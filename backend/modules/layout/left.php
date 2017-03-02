@@ -1,20 +1,21 @@
 <?php
 
 use framework\App;
+
 ?>
 <aside class="left-side sidebar-offcanvas">
     <section class="sidebar">
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<?php echo $this->data['avater'] ?>" class="img-circle" alt="User Image" />
+                <img src="<?php echo $this->data['avater'] ?>" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">
                 <p><?php echo $this->data['session']['username'] ?></p>
                 <a href="<?php
                 echo $this->createUrl(
-                        array('Passport','logout'),
-                         null, App::base()->params['domain']['web']);
+                    array('Passport', 'logout'),
+                    null, App::base()->params['domain']['web']);
                 ?>"><i class="fa fa-circle text-success"></i> 在线</a>
             </div>
         </div>
@@ -34,7 +35,7 @@ use framework\App;
             <?php
             foreach ($this->permitList['left'] as $k => $v) {
                 $moduleAction = $this->getAdminModuleActionArray($v);
-               
+
                 //  print_r($moduleAction);
                 if (empty($v['childList'])) {//如果菜单没有子菜单
                     echo ' <li class="' . ($v['active'] ? 'active ' : '') . '"> 
@@ -61,7 +62,7 @@ use framework\App;
                 foreach ($v['childList'] as $key => $value) {
 
                     $moduleAction = $this->getAdminModuleActionArray($value);
-                  //  print_r($moduleAction);
+                    //  print_r($moduleAction);
                     echo ' <li class="' . (($value['active']) ? 'active' : '') . '"><a href="' . (!empty($moduleAction) ? $this->createUrl($moduleAction) : "javascript:void(0);") . '" style="margin-left: 10px;"><i class="fa fa-angle-double-right"></i> ' . $value['name'] . '</a></li>';
                 }
                 echo ' </ul></li>';
@@ -87,13 +88,13 @@ use framework\App;
 
     </section>
     <script type="text/javascript">
-//        var loadShow = {
-//          
-//            loading: function () {
-//            },
-//            loadClose: function () {
-//            }
-//        };
+        //        var loadShow = {
+        //
+        //            loading: function () {
+        //            },
+        //            loadClose: function () {
+        //            }
+        //        };
 
         function showerror(message) {
             $('#compose-modal .modal-body').html(message);

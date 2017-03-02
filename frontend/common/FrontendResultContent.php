@@ -1,117 +1,115 @@
 <?php
 
-  namespace frontend\common;
+namespace frontend\common;
 
-  use client\common\ClientResultData;
+use client\common\ClientResultData;
 
-  /**
-   * IFRAME页面输出结果格式
-   */
-  class FrontendResultContent extends ClientResultData
-  {
+/**
+ * IFRAME页面输出结果格式
+ */
+class FrontendResultContent extends ClientResultData
+{
 
-      var $javascriptContent = '';
-      var $notexit           = false;
-      var $message           = '';
-      private static $_instance;
+    var $javascriptContent = '';
+    var $notexit = false;
+    var $message = '';
+    private static $_instance;
 
-      private function __construct()
-      {
-          
-      }
+    private function __construct()
+    {
 
-      public static function getInstance()
-      {
-          if (self::$_instance === null)
-          {
-              self::$_instance = new self ( );
-          }
-          return self::$_instance;
-      }
+    }
 
-      public static function getInstanceAnother()
-      {
+    public static function getInstance()
+    {
+        if (self::$_instance === null) {
+            self::$_instance = new self ();
+        }
+        return self::$_instance;
+    }
 
-          return new self ( );
-      }
+    public static function getInstanceAnother()
+    {
 
-      /**
-       *
-       * @return the $status
-       */
-      public function getStatus()
-      {
-          return $this->status;
-      }
+        return new self ();
+    }
 
-      /**
-       *
-       * @return the $message
-       */
-      public function getMessage()
-      {
-          return $this->message;
-      }
+    /**
+     *
+     * @return the $status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
-      /**
-       *
-       * @return the $notexit
-       */
-      public function getNotexit()
-      {
-          return $this->notexit;
-      }
+    /**
+     *
+     * @return the $message
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
 
-      /**
-       *
-       * @param boolean $notexit            
-       */
-      public function setNotexit($notexit)
-      {
-          $this->notexit = $notexit;
-      }
+    /**
+     *
+     * @return the $notexit
+     */
+    public function getNotexit()
+    {
+        return $this->notexit;
+    }
 
-      /**
-       *
-       * @param string $status            
-       */
-      public function setStatus($status)
-      {
-          $this->status = $status;
-      }
+    /**
+     *
+     * @param boolean $notexit
+     */
+    public function setNotexit($notexit)
+    {
+        $this->notexit = $notexit;
+    }
 
-      /**
-       *
-       * @param multitype: $message            
-       */
-      public function setMessage($message)
-      {
-          $this->message .= $message;
-      }
+    /**
+     *
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
 
-      /**
-       *
-       * @return the $javascriptContent
-       */
-      public function getJavascriptContent()
-      {
-          return $this->javascriptContent;
-      }
+    /**
+     *
+     * @param multitype : $message
+     */
+    public function setMessage($message)
+    {
+        $this->message .= $message;
+    }
 
-      /**
-       *
-       * @param string $javascriptContent            
-       */
-      public function setJavascriptContent($javascriptContent, $goto = '')
-      {
-          if (!empty($goto))
-          {
+    /**
+     *
+     * @return the $javascriptContent
+     */
+    public function getJavascriptContent()
+    {
+        return $this->javascriptContent;
+    }
 
-              $js = "parent.location.href='$goto';";
-          }
-          $javascriptContent       = $javascriptContent . $js;
-          $this->javascriptContent = "<script type=\"text/javascript\">{$javascriptContent}</script>";
-      }
+    /**
+     *
+     * @param string $javascriptContent
+     */
+    public function setJavascriptContent($javascriptContent, $goto = '')
+    {
+        if (!empty($goto)) {
 
-  }
+            $js = "parent.location.href='$goto';";
+        }
+        $javascriptContent = $javascriptContent . $js;
+        $this->javascriptContent = "<script type=\"text/javascript\">{$javascriptContent}</script>";
+    }
+
+}
   

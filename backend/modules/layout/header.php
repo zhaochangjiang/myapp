@@ -1,9 +1,10 @@
 <?php
 
-  use framework\App;
+use framework\App;
+
 ?>
 <header class="header">
-    <a href="<?php echo $this->createUrl(array());?>" class="logo">
+    <a href="<?php echo $this->createUrl(array()); ?>" class="logo">
         <?php echo App::base()->params['sitename'] . ' 后台管理中心'; ?>
     </a>
     <nav class="navbar navbar-static-top" role="navigation">
@@ -16,27 +17,27 @@
         <div class="navbar-right">
             <ul class="nav navbar-nav">
                 <?php
-                  $permitlist = $this->permitList['header'];
-                  unset($this->permitList['header']);
+                $permitlist = $this->permitList['header'];
+                unset($this->permitList['header']);
 
-                  //   stop($permitlist[0]);
+                //   stop($permitlist[0]);
                 ?>
                 <?php
-                  foreach ($permitlist as $key => $value):
-                      echo '<li class="dropdown user user-menu ' . ($value['active'] ? ' open' : '') . '">';
-                      $baseUrlParams = $this->getAdminModuleActionArray($value);
-                      echo '<a href = "' . $this->createUrl($baseUrlParams) . '" class = "dropdown-toggle" >';
-                      if (!empty($value['csscode']))
-                      {
-                          echo '<i class="glyphicon ' . $value['csscode'] . '"></i>';
-                      }
-                      ?>
-                      <span><?php echo $value['name']; ?></span>
-                      </a>
-                      </li> 
-                      <?php
-                  endforeach;
+                foreach ($permitlist as $key => $value):
+                    echo '<li class="dropdown user user-menu ' . ($value['active'] ? ' open' : '') . '">';
+                    $baseUrlParams = $this->getAdminModuleActionArray($value);
+                    echo '<a href = "' . $this->createUrl($baseUrlParams) . '" class = "dropdown-toggle" >';
+                    if (!empty($value['csscode'])) {
+                        echo '<i class="glyphicon ' . $value['csscode'] . '"></i>';
+                    }
+                    ?>
+                    <span><?php echo $value['name']; ?></span>
+                    </a>
+                    </li>
+                    <?php
+                endforeach;
                 ?>
+
                 <!--     
                <li class="dropdown messages-menu">
                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -235,39 +236,31 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="user-header bg-light-blue">
-                            <img src="<?php echo $this->data['avater'] ?>" class="img-circle" alt="User Image" />
+                            <img src="<?php echo $this->data['avater'] ?>" class="img-circle" alt="User Image"/>
                             <p>
                                 <?php echo $this->data['session']['username'] ?>
                                 <small><?php echo date('H:i'); ?></small>
                             </p>
                         </li>
-
-                        <!--
                         <li class="user-body">
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Followers</a>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Sales</a>
-                            </div>
-                            <div class="col-xs-4 text-center">
-                                <a href="#">Friends</a>
+                            <div class="col-xs-12 text-center">
+                                <a href="<?php echo $this->createUrl(); ?>" target="_blank">首页</a>
                             </div>
                         </li>
-                        -->
+
                         <li class="user-footer">
                             <div class="pull-left">
                                 <a href="<?php
-                                  echo $this->createUrl(array(
-                                      'User',
-                                      'setting'), null, App::base()->params['domain']['userProfile']);
+                                echo $this->createUrl(array(
+                                    'User',
+                                    'setting'), null, App::base()->params['domain']['userProfile']);
                                 ?>" class="btn btn-default btn-flat">个人设置</a>
                             </div>
                             <div class="pull-right">
                                 <a href="<?php
-                                  echo $this->createUrl(array(
-                                      'Passport',
-                                      'logout'), null, App::base()->params['domain']['web']);
+                                echo $this->createUrl(array(
+                                    'Passport',
+                                    'logout'), null, App::base()->params['domain']['web']);
                                 ?>" class="btn btn-default btn-flat">退出</a>
                             </div>
                         </li>

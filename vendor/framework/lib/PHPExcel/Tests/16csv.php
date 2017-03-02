@@ -36,31 +36,31 @@ include "05featuredemo.inc.php";
 require_once '../Classes/PHPExcel/IOFactory.php';
 
 
-echo date('H:i:s') , " Write to CSV format" , PHP_EOL;
+echo date('H:i:s'), " Write to CSV format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV')->setDelimiter(',')
-                                                                  ->setEnclosure('"')
-                                                                  ->setLineEnding("\r\n")
-                                                                  ->setSheetIndex(0)
-                                                                  ->save(str_replace('.php', '.csv', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.csv', __FILE__) , PHP_EOL;
+    ->setEnclosure('"')
+    ->setLineEnding("\r\n")
+    ->setSheetIndex(0)
+    ->save(str_replace('.php', '.csv', __FILE__));
+echo date('H:i:s'), " File written to ", str_replace('.php', '.csv', __FILE__), PHP_EOL;
 
-echo date('H:i:s') , " Read from CSV format" , PHP_EOL;
+echo date('H:i:s'), " Read from CSV format", PHP_EOL;
 $objReader = PHPExcel_IOFactory::createReader('CSV')->setDelimiter(',')
-                                                    ->setEnclosure('"')
-                                                    ->setLineEnding("\r\n")
-                                                    ->setSheetIndex(0);
+    ->setEnclosure('"')
+    ->setLineEnding("\r\n")
+    ->setSheetIndex(0);
 $objPHPExcelFromCSV = $objReader->load(str_replace('.php', '.csv', __FILE__));
-echo date('H:i:s') , " File read from " , str_replace('.php', '.csv', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File read from ", str_replace('.php', '.csv', __FILE__), PHP_EOL;
 
 
-echo date('H:i:s') , " Write to Excel2007 format" , PHP_EOL;
+echo date('H:i:s'), " Write to Excel2007 format", PHP_EOL;
 $objWriter2007 = PHPExcel_IOFactory::createWriter($objPHPExcelFromCSV, 'Excel2007');
 $objWriter2007->save(str_replace('.php', '.xlsx', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xlsx', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.xlsx', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done writing files" , PHP_EOL;
+echo date('H:i:s'), " Done writing files", PHP_EOL;

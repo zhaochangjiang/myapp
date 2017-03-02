@@ -7,7 +7,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,44 +22,47 @@
  * @package log4php
  * @subpackage helpers
  */
-class LoggerLocationPatternConverter extends LoggerPatternConverter {
-	
-	/**
-	 * @var integer
-	 */
-	private $type;
+class LoggerLocationPatternConverter extends LoggerPatternConverter
+{
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $formattingInfo
-	 * @param integer $type
-	 */
-	public function __construct($formattingInfo, $type) {
-		parent::__construct($formattingInfo);
-		$this->type = $type;
-	}
+    /**
+     * @var integer
+     */
+    private $type;
 
-	/**
-	 * @param LoggerLoggingEvent $event
-	 * @return string
-	 */
-	public function convert($event) {
-		$locationInfo = $event->getLocationInformation();
-		switch($this->type) {
-			case LoggerPatternParser::FULL_LOCATION_CONVERTER:
-				return $locationInfo->getFullInfo();
-			case LoggerPatternParser::METHOD_LOCATION_CONVERTER:
-				return $locationInfo->getMethodName();
-			case LoggerPatternParser::LINE_LOCATION_CONVERTER:
-				return $locationInfo->getLineNumber();
-			case LoggerPatternParser::FILE_LOCATION_CONVERTER:
-				return $locationInfo->getFileName();
-			case LoggerPatternParser::CLASS_LOCATION_CONVERTER:
-				return $locationInfo->getFullQualifiedClassname();
-			default: 
-				return '';
-		}
-	}
+    /**
+     * Constructor
+     *
+     * @param string $formattingInfo
+     * @param integer $type
+     */
+    public function __construct($formattingInfo, $type)
+    {
+        parent::__construct($formattingInfo);
+        $this->type = $type;
+    }
+
+    /**
+     * @param LoggerLoggingEvent $event
+     * @return string
+     */
+    public function convert($event)
+    {
+        $locationInfo = $event->getLocationInformation();
+        switch ($this->type) {
+            case LoggerPatternParser::FULL_LOCATION_CONVERTER:
+                return $locationInfo->getFullInfo();
+            case LoggerPatternParser::METHOD_LOCATION_CONVERTER:
+                return $locationInfo->getMethodName();
+            case LoggerPatternParser::LINE_LOCATION_CONVERTER:
+                return $locationInfo->getLineNumber();
+            case LoggerPatternParser::FILE_LOCATION_CONVERTER:
+                return $locationInfo->getFileName();
+            case LoggerPatternParser::CLASS_LOCATION_CONVERTER:
+                return $locationInfo->getFullQualifiedClassname();
+            default:
+                return '';
+        }
+    }
 }
 

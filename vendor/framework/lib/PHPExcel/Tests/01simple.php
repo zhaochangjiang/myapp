@@ -35,35 +35,35 @@ require_once '../Classes/PHPExcel.php';
 
 
 // Create new PHPExcel object
-echo date('H:i:s') , " Create new PHPExcel object" , PHP_EOL;
+echo date('H:i:s'), " Create new PHPExcel object", PHP_EOL;
 $objPHPExcel = new PHPExcel();
 
 // Set document properties
-echo date('H:i:s') , " Set document properties" , PHP_EOL;
+echo date('H:i:s'), " Set document properties", PHP_EOL;
 $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
-							 ->setLastModifiedBy("Maarten Balliauw")
-							 ->setTitle("Office 2007 XLSX Test Document")
-							 ->setSubject("Office 2007 XLSX Test Document")
-							 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-							 ->setKeywords("office 2007 openxml php")
-							 ->setCategory("Test result file");
+    ->setLastModifiedBy("Maarten Balliauw")
+    ->setTitle("Office 2007 XLSX Test Document")
+    ->setSubject("Office 2007 XLSX Test Document")
+    ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Test result file");
 
 
 // Add some data
-echo date('H:i:s') , " Add some data" , PHP_EOL;
+echo date('H:i:s'), " Add some data", PHP_EOL;
 $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'Hello')
-            ->setCellValue('B2', 'world!')
-            ->setCellValue('C1', 'Hello')
-            ->setCellValue('D2', 'world!');
+    ->setCellValue('A1', 'Hello')
+    ->setCellValue('B2', 'world!')
+    ->setCellValue('C1', 'Hello')
+    ->setCellValue('D2', 'world!');
 
 // Miscellaneous glyphs, UTF-8
 $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A4', 'Miscellaneous glyphs')
-            ->setCellValue('A5', 'éàèùâêîôûëïüÿäöüç');
+    ->setCellValue('A4', 'Miscellaneous glyphs')
+    ->setCellValue('A5', 'éàèùâêîôûëïüÿäöüç');
 
 // Rename worksheet
-echo date('H:i:s') , " Rename worksheet" , PHP_EOL;
+echo date('H:i:s'), " Rename worksheet", PHP_EOL;
 $objPHPExcel->getActiveSheet()->setTitle('Simple');
 
 
@@ -72,14 +72,14 @@ $objPHPExcel->setActiveSheetIndex(0);
 
 
 // Save Excel 2007 file
-echo date('H:i:s') , " Write to Excel2007 format" , PHP_EOL;
+echo date('H:i:s'), " Write to Excel2007 format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save(str_replace('.php', '.xlsx', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xlsx', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.xlsx', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done writing file" , PHP_EOL;
+echo date('H:i:s'), " Done writing file", PHP_EOL;

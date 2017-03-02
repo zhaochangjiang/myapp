@@ -36,21 +36,21 @@ include "05featuredemo.inc.php";
 require_once '../Classes/PHPExcel/IOFactory.php';
 
 
-echo date('H:i:s') , " Hide grid lines" , PHP_EOL;
+echo date('H:i:s'), " Hide grid lines", PHP_EOL;
 $objPHPExcel->getActiveSheet()->setShowGridLines(false);
 
-echo date('H:i:s') , " Set orientation to landscape" , PHP_EOL;
+echo date('H:i:s'), " Set orientation to landscape", PHP_EOL;
 $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
 
-echo date('H:i:s') , " Write to PDF format" , PHP_EOL;
+echo date('H:i:s'), " Write to PDF format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'PDF');
 $objWriter->setSheetIndex(0);
 $objWriter->save(str_replace('.php', '.pdf', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.pdf', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.pdf', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done writing files" , PHP_EOL;
+echo date('H:i:s'), " Done writing files", PHP_EOL;

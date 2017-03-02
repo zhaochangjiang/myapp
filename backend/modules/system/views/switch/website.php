@@ -1,17 +1,26 @@
 <style type="text/css">
-    .margin-bottom-90{ height: 90px;}
-    .nodeline{
-        position:absolute;
-        width:100px;
-        height:100px;
-        border-bottom:1px solid #cccccc;
+    .margin-bottom-90 {
+        height: 90px;
     }
-    .nodelilineup{border-bottom:1px solid #cccccc;  height: 44px;  position:absolute;
 
+    .nodeline {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-bottom: 1px solid #cccccc;
+    }
+
+    .nodelilineup {
+        border-bottom: 1px solid #cccccc;
+        height: 44px;
+        position: absolute;
 
     }
-    .nodelinedown{
-        border-bottom:1px solid #cccccc; height: 44px; position:absolute;
+
+    .nodelinedown {
+        border-bottom: 1px solid #cccccc;
+        height: 44px;
+        position: absolute;
 
     }
 </style>
@@ -31,15 +40,15 @@
             if ($val['status'] === 'on') {
                 $buttonType = 'btn-success';
             }
-            $string.= '<div class="col-md-' . $length . '"><a  maxCount="'.$maxLength.'" ind="' . $index . '" uppid="' . $val['heigher_level_id'] . '" uid="' . $val['id'] . '" class="nodeLi btn ' . $buttonType . '">' . $val['name'] . '</a></div>';
+            $string .= '<div class="col-md-' . $length . '"><a  maxCount="' . $maxLength . '" ind="' . $index . '" uppid="' . $val['heigher_level_id'] . '" uid="' . $val['id'] . '" class="nodeLi btn ' . $buttonType . '">' . $val['name'] . '</a></div>';
         }
-        $string.='</div>';
-        $string.='<div class="margin-bottom-90"><div class="nodelilineup"></div>';
-        $string.='<div class="nodelilinedown"></div>';
-        $string.='</div>';
+        $string .= '</div>';
+        $string .= '<div class="margin-bottom-90"><div class="nodelilineup"></div>';
+        $string .= '<div class="nodelilinedown"></div>';
+        $string .= '</div>';
         echo $string;
     }
-//print_r($data);
+    //print_r($data);
     ?>
     <script type="text/javascript">
         $(function () {
@@ -57,12 +66,15 @@
                     if (typeof (offsetList[uppid]) === 'undefined') {
                         offsetList[uppid] = $('[uid="' + uppid + '"]').offset();
                     }
-                    if (parseInt($(this).attr('ind'))===1) {
+                    if (parseInt($(this).attr('ind')) === 1) {
                         var thisOffset = $(this).offset();
                         var upNodeLiUp = $(this).parents(".row").prev(".margin-bottom-90").find(".nodelilineup");
-                        var w = $(this).parent().width()*(parseInt($(this).attr('maxCount'))-1);
-                        
-                        upNodeLiUp.css({left: thisOffset.left-$("aside.left-side").width()+$(this).width()/2,width:w});
+                        var w = $(this).parent().width() * (parseInt($(this).attr('maxCount')) - 1);
+
+                        upNodeLiUp.css({
+                            left: thisOffset.left - $("aside.left-side").width() + $(this).width() / 2,
+                            width: w
+                        });
                     }
                 }
             });

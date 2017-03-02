@@ -36,14 +36,14 @@ include "05featuredemo.inc.php";
 require_once '../Classes/PHPExcel/IOFactory.php';
 
 
-echo date('H:i:s') , " Write to Excel5 format" , PHP_EOL;
+echo date('H:i:s'), " Write to Excel5 format", PHP_EOL;
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 $objWriter->save(str_replace('.php', '.xls', __FILE__));
-echo date('H:i:s') , " File written to " , str_replace('.php', '.xls', __FILE__) , PHP_EOL;
+echo date('H:i:s'), " File written to ", str_replace('.php', '.xls', __FILE__), PHP_EOL;
 
 
 // Echo memory peak usage
-echo date('H:i:s') , " Peak memory usage: " , (memory_get_peak_usage(true) / 1024 / 1024) , " MB" , PHP_EOL;
+echo date('H:i:s'), " Peak memory usage: ", (memory_get_peak_usage(true) / 1024 / 1024), " MB", PHP_EOL;
 
 // Echo done
-echo date('H:i:s') , " Done writing files" , PHP_EOL;
+echo date('H:i:s'), " Done writing files", PHP_EOL;

@@ -4,19 +4,22 @@ use framework\App;
 
 header("Content-type:text/html;charset=utf-8");
 
-function xmp($obj = null) {
+function xmp($obj = null)
+{
     header("Content-type:text/html;charset=utf-8");
     echo '<xmp>';
     print_r($obj);
     echo '</xmp>';
 }
 
-function stop($obj = null) {
+function stop($obj = null)
+{
     xmp($obj);
     exit;
 }
 
-function getEnvironment() {
+function getEnvironment()
+{
     $enviorment = 'RUN';
     if ($enviorment) {
         $enviormentIni = get_cfg_var('enviorment');
@@ -44,7 +47,6 @@ defined('DIR_APP_LOCATION') or define('DIR_APP_LOCATION', dirname(dirname(__FILE
 
 //是否合并css js
 define('IS_MERAGE', TRUE);
-
 
 
 //启动应用

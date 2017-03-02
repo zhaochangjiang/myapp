@@ -1,4 +1,3 @@
-
 <div style=" padding:100px;">
     <a href="<?php
     echo $this->createUrl('passport.login');

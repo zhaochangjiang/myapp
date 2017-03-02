@@ -1,29 +1,30 @@
 <?php
 namespace framework\lib;
 /**
-* The Response class represents an HTTP response. The object
-* contains the response headers, HTTP status code, and response
-* body.
-*/
-class Response {
+ * The Response class represents an HTTP response. The object
+ * contains the response headers, HTTP status code, and response
+ * body.
+ */
+class Response
+{
     /**
-* @var int HTTP status
-*/
+     * @var int HTTP status
+     */
     protected $status = 200;
 
     /**
-* @var array HTTP headers
-*/
+     * @var array HTTP headers
+     */
     protected $headers = array();
 
     /**
-* @var string HTTP response body
-*/
+     * @var string HTTP response body
+     */
     protected $body;
 
     /**
-* @var array HTTP status codes
-*/
+     * @var array HTTP status codes
+     */
     public static $codes = array(
         200 => 'OK',
         201 => 'Created',
@@ -68,17 +69,17 @@ class Response {
     );
 
     /**
-* Sets the HTTP status of the response.
-*
-* @param int $code HTTP status code.
-* @return object Self reference
-* @throws \Exception If invalid status code
-*/
-    public function status($code) {
+     * Sets the HTTP status of the response.
+     *
+     * @param int $code HTTP status code.
+     * @return object Self reference
+     * @throws \Exception If invalid status code
+     */
+    public function status($code)
+    {
         if (array_key_exists($code, self::$codes)) {
             $this->status = $code;
-        }
-        else {
+        } else {
             throw new \Exception('Invalid status code.');
         }
 
@@ -86,19 +87,19 @@ class Response {
     }
 
     /**
-* Adds a header to the response.
-*
-* @param string|array $name Header name or array of names and values
-* @param string $value Header value
-* @return object Self reference
-*/
-    public function header($name, $value = null) {
+     * Adds a header to the response.
+     *
+     * @param string|array $name Header name or array of names and values
+     * @param string $value Header value
+     * @return object Self reference
+     */
+    public function header($name, $value = null)
+    {
         if (is_array($name)) {
             foreach ($name as $k => $v) {
                 $this->headers[$k] = $v;
             }
-        }
-        else {
+        } else {
             $this->headers[$name] = $value;
         }
 
@@ -106,23 +107,25 @@ class Response {
     }
 
     /**
-* Writes content to the response body.
-*
-* @param string $str Response content
-* @return object Self reference
-*/
-    public function write($str) {
+     * Writes content to the response body.
+     *
+     * @param string $str Response content
+     * @return object Self reference
+     */
+    public function write($str)
+    {
         $this->body .= $str;
 
         return $this;
     }
 
     /**
-* Clears the response.
-*
-* @return object Self reference
-*/
-    public function clear() {
+     * Clears the response.
+     *
+     * @return object Self reference
+     */
+    public function clear()
+    {
         $this->status = 200;
         $this->headers = array();
         $this->body = '';
@@ -131,12 +134,13 @@ class Response {
     }
 
     /**
-* Sets caching headers for the response.
-*
-* @param int|string $expires Expiration time
-* @return object Self reference
-*/
-    public function cache($expires) {
+     * Sets caching headers for the response.
+     *
+     * @param int|string $expires Expiration time
+     * @return object Self reference
+     */
+    public function cache($expires)
+    {
         if ($expires === false) {
             $this->headers['Expires'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
             $this->headers['Cache-Control'] = array(
@@ -145,22 +149,22 @@ class Response {
                 'max-age=0'
             );
             $this->headers['Pragma'] = 'no-cache';
-        }
-        else {
+        } else {
             $expires = is_int($expires) ? $expires : strtotime($expires);
             $this->headers['Expires'] = gmdate('D, d M Y H:i:s', $expires) . ' GMT';
-            $this->headers['Cache-Control'] = 'max-age='.($expires - time());
+            $this->headers['Cache-Control'] = 'max-age=' . ($expires - time());
         }
 
         return $this;
     }
 
     /**
-* Sends HTTP headers.
-*
-* @return object Self reference
-*/
-    public function sendHeaders() {
+     * Sends HTTP headers.
+     *
+     * @return object Self reference
+     */
+    public function sendHeaders()
+    {
         // Send status code header
         if (strpos(php_sapi_name(), 'cgi') !== false) {
             header(
@@ -171,8 +175,7 @@ class Response {
                 ),
                 true
             );
-        }
-        else {
+        } else {
             header(
                 sprintf(
                     '%s %d %s',
@@ -188,11 +191,10 @@ class Response {
         foreach ($this->headers as $field => $value) {
             if (is_array($value)) {
                 foreach ($value as $v) {
-                    header($field.': '.$v, false);
+                    header($field . ': ' . $v, false);
                 }
-            }
-            else {
-                header($field.': '.$value);
+            } else {
+                header($field . ': ' . $value);
             }
         }
 
@@ -200,9 +202,10 @@ class Response {
     }
 
     /**
-* Sends a HTTP response.
-*/
-    public function send() {
+     * Sends a HTTP response.
+     */
+    public function send()
+    {
         if (ob_get_length() > 0) {
             ob_end_clean();
         }

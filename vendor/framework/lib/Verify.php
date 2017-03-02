@@ -12,49 +12,44 @@ class Verify
      * 根据不同的类型，验证该数据是否满足要求
      *
      * @param
-     *        	$type
+     *            $type
      * @param
-     *        	$value
+     *            $value
      * @param
-     *        	$notempty
+     *            $notempty
      * @param
-     *        	$name
+     *            $name
      * @return multitype:boolean string unknown
      */
     public static function doByType($type, $value, $notempty = true, $name = '')
     {
         $result = array(
-            'status'   => false,
-            'message'  => '',
+            'status' => false,
+            'message' => '',
             'typename' => $type,
-            'colum'    => $name,
-            'isNull'   => false
+            'colum' => $name,
+            'isNull' => false
         );
         $verify = self::$$type;
         // 如果名称为空，则用默认的名称
-        if (empty($name))
-        {
-            $name             = $verify ['name'];
+        if (empty($name)) {
+            $name = $verify ['name'];
             $result ['colum'] = $name;
         }
-        if (empty($value) && $notempty === true)
-        {
+        if (empty($value) && $notempty === true) {
 
             $result ['message'] = '您输入的' . $name . '！';
-            $result ['isNull']  = true;
+            $result ['isNull'] = true;
         }
-        if (preg_match($verify ['preg'], $value))
-        {
+        if (preg_match($verify ['preg'], $value)) {
             $result = array(
-                'status'   => true,
-                'message'  => '',
+                'status' => true,
+                'message' => '',
                 'typename' => $type,
-                'colum'    => $name,
-                'isNull'   => true
+                'colum' => $name,
+                'isNull' => true
             );
-        }
-        else
-        {
+        } else {
             $result ['message'] = '请输入正确格式的' . $name . '！';
         }
         return $result;
@@ -71,7 +66,7 @@ class Verify
     /**
      * 浮点数
      */
-    public static $decmal  = array(
+    public static $decmal = array(
         'name' => '小数',
         'preg' => "/^([+-]?)\\d*\\.\\d+$/"
     );
@@ -213,7 +208,7 @@ class Verify
     /**
      * ip地址
      */
-    public static $ip4    = array(
+    public static $ip4 = array(
         'name' => 'IP地址',
         'preg' => "/^(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)$/"
     );
@@ -246,9 +241,9 @@ class Verify
      * 手机
      */
     public static $mobile = array(
-        'name'   => '手机',
+        'name' => '手机',
 //			'preg' => '/^1[3|5][0-9]\d{4,8}$/' 
-        'preg'   => '/^1[345897]\d{9}$/ ',
+        'preg' => '/^1[345897]\d{9}$/ ',
         'jspreg' => '/^1[345897]\d{9}$/ '
     );
 
@@ -342,18 +337,16 @@ class Verify
 
     private static function idcard_verify_number($idcard_base)
     {
-        if (strlen($idcard_base) != 17)
-        {
+        if (strlen($idcard_base) != 17) {
             return false;
         }
-        $factor             = array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2); //debug 加权因子  
+        $factor = array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2); //debug 加权因子
         $verify_number_list = array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'); //debug 校验码对应值  
-        $checksum           = 0;
-        for ($i = 0; $i < strlen($idcard_base); $i++)
-        {
+        $checksum = 0;
+        for ($i = 0; $i < strlen($idcard_base); $i++) {
             $checksum += substr($idcard_base, $i, 1) * $factor[$i];
         }
-        $mod           = $checksum % 11;
+        $mod = $checksum % 11;
         $verify_number = $verify_number_list[$mod];
         return $verify_number;
     }
@@ -366,24 +359,18 @@ class Verify
       # 更新时间：Fri Mar 28 09:49:13 CST 2008
      */
 
-   private static function idcard_15to18($idcard)
+    private static function idcard_15to18($idcard)
     {
-        if (strlen($idcard) != 15)
-        {
+        if (strlen($idcard) != 15) {
             return false;
-        }
-        else
-        {// 如果身份证顺序码是996 997 998 999，这些是为百岁以上老人的特殊编码  
-            if (array_search(substr($idcard, 12, 3), array('996', '997', '998', '999')) !== false)
-            {
+        } else {// 如果身份证顺序码是996 997 998 999，这些是为百岁以上老人的特殊编码
+            if (array_search(substr($idcard, 12, 3), array('996', '997', '998', '999')) !== false) {
                 $idcard = substr($idcard, 0, 6) . '18' . substr($idcard, 6, 15);
-            }
-            else
-            {
+            } else {
                 $idcard = substr($idcard, 0, 6) . '19' . substr($idcard, 6, 15);
             }
         }
-        $idcard = $idcard .self::idcard_verify_number($idcard);
+        $idcard = $idcard . self::idcard_verify_number($idcard);
         return $idcard;
     }
 
@@ -395,19 +382,15 @@ class Verify
       # 更新时间：Fri Mar 28 09:48:36 CST 2008
      */
 
-   private static function idcard_checksum18($idcard)
+    private static function idcard_checksum18($idcard)
     {
-        if (strlen($idcard) != 18)
-        {
+        if (strlen($idcard) != 18) {
             return false;
         }
         $idcard_base = substr($idcard, 0, 17);
-        if (self::idcard_verify_number($idcard_base) != strtoupper(substr($idcard, 17, 1)))
-        {
+        if (self::idcard_verify_number($idcard_base) != strtoupper(substr($idcard, 17, 1))) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
@@ -422,23 +405,16 @@ class Verify
 
     public static function checkIdcard($idcard)
     {
-        if (strlen($idcard) == 15 || strlen($idcard) == 18)
-        {
-            if (strlen($idcard) == 15)
-            {
-                $idcard =self::idcard_15to18($idcard);
+        if (strlen($idcard) == 15 || strlen($idcard) == 18) {
+            if (strlen($idcard) == 15) {
+                $idcard = self::idcard_15to18($idcard);
             }
-            if (self::idcard_checksum18($idcard))
-            {
+            if (self::idcard_checksum18($idcard)) {
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
-        }
-        else
-        {
+        } else {
             return false;
         }
     }

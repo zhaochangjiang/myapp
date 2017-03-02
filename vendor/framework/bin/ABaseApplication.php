@@ -56,7 +56,8 @@ defined('IS_CLIENT') or define('IS_CLIENT', false);
  *
  * @author zhaocj
  */
-class ABaseApplication {
+class ABaseApplication
+{
 
     // 异常错误
     const EXCEPTION_HANDLER = "handleException";
@@ -82,46 +83,51 @@ class ABaseApplication {
      * 实例对象
      * @return type
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$_instance === null) {
-            self::$_instance = new self ( );
+            self::$_instance = new self ();
         }
         return self::$_instance;
     }
 
-    public function init() {
+    public function init()
+    {
         // 初始化方法，留待具体实现类需要时去实现
     }
 
     // 系统views路径
-    public static function getSystemViewPath() {
+    public static function getSystemViewPath()
+    {
         return DIR_FRAMEWORK . D_S . 'views';
     }
 
-    public function sessionDestory() {
+    public function sessionDestory()
+    {
         session_destroy();
     }
 
     /**
      *  递归删除目录
-     * 
+     *
      * @param type $path
      */
-    public static function deleteDir($path) {
+    public static function deleteDir($path)
+    {
         if (!file_exists($path)) {
             return true;
         }
         $dh = opendir($path);
         while (($d = readdir($dh)) !== false) {
             if (in_array($d, array(
-                        '.',
-                        '..'))) {//如果为.或..
+                '.',
+                '..'))) {//如果为.或..
                 continue;
             }
             $tmp = $path . D_S . $d;
 
             //如果为文件 //如果为目录
-            (!is_dir($tmp) ) ? unlink($tmp) : self::deleteDir($tmp);
+            (!is_dir($tmp)) ? unlink($tmp) : self::deleteDir($tmp);
         }
         closedir($dh);
         rmdir($path);
@@ -138,7 +144,8 @@ class ABaseApplication {
      * @param array $array1
      * @param array $array2
      */
-    public static function arrayMerge(array $array1, array $array2) {
+    public static function arrayMerge(array $array1, array $array2)
+    {
         foreach ($array1 as $key => $value) {
             if (is_int($key)) {//如果键为整数则 不处理只有为字符串时 再处理
                 continue;
@@ -162,7 +169,8 @@ class ABaseApplication {
     /**
      * 判断一个数组是否有子数组
      */
-    private static function haveChildArray(array $array) {
+    private static function haveChildArray(array $array)
+    {
         $flag = false;
         foreach ($array as $value) {
             if (is_array($value)) {
@@ -173,7 +181,8 @@ class ABaseApplication {
         return $flag;
     }
 
-    private static function initSelfBasePathMap() {
+    private static function initSelfBasePathMap()
+    {
         if (isset(self::$_config['selfBasePathMap']) && is_array(self::$_config['selfBasePathMap'])) {
             self::$selfBasePathMap = array_merge(self::$selfBasePathMap, self::$_config['selfBasePathMap']);
         }
@@ -182,12 +191,13 @@ class ABaseApplication {
     /**
      * 创建应用
      *
-     * @param $config -String            
+     * @param $config -String
      * @return AApplication
      */
-    public static function createApplication($configFile) {
+    public static function createApplication($configFile)
+    {
 
-        $instance = self :: getInstance();
+        $instance = self:: getInstance();
 
         if (empty($configFile) || !file_exists($configFile)) {
             throw new Exception("The config file:\"{$configFile}\" can't null!");
@@ -206,7 +216,7 @@ class ABaseApplication {
             'autoload'));
 
         // 错误控制
-        $errorHandler = new AErrorHandler ( );
+        $errorHandler = new AErrorHandler ();
         set_error_handler(array(
             $errorHandler,
             self::ERROR_HANDLER));
@@ -221,14 +231,16 @@ class ABaseApplication {
     }
 
     /**
-     * 
+     *
      * @return string
      */
-    public function getAccessToken() {
+    public function getAccessToken()
+    {
         return md5(TOKEN . session_id());
     }
 
-    public function clientReturnDataOrg() {
+    public function clientReturnDataOrg()
+    {
         if (IS_CLIENT === false) {
             return;
         }
@@ -245,10 +257,11 @@ class ABaseApplication {
     }
 
     /**
-     * 
+     *
      * @return void
      */
-    private function initSession() {
+    private function initSession()
+    {
 
         $accessToken = $this->clientReturnDataOrg();
 
@@ -266,10 +279,11 @@ class ABaseApplication {
     /**
      * 框架启动运行方法
      *
-     * @param String $class            
-     * @param String $method            
+     * @param String $class
+     * @param String $method
      */
-    public function run($controllerString = null, $action = null, $moduleString = null) {
+    public function run($controllerString = null, $action = null, $moduleString = null)
+    {
 
         $_config = self::$_config;
 
@@ -278,21 +292,20 @@ class ABaseApplication {
 
 
         // 获得当前请求动作是什么
-        $controller = new ABaseController ( );
+        $controller = new ABaseController ();
         // $moduleString     = $controllerString = $action           = '';
         //如果不是 Afunction 中函数C控制的方法
         if ($moduleString === null && $controllerString === null && $action === null) {
 
             //如果不是PHP文件请求
             if ($_config ['urlManager'] ['rewriteMod'] && strrpos($_SERVER['REQUEST_URI'], '.php') === false) {
-            
+
             } else {
-                    
+
                 $moduleAction = $controller->getInput('r');
-                list ($moduleString, $controllerString, $action) = self :: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
+                list ($moduleString, $controllerString, $action) = self:: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
             }
         }
-               
 
 
         if (empty($controllerString) || empty($action)) {
@@ -300,10 +313,10 @@ class ABaseApplication {
             throw new AHttpException(404, "你要查看的页面不存在!");
         }
 
-         // 获得控制器
+        // 获得控制器
         $className = $this->getControllerNameSpace($moduleString) . '\\Controller' . ucfirst($controllerString);
 
-         // 判断Method是否存在 
+        // 判断Method是否存在
         $moduleDeal = new $className($controllerString, $action, $moduleString);
 
         //var_dump($moduleDeal);
@@ -311,7 +324,7 @@ class ABaseApplication {
 
 
         self::loadAWidget($moduleDeal);
-        $methodName = self :: getMethodName($action);
+        $methodName = self:: getMethodName($action);
 
 
         // 如果方法不存在，新增动态action
@@ -320,34 +333,38 @@ class ABaseApplication {
         }
         $moduleDeal->$methodName();
     }
-    
+
     /**
      * 设置默认访问模块
      * @return string
      */
-    public static function getDefaultModule(){
+    public static function getDefaultModule()
+    {
         return 'site';
     }
+
     /**
      * 获得conrotller的命名空间
      * @return string
      */
-    private function getControllerNameSpace($moduleString) {
+    private function getControllerNameSpace($moduleString)
+    {
 
         if (empty(self::$_config['controllerNameSpace'])) {
             throw new Exception('ther controller $_config[\'controllerNameSpace\'] is null,you need set it in config!');
         }
-        if(empty($moduleString)){
-            $moduleString=  self::getDefaultModule();
+        if (empty($moduleString)) {
+            $moduleString = self::getDefaultModule();
         }
-        return  self::$_config['controllerNameSpace'] . "\\{$moduleString}\\controllers";
+        return self::$_config['controllerNameSpace'] . "\\{$moduleString}\\controllers";
     }
 
     /**
-     * 
+     *
      * @return string
      */
-    private static function getDefaultModuleAction() {
+    private static function getDefaultModuleAction()
+    {
         $defaultModuleAction = self::$_config ['defaultModuleAction'];
         if ($defaultModuleAction == '') {
             $defaultModuleAction = 'Site' . self::$delimiterModuleAction . 'index';
@@ -355,7 +372,8 @@ class ABaseApplication {
         return $defaultModuleAction;
     }
 
-    private static function loadAWidget($moduleDeal) {
+    private static function loadAWidget($moduleDeal)
+    {
         $widget = new AHelper();
         $widget->init($moduleDeal); //把上下文加入到组件里
     }
@@ -364,7 +382,8 @@ class ABaseApplication {
      * 返回应用程序根目录 @return string
      */
 
-    public static function getBasePath() {
+    public static function getBasePath()
+    {
         return self::$_basePath;
     }
 
@@ -372,8 +391,9 @@ class ABaseApplication {
      * 设置应用程序根目录 @param string $path 应用程序根目录
      */
 
-    public static function setBasePath($path) {
-        if (( self::$_basePath = realpath($path) ) === false || !is_dir(self::$_basePath)) {
+    public static function setBasePath($path)
+    {
+        if ((self::$_basePath = realpath($path)) === false || !is_dir(self::$_basePath)) {
             throw new Exception("{$path} 不是一个有效的目录");
         }
     }
@@ -388,7 +408,8 @@ class ABaseApplication {
      *
      * @return Ambigous <string, multitype:>
      */
-    public static function getRoute($moduleAction) {
+    public static function getRoute($moduleAction)
+    {
         $default = $defaultModuleAction = self::getDefaultModuleAction();
         if (!empty($moduleAction)) {
             $default = $moduleAction;
@@ -419,18 +440,20 @@ class ABaseApplication {
     /**
      * 获得SESSION内容，不传值表示返回所有的Session
      *
-     * @param string $key            
+     * @param string $key
      * @return Ambigous <unknown, string>
      */
-    public static function getSession($key = '') {
+    public static function getSession($key = '')
+    {
         $session = $_SESSION;
-        return empty($key) ? $session : ( isset($session[$key]) ? $session[$key] : '' );
+        return empty($key) ? $session : (isset($session[$key]) ? $session[$key] : '');
     }
 
     /**
      * 销毁Session
      */
-    public static function sessionDestroy() {
+    public static function sessionDestroy()
+    {
         session_destroy();
     }
 
@@ -438,7 +461,8 @@ class ABaseApplication {
      * HTTP错误 @param $message 错误内容 @param $code 错误代码
      */
 
-    public static function error($message, $code = 404) {
+    public static function error($message, $code = 404)
+    {
 
         require_once dirname(__FILE__) . D_S . 'AHttpException.php';
         throw new AHttpException($code, $message);
@@ -447,15 +471,16 @@ class ABaseApplication {
     /**
      * 将一个对象转换成一个数组
      *
-     * @param Object $object            
+     * @param Object $object
      * @return multitype:
      */
-    public static function objectToArray($object) {
+    public static function objectToArray($object)
+    {
         $result = array();
         $_array = is_object($object) ? get_object_vars($object) : $object;
         if (is_array($_array)) {
             foreach ($_array as $key => $value) {
-                $result [$key] = ( is_array($value) || is_object($value) ) ? std_class_object_to_array($value) : $value;
+                $result [$key] = (is_array($value) || is_object($value)) ? std_class_object_to_array($value) : $value;
             }
         }
         return $result;
@@ -464,10 +489,11 @@ class ABaseApplication {
     /**
      * 设置Session的内容
      *
-     * @param String $key            
-     * @param String $value            
+     * @param String $key
+     * @param String $value
      */
-    public static function setSession($key, $value) {
+    public static function setSession($key, $value)
+    {
         $session = self::getSession();
         $session[$key] = $value;
         self::setSessionArray($session);
@@ -476,10 +502,11 @@ class ABaseApplication {
     /**
      * 设置Session的内容
      *
-     * @param String $key            
-     * @param String $value            
+     * @param String $key
+     * @param String $value
      */
-    public static function setSessionArray($sessionArray, $sessionAll = false) {
+    public static function setSessionArray($sessionArray, $sessionAll = false)
+    {
         if ($sessionAll === true) {
             $_SESSION = $sessionArray;
             return;
@@ -493,7 +520,8 @@ class ABaseApplication {
      *
      * @return Ambigous <string, multitype:>
      */
-    public static function getRouteNotNeedDefault($moduleAction) {
+    public static function getRouteNotNeedDefault($moduleAction)
+    {
         if (!empty($moduleAction)) {
             self::$moduleAction = $moduleAction;
         }
@@ -503,24 +531,26 @@ class ABaseApplication {
 
     /**
      *
-     * @param String $module            
-     * @param String $action            
+     * @param String $module
+     * @param String $action
      */
-    public static function getRouteModuleAction($module, $action = 'index') {
-        return ( empty($module) && empty($action) ) ? '' : "{$module}/{$action}";
+    public static function getRouteModuleAction($module, $action = 'index')
+    {
+        return (empty($module) && empty($action)) ? '' : "{$module}/{$action}";
     }
 
     /**
      *
-     * @param String $dirname  
-     * @param type $mode Description          
+     * @param String $dirname
+     * @param type $mode Description
      * @return boolean
      */
-    public static function createDir($dirname, $mode) {
+    public static function createDir($dirname, $mode)
+    {
         if (is_dir($dirname) || mkdir($dirname, $mode)) {
             return true;
         }
-        if (!self :: createDirLinux(dirname($dirname), $mode)) {
+        if (!self:: createDirLinux(dirname($dirname), $mode)) {
             return false;
         }
         return mkdir($dirname, $mode);
@@ -529,10 +559,11 @@ class ABaseApplication {
     /**
      * 根据KEY 获得缓存内容
      *
-     * @param String $key            
+     * @param String $key
      * @return Ambigous <string, mixed>|string
      */
-    public static function cacheGet($key) {
+    public static function cacheGet($key)
+    {
         if (file_exists($key)) {
             $result = unserialize(file_get_contents($key));
             return isset($result ['content']) ? $result ['content'] : '';
@@ -540,7 +571,8 @@ class ABaseApplication {
         return '';
     }
 
-    public static function getBasePathMap($path = '') {
+    public static function getBasePathMap($path = '')
+    {
         if (!empty($path)) {
             if (!isset(self::$selfBasePathMap[$path])) {
                 self::setBasePathMap($path);
@@ -550,15 +582,28 @@ class ABaseApplication {
         return self::$selfBasePathMap;
     }
 
-    private static function setBasePathMap($path) {
+    /**
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * @param $path
+     * @return string *
+     */
+    public static function setBasePathMap($path)
+    {
         return self::$selfBasePathMap["@{$path}"] = DIR_SERVER . $path . D_S;
     }
 
-    /*
+    /**
      * 把别名转换成真实路径 @param string $alias 别名
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * @param $alias
+     * @return string *
      */
-
-    public static function getPathOfAlias($alias) {
+    public static function getPathOfAlias($alias)
+    {
         $namespaceDividString = explode('/', str_replace('\\', '/', ltrim($alias, '@')));
         $nameSpaceBasePath = array_shift($namespaceDividString);
 
@@ -572,11 +617,11 @@ class ABaseApplication {
     /**
      * 自动加载类方法
      *
-     * @param string $className
-     *            类名称
+     * @param string $className 类名称
      * @return 当是否成功加载类返回true or false
      */
-    public static function autoload($className) {
+    public static function autoload($className)
+    {
 
         if (empty($className)) {
             return true;
@@ -627,18 +672,26 @@ class ABaseApplication {
 
     /**
      * 获得控制器方法名
-     *
-     * @param String $method            
+     * @param String $method
      * @return String
      */
-    public static function getMethodName($method) {
+    public static function getMethodName($method)
+    {
         return 'action' . ucfirst($method);
     }
 
-    // 简单缓存操作
-    public static function cache($_config) {
+    /**
+     * 简单缓存操作
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * @param $_config
+     * @return array *
+     */
+    public static function cache($_config)
+    {
         //   $instance    =
-        self :: getInstance();
+        self:: getInstance();
         $cache_array = $_config ['cache'];
         $arr = array();
         foreach ($cache_array as $key => $val) {
@@ -648,7 +701,7 @@ class ABaseApplication {
                     $arr [$key] = new RedisClass($val ['host'], $val ['port']);
                     break;
                 case 'FileCache' : // 文件缓存
-                    $fileCache = new FileCacheClass ( );
+                    $fileCache = new FileCacheClass ();
                     $val ['file_name_prefix'] != '' && $fileCache->setCacheDir($val ['file_name_prefix']);
                     $val ['mode'] != '' && $fileCache->setCacheMode($val ['mode']);
                     $arr [$key] = $fileCache;
@@ -659,18 +712,22 @@ class ABaseApplication {
         return $arr;
     }
 
-    /*
-     * 静态化对象，里面封装了应用配置文件,AController。主要是方便其他地方调用
+    /**
+     * 简单缓存操作
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * @return ABaseObject *
      */
-
-    public static function base() {
-        $instance = self :: getInstance();
-        $controller = new AController ( );
+    public static function base()
+    {
+        $instance = self:: getInstance();
+        $controller = new AController ();
         $_config = $instance::$_config;
         $obj = new ABaseObject($_config);
         $obj->controller = $controller;
-        $obj->request = new ARequest ( );
-        $obj->response = new AResponse ( );
+        $obj->request = new ARequest ();
+        $obj->response = new AResponse ();
         unset($_config);
         return $obj;
     }
@@ -678,14 +735,15 @@ class ABaseApplication {
     /**
      * 或得本机的IP地址
      */
-    public static function getServerIp() {
+    public static function getServerIp()
+    {
         $ip = $_SERVER['SERVER_ADDR'];
 
         if (isset($_SERVER['SERVER_ADDR'])) {//如果有针对本机的私有配置
             if (in_array($_SERVER['SERVER_ADDR'], array(
-                        '::1',
-                        '127.0.0.1',
-                        'localhost'))) {//如果是测试环境
+                '::1',
+                '127.0.0.1',
+                'localhost'))) {//如果是测试环境
                 $ip = '127.0.0.1';
             }
         } else {//指定本机的IP地址，以便于能够运行命令行下的 PHP脚本
@@ -699,7 +757,8 @@ class ABaseApplication {
      * 当前代码部署的服务器机房,保留方法
      * @return string
      */
-    public static function getMachineRoom() {
+    public static function getMachineRoom()
+    {
         return 'default';
     }
 

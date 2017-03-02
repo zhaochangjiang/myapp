@@ -1,32 +1,32 @@
 <?php
 
-  namespace test\controllers;
+namespace test\controllers;
 
-  use test\common\FrontendController;
+use test\common\FrontendController;
 
-  /**
-   * Description of Passport
-   *
-   * @author zhaocj
-   */
-  class PassportController extends FrontendController
-  {
+/**
+ * Description of Passport
+ *
+ * @author zhaocj
+ */
+class PassportController extends FrontendController
+{
 
-      /**
-       * 
-       */
-      public function actionIframeLogin()
-      {
-          $this->params = array(
-              'username' => 'admin',
-              'password' => '111111',
-          );
+    /**
+     *
+     */
+    public function actionIframeLogin()
+    {
+        $this->params = array(
+            'username' => 'admin',
+            'password' => '111111',
+        );
 
-          $result = $this->httpConnectionByBase('Passport', 'iframeLogin', null, $this->params);
+        $result = $this->httpConnectionByBase('Passport', 'iframeLogin', null, $this->params);
 
-          print_r($result);
-          exit;
-      }
+        print_r($result);
+        exit;
+    }
 
-  }
+}
   

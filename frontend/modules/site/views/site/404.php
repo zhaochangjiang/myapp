@@ -1,6 +1,6 @@
 <?php
 
-  use framework\App; ?>
+use framework\App; ?>
 <div class="row">
     <div class="col-md-8">
         <div class="main-error mb-xlg">
@@ -12,13 +12,15 @@
         <h4 class="text">您是不是想去如下页面?</h4>
         <ul class="nav nav-list primary">
             <li>
-                <a href="<?php echo $this->createUrl("user/index", null, App::base()->params['domain']['userProfile']); ?>"><i class="fa fa-caret-right text-dark"></i>&nbsp;用户中心</a>
+                <a href="<?php echo $this->createUrl("user/index", null, App::base()->params['domain']['userProfile']); ?>"><i
+                        class="fa fa-caret-right text-dark"></i>&nbsp;用户中心</a>
             </li>
             <li>
                 <a href="<?php echo $this->createUrl("site/index"); ?>"><i class="fa fa-caret-right text-dark"></i>&nbsp;首页</a>
             </li>
             <li>
-                <a href="<?php echo $this->createUrl("help/index"); ?>"><i class="fa fa-caret-right text-dark"></i>&nbsp; 帮助页面</a>
+                <a href="<?php echo $this->createUrl("help/index"); ?>"><i class="fa fa-caret-right text-dark"></i>&nbsp;
+                    帮助页面</a>
             </li>
         </ul>
     </div>

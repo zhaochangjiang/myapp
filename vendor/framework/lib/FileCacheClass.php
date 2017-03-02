@@ -6,7 +6,8 @@ namespace framework\lib;
  *
  * @author heypigg
  */
-class FileCacheClass {
+class FileCacheClass
+{
 
     private static $_instance = null;
     protected $_options = array(
@@ -17,10 +18,11 @@ class FileCacheClass {
 
     /**
      * 得到本类实例
-     * 
+     *
      * @return Ambiguous
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$_instance === null) {
             self::$_instance = new self();
         }
@@ -29,18 +31,19 @@ class FileCacheClass {
 
     /**
      * 得到缓存信息
-     * 
+     *
      * @param string $id
      * @return boolean|array
      */
-    public static function get($id) {
+    public static function get($id)
+    {
         $instance = self::getInstance();
 
         //缓存文件不存在
         if (!$instance->has($id)) {
             return false;
         }
-        
+
         $file = $instance->_file($id);
 
         $data = $instance->_fileGetContents($file);
@@ -53,12 +56,13 @@ class FileCacheClass {
 
     /**
      * 设置一个缓存
-     * 
-     * @param string $id   缓存id
-     * @param array  $data 缓存内容
-     * @param int    $cacheLife 缓存生命 默认为0无限生命
+     *
+     * @param string $id 缓存id
+     * @param array $data 缓存内容
+     * @param int $cacheLife 缓存生命 默认为0无限生命
      */
-    public static function set($id, $data, $cacheLife = 0) {
+    public static function set($id, $data, $cacheLife = 0)
+    {
         $instance = self::getInstance();
 
         $time = time();
@@ -68,17 +72,18 @@ class FileCacheClass {
         $cache['mtime'] = $time;
 
         $file = $instance->_file($id);
-        
+
         return $instance->_filePutContents($file, $cache);
     }
 
     /**
      * 清除一条缓存
-     * 
-     * @param string cache id	 
+     *
+     * @param string cache id
      * @return void
      */
-    public static function delete($id) {
+    public static function delete($id)
+    {
         $instance = self::getInstance();
 
         if (!$instance->has($id)) {
@@ -91,11 +96,12 @@ class FileCacheClass {
 
     /**
      * 判断缓存是否存在
-     * 
+     *
      * @param string $id cache_id
      * @return boolean true 缓存存在 false 缓存不存在
      */
-    public static function has($id) {
+    public static function has($id)
+    {
         $instance = self::getInstance();
         $file = $instance->_file($id);
         if (!is_file($file)) {
@@ -109,7 +115,8 @@ class FileCacheClass {
      * @param string $id
      * @return string 缓存文件路径
      */
-    protected function _file($id) {
+    protected function _file($id)
+    {
         $instance = self::getInstance();
         $fileName = $instance->_idToFileName($id);
         return $instance->_options['cache_dir'] . $fileName;
@@ -117,11 +124,12 @@ class FileCacheClass {
 
     /**
      * 通过id得到缓存信息存储文件名
-     * 
+     *
      * @param  $id
      * @return string 缓存文件名
      */
-    protected function _idToFileName($id) {
+    protected function _idToFileName($id)
+    {
         $instance = self::getInstance();
         $prefix = $instance->_options['file_name_prefix'];
         return $prefix . '---' . $id;
@@ -129,11 +137,12 @@ class FileCacheClass {
 
     /**
      * 通过filename得到缓存id
-     * 
+     *
      * @param  $id
      * @return string 缓存id
      */
-    protected function _fileNameToId($fileName) {
+    protected function _fileNameToId($fileName)
+    {
         $instance = self::getInstance();
         $prefix = $instance->_options['file_name_prefix'];
         return preg_replace('/^' . $prefix . '---(.*)$/', '$1', $fileName);
@@ -141,26 +150,27 @@ class FileCacheClass {
 
     /**
      * 把数据写入文件
-     * 
+     *
      * @param string $file 文件名称
-     * @param array  $contents 数据内容
-     * @return bool 
+     * @param array $contents 数据内容
+     * @return bool
      */
-    protected function _filePutContents($file, $contents) {
-       
+    protected function _filePutContents($file, $contents)
+    {
+
         if ($this->_options['mode'] == 1) {
             $contents = serialize($contents);
         } else {
             $time = time();
             $contents = "<?php\n" .
-            " // mktime: " . $time . "\n" .
-            " return " .
-            var_export($contents, true) .
-            "\n?>";
+                " // mktime: " . $time . "\n" .
+                " return " .
+                var_export($contents, true) .
+                "\n?>";
         }
 
         $result = false;
-       
+
         $f = @fopen($file, 'w');
         if ($f) {
             @flock($f, LOCK_EX);
@@ -168,10 +178,10 @@ class FileCacheClass {
             ftruncate($f, 0);
             $tmp = @fwrite($f, $contents);
             if (!($tmp === false)) {
-             
+
                 $result = true;
             }
-             
+
             @fclose($f);
         }
         @chmod($file, 0777);
@@ -180,11 +190,12 @@ class FileCacheClass {
 
     /**
      * 从文件得到数据
-     * 
+     *
      * @param  sring $file
      * @return boolean|array
      */
-    protected function _fileGetContents($file) {
+    protected function _fileGetContents($file)
+    {
         if (!is_file($file)) {
             return false;
         }
@@ -199,7 +210,8 @@ class FileCacheClass {
         }
     }
 
-    protected function _createDir($dirname, $mode = 0755) {
+    protected function _createDir($dirname, $mode = 0755)
+    {
         if (empty($dirname))
             return true;
         if (is_dir($dirname) || @mkdir($dirname, $mode))
@@ -212,26 +224,26 @@ class FileCacheClass {
 
     /**
      * 设置缓存路径
-     * 
+     *
      * @param string $path
      * @return self
      */
-    public static function setCacheDir($path) {
+    public static function setCacheDir($path)
+    {
         $instance = self::getInstance();
         if (!is_dir($path)) {
             //exit('file_cache: ' . $path . ' 不是一个有效路径 ');
             $instance->_createDir($path);
         }
-        
-         
+
+
         if (!is_writable($path)) {
             exit('file_cache: 路径 "' . $path . '" 不可写');
         }
 
         $path = rtrim($path, '/') . '/';
-        
-       
-        
+
+
         $instance->_options['cache_dir'] = $path;
 
         return $instance;
@@ -239,11 +251,12 @@ class FileCacheClass {
 
     /**
      * 设置缓存文件前缀
-     * 
+     *
      * @param srting $prefix
      * @return self
      */
-    public static function setCachePrefix($prefix) {
+    public static function setCachePrefix($prefix)
+    {
         $instance = self::getInstance();
         $instance->_options['file_name_prefix'] = $prefix;
         return $instance;
@@ -251,11 +264,12 @@ class FileCacheClass {
 
     /**
      * 设置缓存存储类型
-     * 
+     *
      * @param int $mode
      * @return self
      */
-    public static function setCacheMode($mode = 1) {
+    public static function setCacheMode($mode = 1)
+    {
         $instance = self::getInstance();
         if ($mode == 1) {
             $instance->_options['mode'] = 1;
@@ -270,7 +284,8 @@ class FileCacheClass {
      * 删除所有缓存
      * @return boolean
      */
-    public static function flush() {
+    public static function flush()
+    {
         $instance = self::getInstance();
         $glob = @glob($instance->_options['cache_dir'] . $instance->_options['file_name_prefix'] . '--*');
 

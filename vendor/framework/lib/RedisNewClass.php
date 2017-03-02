@@ -28,10 +28,9 @@ class RedisNewClass
      */
     public function exists($key)
     {
-        $cmd      = "EXISTS {$key}";
+        $cmd = "EXISTS {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -40,22 +39,20 @@ class RedisNewClass
     /**
      * 通过key匹配缓存中存在的key的列表
      * Enter description here ...
-     * @param string $key    // $key = "*user*";
+     * @param string $key // $key = "*user*";
      */
     public function keys($key)
     {
-        $cmd      = "KEYS {$key}";
+        $cmd = "KEYS {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = intval(substr($response, 1));
+        $len = intval(substr($response, 1));
         $list = array();
-        for ($i = 0; $i < $len; $i++)
-        {
+        for ($i = 0; $i < $len; $i++) {
             $length = substr($this->getResponse(), 1);
-            $value  = $this->getResponse();
+            $value = $this->getResponse();
             $list[] = $value;
         }
         return $list;
@@ -64,14 +61,13 @@ class RedisNewClass
     /**
      * 通过key匹配删除key
      * Enter description here ...
-     * @param string $key    // $key = "*user*";
+     * @param string $key // $key = "*user*";
      */
     public function del($key)
     {
-        $cmd      = "DEL {$key}";
+        $cmd = "DEL {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -83,10 +79,9 @@ class RedisNewClass
      */
     public function randomkey()
     {
-        $cmd      = "RANDOMKEY";
+        $cmd = "RANDOMKEY";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return $this->getResponse();
@@ -99,10 +94,9 @@ class RedisNewClass
      */
     public function type($key)
     {
-        $cmd      = "TYPE {$key}";
+        $cmd = "TYPE {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return $response;
@@ -111,18 +105,16 @@ class RedisNewClass
 
     public function sort($key, $order = '', $encode = true)
     {
-        $cmd      = "SORT {$key} {$order}";
+        $cmd = "SORT {$key} {$order}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        for ($i = 0; $i < $len; $i++)
-        {
+        for ($i = 0; $i < $len; $i++) {
             $length = substr($this->getResponse(), 1);
-            $value  = $this->getResponse();
+            $value = $this->getResponse();
             $list[] = $this->unpack_value($value, $encode);
         }
         return $list;
@@ -132,10 +124,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "TTL {$key}";
+        $cmd = "TTL {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -145,10 +136,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "EXPIRE {$key} {$secord}";
+        $cmd = "EXPIRE {$key} {$secord}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -158,11 +148,10 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "PERSIST {$key}";
+        $cmd = "PERSIST {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
-            
+        if (!$this->getError($response)) {
+
         }
     }
 
@@ -173,11 +162,10 @@ class RedisNewClass
     {
         if (empty($key) || empty($value))
             return false;
-        $value    = $this->pack_value($value, false);
-        $cmd      = "APPEND {$key} {$value}";
+        $value = $this->pack_value($value, false);
+        $cmd = "APPEND {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -187,11 +175,10 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "GETSET {$key} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "GETSET {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         $response = $this->getResponse();
@@ -202,16 +189,14 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "GETRANGE {$key} 0 -1";
+        $cmd = "GETRANGE {$key} 0 -1";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         $response = $this->getResponse();
-        $value    = $this->unpack_value($response, $encode);
-        if ($end == 0)
-        {
+        $value = $this->unpack_value($response, $encode);
+        if ($end == 0) {
             return substr($value, $start);
         }
         return substr($value, $start, $end);
@@ -219,11 +204,10 @@ class RedisNewClass
 
     public function set($key, $value, $encode = false)
     {
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "SET {$key} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "SET {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return true;
@@ -232,16 +216,13 @@ class RedisNewClass
     public function mset($data, $encode = false)
     {
         $cmd = " ";
-        if (is_array($data))
-        {
-            foreach ($data as $k => $v)
-            {
+        if (is_array($data)) {
+            foreach ($data as $k => $v) {
                 $cmd .= $k . ' "' . $this->pack_value($v, $encode) . '" ';
             }
-            $cmd      = "MSET " . $cmd;
+            $cmd = "MSET " . $cmd;
             $response = $this->exec($cmd);
-            if (!$this->getError($response))
-            {
+            if (!$this->getError($response)) {
                 return false;
             }
             return true;
@@ -251,15 +232,13 @@ class RedisNewClass
 
     public function get($key, $encode = false)
     {
-        $cmd      = "GET {$key}";
+        $cmd = "GET {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         $len = intval(substr($response, 1));
-        if ($len > 0)
-        {
+        if ($len > 0) {
             $value = $this->getResponse();
             return $this->unpack_value($value, $encode);
         }
@@ -268,33 +247,25 @@ class RedisNewClass
 
     public function mget($keys, $encode = false)
     {
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $key = implode(" ", $keys);
-        }
-        else
-        {
+        } else {
             $key = $keys;
         }
-        $key      = trim($key);
-        $cmd      = "MGET {$key}";
+        $key = trim($key);
+        $cmd = "MGET {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = intval(substr($response, 1));
+        $len = intval(substr($response, 1));
         $list = array();
-        for ($i = 0; $i < $len; $i++)
-        {
+        for ($i = 0; $i < $len; $i++) {
             $length = substr($this->getResponse(), 1);
-            if ($length > 0)
-            {
-                $value           = $this->getResponse();
+            if ($length > 0) {
+                $value = $this->getResponse();
                 $list[$keys[$i]] = $this->unpack_value($value, $encode);
-            }
-            else
-            {
+            } else {
                 $list[$keys[$i]] = '';
             }
         }
@@ -303,17 +274,13 @@ class RedisNewClass
 
     public function incr($key, $offset = 1)
     {
-        if ($offset == 1)
-        {
+        if ($offset == 1) {
             $cmd = "INCR {$key}";
-        }
-        else
-        {
+        } else {
             $cmd = "INCRBY {$key} {$offset}";
         }
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -321,17 +288,13 @@ class RedisNewClass
 
     public function decr($key, $offset = 1)
     {
-        if ($offset == 1)
-        {
+        if ($offset == 1) {
             $cmd = "DECR {$key}";
-        }
-        else
-        {
+        } else {
             $cmd = "DECRBY {$key} {$offset}";
         }
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -343,15 +306,13 @@ class RedisNewClass
             return false;
 
         $field = " ";
-        foreach ($data as $k => $v)
-        {
+        foreach ($data as $k => $v) {
             $field .= $k . ' "' . $this->pack_value($v, $encode) . '" ';
         }
-        $field    = trim($field);
-        $cmd      = "MSETNX {$field}";
+        $field = trim($field);
+        $cmd = "MSETNX {$field}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -361,16 +322,14 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "SETEX {$key} {$secord} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "SETEX {$key} {$secord} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         $response = substr($response, 1);
-        if ($response == "OK")
-        {
+        if ($response == "OK") {
             return true;
         }
         return false;
@@ -380,11 +339,10 @@ class RedisNewClass
     {
         if (empty($key) || $value == '')
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "SETNX {$key} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "SETNX {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -394,11 +352,10 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "SETRANGE {$key} {$offset} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "SETRANGE {$key} {$offset} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -408,21 +365,16 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        if ($encode == true)
-        {
+        if ($encode == true) {
             $data = $this->get($key, $encode);
-            if (empty($data))
-            {
+            if (empty($data)) {
                 return 0;
             }
             return strlen($data);
-        }
-        else
-        {
-            $cmd      = "STRLEN {$key}";
+        } else {
+            $cmd = "STRLEN {$key}";
             $response = $this->exec($cmd);
-            if (!$this->getError($response))
-            {
+            if (!$this->getError($response)) {
                 return false;
             }
             return substr($response, 1);
@@ -436,11 +388,10 @@ class RedisNewClass
     {
         if (empty($key) || empty($field) || empty($value))
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "HSET {$key} {$field} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "HSET {$key} {$field} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -448,20 +399,17 @@ class RedisNewClass
 
     public function hmset($key, $fields, $encode = false)
     {
-        if (empty($key) || empty($fields) || !is_array($fields))
-        {
+        if (empty($key) || empty($fields) || !is_array($fields)) {
             return false;
         }
         $field = "";
-        foreach ($fields as $k => $v)
-        {
+        foreach ($fields as $k => $v) {
             $field .= "$k " . $this->pack_value($v, $encode) . " ";
         }
-        $field    = trim($field);
-        $cmd      = "HMSET {$key} {$field}";
+        $field = trim($field);
+        $cmd = "HMSET {$key} {$field}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return true;
@@ -471,16 +419,14 @@ class RedisNewClass
     {
         if (empty($key) || empty($field))
             return false;
-        $cmd      = "HGET {$key} {$field}";
+        $cmd = "HGET {$key} {$field}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len   = substr($response, 1);
+        $len = substr($response, 1);
         $value = '';
-        if ($len > 0)
-        {
+        if ($len > 0) {
             $value = $this->getResponse();
             $value = $this->unpack_value($value, $encode);
         }
@@ -492,32 +438,24 @@ class RedisNewClass
         if (empty($key) || empty($fields))
             return false;
         $field = "";
-        if (is_array($fields))
-        {
+        if (is_array($fields)) {
             $field = implode(" ", $fields);
-        }
-        else
-        {
+        } else {
             $field = $fields;
         }
-        $cmd      = "HMGET {$key} {$field}";
+        $cmd = "HMGET {$key} {$field}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        for ($i = 0; $i < $len; $i++)
-        {
+        for ($i = 0; $i < $len; $i++) {
             $length = substr($this->getResponse(), 1);
-            if ($length > 0)
-            {
-                $value             = $this->getResponse();
+            if ($length > 0) {
+                $value = $this->getResponse();
                 $list[$fields[$i]] = empty($value) ? '' : $this->unpack_value($value, $encode);
-            }
-            else
-            {
+            } else {
                 $list[$fields[$i]] = '';
             }
         }
@@ -528,10 +466,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "HLEN {$key}";
+        $cmd = "HLEN {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -540,18 +477,14 @@ class RedisNewClass
     public function hdel($key, $fields)
     {
         $field = "";
-        if (is_array($fields))
-        {
+        if (is_array($fields)) {
             $field = implode(' ', $fields);
-        }
-        else
-        {
+        } else {
             $field = $fields;
         }
-        $cmd      = "HDEL {$key} {$field}";
+        $cmd = "HDEL {$key} {$field}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -561,21 +494,19 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "HGETALL {$key}";
+        $cmd = "HGETALL {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        for ($i = 0; $i < $len / 2; $i++)
-        {
-            $length     = substr($this->getResponse(), 1);
-            $key        = $this->getResponse();
-            $length     = substr($this->getResponse(), 1);
-            $value      = $this->getResponse();
-            $value      = $this->unpack_value($value, $encode);
+        for ($i = 0; $i < $len / 2; $i++) {
+            $length = substr($this->getResponse(), 1);
+            $key = $this->getResponse();
+            $length = substr($this->getResponse(), 1);
+            $value = $this->getResponse();
+            $value = $this->unpack_value($value, $encode);
             $list[$key] = $value;
         }
         return $list;
@@ -586,20 +517,17 @@ class RedisNewClass
         if (empty($key))
             return false;
 
-        $cmd      = "HKEYS {$key}";
+        $cmd = "HKEYS {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
+                $value = $this->getResponse();
                 $list[] = $value;
             }
         }
@@ -611,20 +539,17 @@ class RedisNewClass
         if (empty($key))
             return false;
 
-        $cmd      = "HVALS {$key}";
+        $cmd = "HVALS {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
+                $value = $this->getResponse();
                 $list[] = $this->unpack_value($value, $encode);
             }
         }
@@ -636,10 +561,9 @@ class RedisNewClass
         if (empty($key) || empty($field))
             return false;
 
-        $cmd      = "HEXISTS {$key} {$field}";
+        $cmd = "HEXISTS {$key} {$field}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -649,10 +573,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($field))
             return false;
-        $cmd      = "HINCRBY {$key} {$field} {$offset}";
+        $cmd = "HINCRBY {$key} {$field} {$offset}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -662,11 +585,10 @@ class RedisNewClass
     {
         if (empty($key) || empty($field))
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "HSETNX {$key} {$field} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "HSETNX {$key} {$field} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -676,11 +598,10 @@ class RedisNewClass
     // ================================== LIST start =====================================================//
     public function lpush($key, $value, $encode = true)
     {
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "LPUSH {$key} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "LPUSH {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -688,29 +609,26 @@ class RedisNewClass
 
     public function lpop($key, $encode = true)
     {
-        $cmd      = "LPOP {$key}";
+        $cmd = "LPOP {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = '';
-        if ($len > 0)
-        {
+        if ($len > 0) {
             $value = $this->getResponse();
-            $list  = $this->unpack_value($value, $encode);
+            $list = $this->unpack_value($value, $encode);
         }
         return $list;
     }
 
     public function rpush($key, $value, $encode = true)
     {
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "RPUSH {$key} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "RPUSH {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -720,29 +638,26 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "RPOP {$key}";
+        $cmd = "RPOP {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = '';
-        if ($len > 0)
-        {
+        if ($len > 0) {
             $value = $this->getResponse();
-            $list  = $this->unpack_value($value, $encode);
+            $list = $this->unpack_value($value, $encode);
         }
         return $list;
     }
 
     public function lrem($key, $value, $count = 0)
     {
-        $value    = $this->pack_value($value);
-        $cmd      = "LREM {$key} {$count} {$value}";
+        $value = $this->pack_value($value);
+        $cmd = "LREM {$key} {$count} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -750,19 +665,17 @@ class RedisNewClass
 
     public function lrange($key, $offset = 0, $limit = -1, $encode = true)
     {
-        $end      = $offset + $limit;
-        $cmd      = "LRANGE {$key} {$offset} {$end}";
+        $end = $offset + $limit;
+        $cmd = "LRANGE {$key} {$offset} {$end}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return;
         }
         $count = intval(substr($response, 1));
-        $list  = array();
-        for ($i = 0; $i < $count; $i++)
-        {
+        $list = array();
+        for ($i = 0; $i < $count; $i++) {
             $length = substr($this->getResponse(), 1);
-            $value  = $this->getResponse();
+            $value = $this->getResponse();
             $list[] = $this->unpack_value($value, $encode);
         }
         return $list;
@@ -770,18 +683,16 @@ class RedisNewClass
 
     public function ltrim($key, $offset = 0, $stop = -1, $encode = true)
     {
-        $cmd      = "LTRIM {$key} {$offset} {$stop}";
+        $cmd = "LTRIM {$key} {$offset} {$stop}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return;
         }
         $count = intval(substr($response, 1));
-        $list  = array();
-        for ($i = 0; $i < $count; $i++)
-        {
+        $list = array();
+        for ($i = 0; $i < $count; $i++) {
             $length = substr($this->getResponse(), 1);
-            $value  = $this->getResponse();
+            $value = $this->getResponse();
             $list[] = $this->unpack_value($value, $encode);
         }
         return $list;
@@ -791,10 +702,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "LLEN {$key}";
+        $cmd = "LLEN {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -804,14 +714,12 @@ class RedisNewClass
     {
         if (empty($key) || empty($index) || empty($value))
             return false;
-        $cmd      = "LSET {$key} {$index} {$value}";
+        $cmd = "LSET {$key} {$index} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        if (substr($response, 1) == 'OK')
-        {
+        if (substr($response, 1) == 'OK') {
             return true;
         }
         return false;
@@ -821,18 +729,16 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "LINDEX {$key} {$index}";
+        $cmd = "LINDEX {$key} {$index}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = '';
-        if ($len > 0)
-        {
+        if ($len > 0) {
             $value = $this->getResponse();
-            $list  = $this->unpack_value($value, $encode);
+            $list = $this->unpack_value($value, $encode);
         }
         return $list;
     }
@@ -842,12 +748,11 @@ class RedisNewClass
     {
         if (empty($key) || empty($pivot) || empty($value))
             return false;
-        $pivot    = $this->pack_value($pivot);
-        $value    = $this->pack_value($value);
-        $cmd      = "LINSERT {$key} {$flag} {$pivot} {$value}";
+        $pivot = $this->pack_value($pivot);
+        $value = $this->pack_value($value);
+        $cmd = "LINSERT {$key} {$flag} {$pivot} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -860,11 +765,10 @@ class RedisNewClass
     {
         if (empty($key) || empty($value))
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "SADD {$key} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "SADD {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -875,15 +779,13 @@ class RedisNewClass
         if (empty($key) || empty($data) || !is_array($data))
             return false;
         $cmd = "";
-        foreach ($data as $v)
-        {
+        foreach ($data as $v) {
             $value = $this->pack_value($v, $encode);
             $cmd .= "SADD {$key} {$value}\r\n";
         }
-        $cmd      = trim($cmd, "\r\n");
+        $cmd = trim($cmd, "\r\n");
         $response = $this->exec($cmd);
-        if ($this->getError($response))
-        {
+        if ($this->getError($response)) {
             return false;
         }
         return true;
@@ -893,10 +795,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "SCARD {$key}";
+        $cmd = "SCARD {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -906,24 +807,20 @@ class RedisNewClass
     {
         if (empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(' ', $keys);
         }
-        $cmd      = "SDIFF {$keys}";
+        $cmd = "SDIFF {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
+                $value = $this->getResponse();
                 $list[] = $this->unpack_value($value, $encode);
             }
         }
@@ -934,19 +831,16 @@ class RedisNewClass
     {
         if (empty($dest) || empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(" ", $keys);
         }
-        $cmd      = "SDIFFSTORE {$dest} {$keys}";
+        $cmd = "SDIFFSTORE {$dest} {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         $len = substr($response, 1);
-        if ($len > 0)
-        {
+        if ($len > 0) {
             return $len;
         }
         return false;
@@ -956,15 +850,13 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "SPOP {$key}";
+        $cmd = "SPOP {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         $len = substr($response, 1);
-        if ($len > 0)
-        {
+        if ($len > 0) {
             return $this->unpack_value($this->getResponse(), $encode);
         }
         return false;
@@ -974,11 +866,10 @@ class RedisNewClass
     {
         if (empty($key) || empty($value))
             return false;
-        $value    = $this->pack_value($value, $encode);
-        $cmd      = "SISMEMBER {$key} {$value}";
+        $value = $this->pack_value($value, $encode);
+        $cmd = "SISMEMBER {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -988,20 +879,17 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "SMEMBERS {$key}";
+        $cmd = "SMEMBERS {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
+                $value = $this->getResponse();
                 $list[] = $this->unpack_value($value, $encode);
             }
         }
@@ -1012,11 +900,10 @@ class RedisNewClass
     {
         if (empty($source) || empty($dest) || empty($member))
             return false;
-        $member   = $this->pack_value($member, $encode);
-        $cmd      = "SMOVE {$source} {$dest} {$member}";
+        $member = $this->pack_value($member, $encode);
+        $cmd = "SMOVE {$source} {$dest} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1026,16 +913,14 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "SRANDMEMBER {$key}";
+        $cmd = "SRANDMEMBER {$key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len   = substr($response, 1);
+        $len = substr($response, 1);
         $value = '';
-        if ($len > 0)
-        {
+        if ($len > 0) {
             $value = $this->getResponse();
             $value = $this->unpack_value($value, $encode);
         }
@@ -1046,10 +931,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($member))
             return false;
-        $cmd      = "SREM {$key} {$member}";
+        $cmd = "SREM {$key} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1059,24 +943,20 @@ class RedisNewClass
     {
         if (empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(" ", $keys);
         }
-        $cmd      = "SINTER {$keys}";
+        $cmd = "SINTER {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
+                $value = $this->getResponse();
                 $list[] = $this->unpack_value($value, $encode);
             }
         }
@@ -1087,14 +967,12 @@ class RedisNewClass
     {
         if (empty($dest) || empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(" ", $keys);
         }
-        $cmd      = "SINTERSTORE {$dest} {$keys}";
+        $cmd = "SINTERSTORE {$dest} {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1104,24 +982,20 @@ class RedisNewClass
     {
         if (empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(" ", $keys);
         }
-        $cmd      = "SUNION {$keys}";
+        $cmd = "SUNION {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
+                $value = $this->getResponse();
                 $list[] = $this->unpack_value($value, $encode);
             }
         }
@@ -1132,14 +1006,12 @@ class RedisNewClass
     {
         if (empty($dest) || empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(" ", $keys);
         }
-        $cmd      = "SUNIONSTORE {$dest} {$keys}";
+        $cmd = "SUNIONSTORE {$dest} {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1151,10 +1023,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($member))
             return false;
-        $cmd      = "ZADD {$key} {$score} {$member}";
+        $cmd = "ZADD {$key} {$score} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1164,10 +1035,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "ZCARD {key}";
+        $cmd = "ZCARD {key}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1177,10 +1047,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($min) || empty($max))
             return false;
-        $cmd      = "ZADD {$key} {$min} {$max}";
+        $cmd = "ZADD {$key} {$min} {$max}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1190,10 +1059,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($member))
             return false;
-        $cmd      = "ZINCRBY {$key} {$offset} {$member}";
+        $cmd = "ZINCRBY {$key} {$offset} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1203,14 +1071,12 @@ class RedisNewClass
     {
         if (empty($dest) || empty($numkey) || empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(" ", $keys);
         }
-        $cmd      = "ZINTERSTORE {$dest} {$numkey} {$keys}";
+        $cmd = "ZINTERSTORE {$dest} {$numkey} {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1221,40 +1087,30 @@ class RedisNewClass
         if (empty($key))
             return false;
         $score = '';
-        if ($withscores == true)
-        {
+        if ($withscores == true) {
             $score = "WITHSCORES";
         }
-        $cmd      = "ZRANGE {$key} {$start} {$stop} {$score}";
+        $cmd = "ZRANGE {$key} {$start} {$stop} {$score}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            if ($withscores == true)
-            {
+        if ($len > 0) {
+            if ($withscores == true) {
                 $max = $len / 2;
-            }
-            else
-            {
+            } else {
                 $max = $len;
             }
-            for ($i = 0; $i < $max; $i++)
-            {
+            for ($i = 0; $i < $max; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
-                if ($withscores == true)
-                {
-                    $length     = substr($this->getResponse(), 1);
-                    $key        = $this->getResponse();
+                $value = $this->getResponse();
+                if ($withscores == true) {
+                    $length = substr($this->getResponse(), 1);
+                    $key = $this->getResponse();
                     $list[$key] = $value;
-                }
-                else
-                {
+                } else {
                     $list[] = $value;
                 }
             }
@@ -1267,47 +1123,36 @@ class RedisNewClass
         if (empty($key))
             return false;
         $score = '';
-        if ($withscores == true)
-        {
+        if ($withscores == true) {
             $score = "WITHSCORES";
         }
         $limits = '';
-        if (!empty($limit))
-        {
+        if (!empty($limit)) {
             $limits = "LIMIT " . $limit;
         }
-        $cmd      = "ZRANGEBYSCORE {$key} {$min} {$max} {$score} {$limits}";
-        $cmd      = trim($cmd);
+        $cmd = "ZRANGEBYSCORE {$key} {$min} {$max} {$score} {$limits}";
+        $cmd = trim($cmd);
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            if ($withscores == true)
-            {
+        if ($len > 0) {
+            if ($withscores == true) {
                 $max = $len / 2;
-            }
-            else
-            {
+            } else {
                 $max = $len;
             }
-            for ($i = 0; $i < $max; $i++)
-            {
+            for ($i = 0; $i < $max; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
-                if ($withscores == true)
-                {
+                $value = $this->getResponse();
+                if ($withscores == true) {
 
-                    $length     = substr($this->getResponse(), 1);
-                    $key        = $this->getResponse();
+                    $length = substr($this->getResponse(), 1);
+                    $key = $this->getResponse();
                     $list[$key] = $value;
-                }
-                else
-                {
+                } else {
                     $list[] = $value;
                 }
             }
@@ -1319,10 +1164,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($member))
             return false;
-        $cmd      = "ZRANK {$key} {$member}";
+        $cmd = "ZRANK {$key} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1332,10 +1176,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($member))
             return false;
-        $cmd      = "ZREM {$key} {$member}";
+        $cmd = "ZREM {$key} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1345,10 +1188,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "ZREMRANGEBYRANK {$key} {$start} {$stop}";
+        $cmd = "ZREMRANGEBYRANK {$key} {$start} {$stop}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1358,10 +1200,9 @@ class RedisNewClass
     {
         if (empty($key))
             return false;
-        $cmd      = "ZREMRANGEBYSCORE {$key} {$min} {$max}";
+        $cmd = "ZREMRANGEBYSCORE {$key} {$min} {$max}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1372,40 +1213,30 @@ class RedisNewClass
         if (empty($key))
             return false;
         $score = '';
-        if ($withscores == true)
-        {
+        if ($withscores == true) {
             $score = "WITHSCORES";
         }
-        $cmd      = "ZREVRANGE {$key} {$start} {$stop} {$score}";
+        $cmd = "ZREVRANGE {$key} {$start} {$stop} {$score}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            if ($withscores == true)
-            {
+        if ($len > 0) {
+            if ($withscores == true) {
                 $max = $len / 2;
-            }
-            else
-            {
+            } else {
                 $max = $len;
             }
-            for ($i = 0; $i < $max; $i++)
-            {
+            for ($i = 0; $i < $max; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
-                if ($withscores == true)
-                {
-                    $length     = substr($this->getResponse(), 1);
-                    $key        = $this->getResponse();
+                $value = $this->getResponse();
+                if ($withscores == true) {
+                    $length = substr($this->getResponse(), 1);
+                    $key = $this->getResponse();
                     $list[$key] = $value;
-                }
-                else
-                {
+                } else {
                     $list[] = $value;
                 }
             }
@@ -1418,46 +1249,35 @@ class RedisNewClass
         if (empty($key))
             return false;
         $score = '';
-        if ($withscores == true)
-        {
+        if ($withscores == true) {
             $score = "WITHSCORES";
         }
         $limits = "";
-        if (!empty($limit))
-        {
+        if (!empty($limit)) {
             $limits = "LIMIT " . $limit;
         }
-        $cmd      = "ZREVRANGEBYSCORE {$key} {$max} {$min} {$score} {$limits}";
-        $cmd      = trim($cmd);
+        $cmd = "ZREVRANGEBYSCORE {$key} {$max} {$min} {$score} {$limits}";
+        $cmd = trim($cmd);
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            if ($withscores == true)
-            {
+        if ($len > 0) {
+            if ($withscores == true) {
                 $max = $len / 2;
-            }
-            else
-            {
+            } else {
                 $max = $len;
             }
-            for ($i = 0; $i < $max; $i++)
-            {
+            for ($i = 0; $i < $max; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
-                if ($withscores == true)
-                {
-                    $length     = substr($this->getResponse(), 1);
-                    $key        = $this->getResponse();
+                $value = $this->getResponse();
+                if ($withscores == true) {
+                    $length = substr($this->getResponse(), 1);
+                    $key = $this->getResponse();
                     $list[$key] = $value;
-                }
-                else
-                {
+                } else {
                     $list[] = $value;
                 }
             }
@@ -1469,10 +1289,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($member))
             return false;
-        $cmd      = "ZREVRANK {$key} {$member}";
+        $cmd = "ZREVRANK {$key} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1482,16 +1301,14 @@ class RedisNewClass
     {
         if (empty($key) || empty($member))
             return false;
-        $cmd      = "ZSCORE {$key} {$member}";
+        $cmd = "ZSCORE {$key} {$member}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len   = substr($response, 1);
+        $len = substr($response, 1);
         $value = 0;
-        if ($len > 0)
-        {
+        if ($len > 0) {
             $value = $this->getResponse();
         }
         return $value;
@@ -1501,14 +1318,12 @@ class RedisNewClass
     {
         if (empty($dest) || empty($keys))
             return false;
-        if (is_array($keys))
-        {
+        if (is_array($keys)) {
             $keys = implode(" ", $keys);
         }
-        $cmd      = "ZUNIONSTORE {$dest} {$numkey} {$keys}";
+        $cmd = "ZUNIONSTORE {$dest} {$numkey} {$keys}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1519,10 +1334,9 @@ class RedisNewClass
 
     public function bgrewriteaof()
     {
-        $cmd      = "BGREWRITEAOF";
+        $cmd = "BGREWRITEAOF";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return true;
@@ -1530,10 +1344,9 @@ class RedisNewClass
 
     public function bgsave()
     {
-        $cmd      = "BGSAVE";
+        $cmd = "BGSAVE";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return true;
@@ -1541,20 +1354,17 @@ class RedisNewClass
 
     public function getconfig($param = "*")
     {
-        $cmd      = "CONFIG GET {$param}";
+        $cmd = "CONFIG GET {$param}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $length = substr($this->getResponse(), 1);
-                $value  = $this->getResponse();
+                $value = $this->getResponse();
                 $list[] = $value;
             }
         }
@@ -1565,10 +1375,9 @@ class RedisNewClass
     {
         if (empty($key) || empty($value))
             return false;
-        $cmd      = "CONFIG SET {$key} {$value}";
+        $cmd = "CONFIG SET {$key} {$value}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return true;
@@ -1576,10 +1385,9 @@ class RedisNewClass
 
     public function dbsize()
     {
-        $cmd      = "DBSIZE";
+        $cmd = "DBSIZE";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1587,21 +1395,17 @@ class RedisNewClass
 
     public function info()
     {
-        $cmd      = "INFO";
+        $cmd = "INFO";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        $len  = substr($response, 1);
+        $len = substr($response, 1);
         $list = array();
-        if ($len > 0)
-        {
-            for ($i = 0; $i < $len; $i++)
-            {
+        if ($len > 0) {
+            for ($i = 0; $i < $len; $i++) {
                 $value = substr($this->getResponse(), 1);
-                if (!empty($value))
-                {
+                if (!empty($value)) {
                     $list[] = $value;
                     continue;
                 }
@@ -1613,10 +1417,9 @@ class RedisNewClass
 
     public function lastsave()
     {
-        $cmd      = "LASTSAVE";
+        $cmd = "LASTSAVE";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return substr($response, 1);
@@ -1624,10 +1427,9 @@ class RedisNewClass
 
     public function save()
     {
-        $cmd      = "SAVE";
+        $cmd = "SAVE";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         return true;
@@ -1640,15 +1442,13 @@ class RedisNewClass
     {
         if (empty($message))
             return false;
-        $cmd      = "ECHO {$message}";
+        $cmd = "ECHO {$message}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
         $len = substr($response, 1);
-        if ($len > 0)
-        {
+        if ($len > 0) {
             return $this->getResponse();
         }
         return false;
@@ -1656,10 +1456,9 @@ class RedisNewClass
 
     public function ping()
     {
-        $cmd      = "PING";
+        $cmd = "PING";
         $response = $this->exec($cmd);
-        if ($response == '+PONG')
-        {
+        if ($response == '+PONG') {
             return true;
         }
         return false;
@@ -1667,14 +1466,12 @@ class RedisNewClass
 
     public function select($index)
     {
-        $cmd      = "SELECT {$index}";
+        $cmd = "SELECT {$index}";
         $response = $this->exec($cmd);
-        if (!$this->getError($response))
-        {
+        if (!$this->getError($response)) {
             return false;
         }
-        if ($response == '+OK')
-        {
+        if ($response == '+OK') {
             return true;
         }
         return false;
@@ -1688,11 +1485,9 @@ class RedisNewClass
      */
     private function getConnection()
     {
-        if (!$this->handle)
-        {
-            $errno  = $errstr = '';
-            if (!$sock   = fsockopen($this->host, $this->port, $errno, $errstr, 10))
-            {
+        if (!$this->handle) {
+            $errno = $errstr = '';
+            if (!$sock = fsockopen($this->host, $this->port, $errno, $errstr, 10)) {
                 return false;
             }
             $this->handle = $sock;
@@ -1702,19 +1497,16 @@ class RedisNewClass
 
     private function pack_value($value, $encode = true)
     {
-        if($value==""){
+        if ($value == "") {
             return "0empty0";
         }
-        
+
         if ($encode == false)
             return preg_replace("/ /", "0empty0", $value);
 
-        if (is_numeric($value))
-        {
+        if (is_numeric($value)) {
             return trim($value);
-        }
-        else
-        {
+        } else {
             $value = json_encode($value);
             return preg_replace("/ /", "0empty0", $value);
         }
@@ -1726,8 +1518,7 @@ class RedisNewClass
         if ($encode == false)
             return preg_replace("/0empty0/", " ", $value);
 
-        if (is_numeric($value))
-        {
+        if (is_numeric($value)) {
             return trim($value);
         }
         $value = preg_replace("/0empty0/", " ", $value);
@@ -1737,16 +1528,13 @@ class RedisNewClass
     private function exec($cmd)
     {
         $this->getConnection();
-        if (!$this->handle)
-        {
+        if (!$this->handle) {
             return false;
         }
         $cmd .= "\r\n";
         $fwrite = 0;
-        for ($written = 0; $written < strlen($cmd); $written += $fwrite)
-        {
-            if (!$fwrite = fwrite($this->handle, substr($cmd, $fwrite)))
-            {
+        for ($written = 0; $written < strlen($cmd); $written += $fwrite) {
+            if (!$fwrite = fwrite($this->handle, substr($cmd, $fwrite))) {
                 return false;
             }
         }
@@ -1762,8 +1550,7 @@ class RedisNewClass
 
     private function getError($response)
     {
-        if (strpos($response, '-ERR') === 0)
-        {
+        if (strpos($response, '-ERR') === 0) {
             //return substr($response, 5);
             return false;
         }
@@ -1772,8 +1559,7 @@ class RedisNewClass
 
     public function __destruct()
     {
-        if ($this->handle)
-        {
+        if ($this->handle) {
             fclose($this->handle);
         }
     }

@@ -12,28 +12,33 @@ use communal\models\user\UserMainModel;
  *
  * @author zhaocj
  */
-class ControllerPassport extends ControllerClient {
+class ControllerPassport extends ControllerClient
+{
 
     protected $clientResultData;
 
     /**
      * 初始化功能
-     * 
+     *
      */
-    public function init() {
+    public function init()
+    {
         parent::init();
         $this->_initClientResultData();
     }
 
-    private function _initClientResultData() {
+    private function _initClientResultData()
+    {
         $this->clientResultData = ClientResultData::getInstance();
     }
 
     /**
      * 退出页面的界面
      * @author Karl.zhao<zhaocj2009@126.com>
-     * @since 2016/09/20       */
-    public function actionLogout() {
+     * @since 2016/09/20
+     */
+    public function actionLogout()
+    {
         App::sessionDestroy();
         $this->clientResultData->setResult(ErrorCode::$SUCCESS);
         $this->outPut($this->clientResultData);
@@ -42,22 +47,24 @@ class ControllerPassport extends ControllerClient {
     /**
      * 注册页面提交页面
      * @author Karl.zhao<zhaocj2009@126.com>
-     * @since 2016/09/20 
+     * @since 2016/09/20
      */
-    public function actionIframeRegister() {
-        
+    public function actionIframeRegister()
+    {
+
     }
 
     /**
      * 登录表单提交页面
      * @author Karl.zhao<zhaocj2009@126.com>
      * @since 2016/09/20
-     * 
+     *
      */
-    public function actionIframeLogin() {
+    public function actionIframeLogin()
+    {
         $params = $this->getRequestParams();
 
-        list ( $this->params['username'], $this->params['password']) = array(
+        list ($this->params['username'], $this->params['password']) = array(
             $params['username'],
             $params['password']);
 

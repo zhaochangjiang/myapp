@@ -12,11 +12,13 @@ use framework\App;
  *
  * @author zhaocj
  */
-class ControllerPassport extends ControllerFrontend {
+class ControllerPassport extends ControllerFrontend
+{
 
     public $layout = 'passport';
 
-    public function init() {
+    public function init()
+    {
 
         parent::init();
     }
@@ -24,9 +26,10 @@ class ControllerPassport extends ControllerFrontend {
     /**
      * 退出登录
      */
-    public function actionLogout() {
+    public function actionLogout()
+    {
 
-        $result = $this->httpConnectionByBase(array('Passport','logout'), null, $this->params);
+        $result = $this->httpConnectionByBase(array('Passport', 'logout'), null, $this->params);
         //  stop($result);
         header("Location:" . App::base()->params['domain']['web']);
         App::sessionDestroy();
@@ -35,7 +38,8 @@ class ControllerPassport extends ControllerFrontend {
     /**
      * 登录界面
      */
-    public function actionLogin() {
+    public function actionLogin()
+    {
         $this->data['goto'] = $this->getInput('goto');
         $this->render();
     }
@@ -43,17 +47,18 @@ class ControllerPassport extends ControllerFrontend {
     /**
      * 注册表单提交
      */
-    public function actionIframeRegister() {
+    public function actionIframeRegister()
+    {
 
         $this->params = $this->getRequestParams();
         $this->data['goto'] = base64_decode($this->params('goto'));
-        $result = (array) parent::httpConnectionByBase(
-                        array('Passport','iframeRegister'), array(), $this->params);
+        $result = (array)parent::httpConnectionByBase(
+            array('Passport', 'iframeRegister'), array(), $this->params);
         $resultData = FrontendResultContent::getInstanceAnother();
 
         $jsString = '';
         if ($result->code != 200) {
-            $jsString.='parent.showerror("' . $result->message . '");';
+            $jsString .= 'parent.showerror("' . $result->message . '");';
         }
         App::setSessionArray($result['data']);
         //默认注册成功跳转
@@ -65,9 +70,10 @@ class ControllerPassport extends ControllerFrontend {
      * 登录表单提交
      * @author karl.zhao<zhaocj2009@126.com>
      * @since 2016/09/19
-     * 
+     *
      */
-    public function actionIframeLogin() {
+    public function actionIframeLogin()
+    {
 //        $_POST = array(
 //            'username' => 'admin',
 //            'password' => '111111'
@@ -75,11 +81,11 @@ class ControllerPassport extends ControllerFrontend {
         $this->params = $this->getRequestParams();
         $this->data['goto'] = base64_decode($this->getInput('goto'));
 
-        $result = (array) $this->httpConnectionByBase(array('Passport', 'iframeLogin')
-                        , null, $this->params);
+        $result = (array)$this->httpConnectionByBase(array('Passport', 'iframeLogin')
+            , null, $this->params);
         $jsString = '';
         if ($result['code'] != 200) {
-            $jsString.='parent.showerror("' . $result['message'] . '");';
+            $jsString .= 'parent.showerror("' . $result['message'] . '");';
         }
         App::setSessionArray($result['data']);
 
@@ -92,22 +98,25 @@ class ControllerPassport extends ControllerFrontend {
     /**
      * 验证码请求
      */
-    public function actionAuthcode() {
-        $cCaptchaAction = new CCaptchaAction ( );
+    public function actionAuthcode()
+    {
+        $cCaptchaAction = new CCaptchaAction ();
         $cCaptchaAction->run(true);
     }
 
     /**
-     * 
+     *
      */
-    public function actionForget() {
+    public function actionForget()
+    {
         $this->render();
     }
 
     /**
-     * 
+     *
      */
-    public function actionRegister() {
+    public function actionRegister()
+    {
         $this->data['goto'] = $this->getInput('goto');
 
         $this->render();

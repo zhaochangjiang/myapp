@@ -7,7 +7,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,36 +22,40 @@
  * @package log4php
  * @subpackage helpers
  */
-class LoggerLiteralPatternConverter extends LoggerPatternConverter {
-	
-	/**
-	 * @var string
-	 */
-	private $literal;
+class LoggerLiteralPatternConverter extends LoggerPatternConverter
+{
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $value
-	 */
-	public function __construct($value) {
-		$this->literal = $value;
-	}
+    /**
+     * @var string
+     */
+    private $literal;
 
-	/**
-	 * @param string &$sbuf
-	 * @param LoggerLoggingEvent $event
-	 */
-	public function format(&$sbuf, $event) {
-		$sbuf .= $this->literal;
-	}
+    /**
+     * Constructor
+     *
+     * @param string $value
+     */
+    public function __construct($value)
+    {
+        $this->literal = $value;
+    }
 
-	/**
-	 * @param LoggerLoggingEvent $event
-	 * @return string
-	 */
-	public function convert($event) {
-		return $this->literal;
-	}
+    /**
+     * @param string &$sbuf
+     * @param LoggerLoggingEvent $event
+     */
+    public function format(&$sbuf, $event)
+    {
+        $sbuf .= $this->literal;
+    }
+
+    /**
+     * @param LoggerLoggingEvent $event
+     * @return string
+     */
+    public function convert($event)
+    {
+        return $this->literal;
+    }
 }
 

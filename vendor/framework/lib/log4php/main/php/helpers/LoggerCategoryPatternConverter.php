@@ -7,7 +7,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,23 +22,26 @@
  * @package log4php
  * @subpackage helpers
  */
-class LoggerCategoryPatternConverter extends LoggerNamedPatternConverter {
+class LoggerCategoryPatternConverter extends LoggerNamedPatternConverter
+{
 
-	/**
-	 * Constructor
-	 *
-	 * @param string $formattingInfo
-	 * @param integer $precision
-	 */
-	public function __construct($formattingInfo, $precision) {
-		parent::__construct($formattingInfo, $precision);
-	}
+    /**
+     * Constructor
+     *
+     * @param string $formattingInfo
+     * @param integer $precision
+     */
+    public function __construct($formattingInfo, $precision)
+    {
+        parent::__construct($formattingInfo, $precision);
+    }
 
-	/**
-	 * @param LoggerLoggingEvent $event
-	 * @return string
-	 */
-	public function getFullyQualifiedName($event) {
-		return $event->getLoggerName();
-	}
+    /**
+     * @param LoggerLoggingEvent $event
+     * @return string
+     */
+    public function getFullyQualifiedName($event)
+    {
+        return $event->getLoggerName();
+    }
 }

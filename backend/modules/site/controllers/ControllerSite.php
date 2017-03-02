@@ -1,23 +1,22 @@
 <?php
 
-  /**
-   *
-   * @author zhaocj
-   */
+/**
+ *
+ * @author zhaocj
+ */
 
-  namespace backend\modules\site\controllers;
+namespace backend\modules\site\controllers;
 
-  use backend\common\ControllerBackend;
+use backend\common\ControllerBackend;
 
-  class ControllerSite extends ControllerBackend
-  {
+class ControllerSite extends ControllerBackend
+{
 
-      function actionIndex()
-      {
-          $this->render();
-      }
-      
-      
+    function actionIndex()
+    {
+        $this->render();
+    }
 
-  }
+
+}
   

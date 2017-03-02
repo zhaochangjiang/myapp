@@ -10,11 +10,13 @@ use framework\bin\AController;
  *
  * @author zhaocj
  */
-class ControllerFrontend extends AController {
+class ControllerFrontend extends AController
+{
 
     public $applicationDIr;
 
-    public function init() {
+    public function init()
+    {
         parent::init();
         $this->applicationDIr = dirname(dirname(__FILE__)) . D_S;
     }
@@ -27,7 +29,8 @@ class ControllerFrontend extends AController {
      * @param String $domain
      * @return type
      */
-    public function urlCreate($module, $action, $params = array(), $domain = '') {
+    public function urlCreate($module, $action, $params = array(), $domain = '')
+    {
         if (empty($action)) {
             return $this->createUrl($module, $params, $domain);
         }
@@ -42,18 +45,20 @@ class ControllerFrontend extends AController {
      * @param Array|null $posts
      * @return String
      */
-    protected function httpConnectionByBase($moduleAction, $gets = array(), $posts = array()) {
+    protected function httpConnectionByBase($moduleAction, $gets = array(), $posts = array())
+    {
 
         return parent::httpConnectionByBase($moduleAction, $gets, $posts);
     }
-   
+
     /**
      * @author kar.zhao<zhaocj2009@126.com>
      * @since 2016/09/20
      * 获取默认的登录地址
      * @return type
      */
-    protected function getDefaultLoginGoto() {
+    protected function getDefaultLoginGoto()
+    {
         return App::base()->params['domain']['userProfile'];
     }
 

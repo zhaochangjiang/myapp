@@ -22,7 +22,6 @@ class PageRedisCacheClass extends AComponent
         $this->redis->select(2);
 
 
-
         //print_r($this->redis);
 //        xmp($this->data);
     }
@@ -30,8 +29,8 @@ class PageRedisCacheClass extends AComponent
     public function init()
     {
         $this->hashId = !empty($this->id) ? 'FragmentCaching' : 'PageCaching';
-        $this->id     = !empty($this->id) ? 'FragmentCaching' . md5($this->id) : 'PageCaching' . $this->getcacheid();
-        $this->data   = $this->redis->hget($this->hashId, $this->id, true);
+        $this->id = !empty($this->id) ? 'FragmentCaching' . md5($this->id) : 'PageCaching' . $this->getcacheid();
+        $this->data = $this->redis->hget($this->hashId, $this->id, true);
     }
 
     /**
@@ -52,11 +51,10 @@ class PageRedisCacheClass extends AComponent
      * 写入缓存
      * $mode == 0 , 以浏览器缓存的方式取得页面内容
      */
-    public function endCache( $mode = 0, $content = '')
+    public function endCache($mode = 0, $content = '')
     {
 
-        switch ($mode)
-        {
+        switch ($mode) {
             case 0:
                 $content = ob_get_contents();
                 break;
@@ -64,8 +62,7 @@ class PageRedisCacheClass extends AComponent
                 break;
         }
         ob_end_flush();
-        try
-        {
+        try {
 //            $nocacheMe = array();
 //            if (preg_match_all("/<nocache>(.*)<\/nocache>/isU", $content, $m))
 //            {
@@ -83,8 +80,7 @@ class PageRedisCacheClass extends AComponent
             $this->redis->hset($this->hashId, $this->id, array('content' => $content, 'creattime' => TIMESTAMP), true);
 
             //$this->redis->expire($this->id, time() + $this->lifeTime);
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->error('写入缓存失败!');
         }
     }
@@ -97,13 +93,10 @@ class PageRedisCacheClass extends AComponent
     public function startCache()
     {
 
-        if ($this->isvalid())
-        {
+        if ($this->isvalid()) {
             echo $this->data['content'];
             return FALSE;
-        }
-        else
-        {
+        } else {
             ob_start();
             return true;
         }
@@ -114,12 +107,10 @@ class PageRedisCacheClass extends AComponent
      */
     public function cleanCache()
     {
-        try
-        {
+        try {
             //$this->redis->hdel($this->id, array('content', 'creattime'));
             $this->redis->del("PageCaching");
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->error('清除缓存失败!');
         }
     }
@@ -138,12 +129,9 @@ class PageRedisCacheClass extends AComponent
     private function geturl()
     {
         $url = '';
-        if (isset($_SERVER['REQUEST_URI']))
-        {
+        if (isset($_SERVER['REQUEST_URI'])) {
             $url = $_SERVER['REQUEST_URI'];
-        }
-        else
-        {
+        } else {
             $url = $_SERVER['Php_SELF'];
             $url .= empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING'];
         }

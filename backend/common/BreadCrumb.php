@@ -1,17 +1,17 @@
 <?php
 
-  namespace backend\common;
+namespace backend\common;
 
-  /**
-   * Description of BreadCrumb
-   *
-   * @author zhaocj
-   */
-  class BreadCrumb 
-  {
-     var  $name;
-     var $href;
-   
+/**
+ * Description of BreadCrumb
+ *
+ * @author zhaocj
+ */
+class BreadCrumb
+{
+    var $name;
+    var $href;
 
-   }
+
+}
   

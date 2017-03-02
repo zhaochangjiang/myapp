@@ -7,26 +7,30 @@
  */
 
 namespace backend\common;
- 
- use communal\common\UtilsResultData;
+
+use communal\common\UtilsResultData;
+
 /**
  * Description of ReusltData
  *
  * @author changjiang
  */
-class ReusltData extends UtilsResultData {
-    
-    private  $javascriptContent;
-    
-    
-    function getJavascriptContent() {
+class ReusltData extends UtilsResultData
+{
+
+    private $javascriptContent;
+
+
+    function getJavascriptContent()
+    {
         return $this->javascriptContent;
     }
 
-    function setJavascriptContent($javascriptContent) {
+    function setJavascriptContent($javascriptContent)
+    {
         $this->javascriptContent = $javascriptContent;
     }
 
-    
+
     //put your code here
 }

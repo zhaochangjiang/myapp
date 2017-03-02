@@ -14,8 +14,8 @@ class RedisCacheClass
 
     public function __construct($host = '', $port = '', $prefix = '')
     {
-        $this->redis  = new Redis();
-        $this->host   = $host;
+        $this->redis = new Redis();
+        $this->host = $host;
         $this->prefix = $prefix;
         $this->redis->connect($host, $port);
     }
@@ -27,9 +27,9 @@ class RedisCacheClass
 
     public function getConfig()
     {
-        $data           = array();
-        $info           = $this->redis->info();
-        $data['host']   = $this->host;
+        $data = array();
+        $info = $this->redis->info();
+        $data['host'] = $this->host;
         $data['memory'] = $info['used_memory_human'];
         return $data;
     }
@@ -44,14 +44,11 @@ class RedisCacheClass
     //获取有关指定键的值
     public function get($key, $encode = false)
     {
-        $key   = $this->prefix . $key;
+        $key = $this->prefix . $key;
         $value = $this->redis->get($key);
-        if ($encode)
-        {
+        if ($encode) {
             return json_decode($value, true);
-        }
-        else
-        {
+        } else {
             return $value;
         }
     }
@@ -60,8 +57,7 @@ class RedisCacheClass
     public function set($key, $value, $encode = false)
     {
         $key = $this->prefix . $key;
-        if ($encode)
-        {
+        if ($encode) {
             $value = json_encode($value);
         }
         return $this->redis->set($key, $value);
@@ -104,7 +100,7 @@ class RedisCacheClass
     /**
      * 通过key匹配缓存中存在的key的列表
      * Enter description here ...
-     * @param string $key    // $key = "*user*";
+     * @param string $key // $key = "*user*";
      */
     public function keys($key)
     {
@@ -130,8 +126,7 @@ class RedisCacheClass
     public function hset($key, $field, $value, $encode = false)
     {
         $key = $this->prefix . $key;
-        if ($encode)
-        {
+        if ($encode) {
 
             $value = json_encode($value);
         }
@@ -142,8 +137,7 @@ class RedisCacheClass
     public function hsetnx($key, $field, $value, $encode = false)
     {
         $key = $this->prefix . $key;
-        if ($encode)
-        {
+        if ($encode) {
             $value = json_encode($value);
         }
         return $this->redis->hSetNx($key, $field, $value);
@@ -152,10 +146,9 @@ class RedisCacheClass
     //返回名称为$key的hash中$field对应的value
     public function hget($key, $field, $encode = false)
     {
-        $key   = $this->prefix . $key;
+        $key = $this->prefix . $key;
         $value = $this->redis->hGet($key, $field);
-        if ($encode)
-        {
+        if ($encode) {
             $value = json_decode($value, true);
         }
         return $value;
@@ -206,17 +199,13 @@ class RedisCacheClass
     //返回名称为key的list中start至end之间的元素（end为 -1 ，返回所有）
     public function lrange($key, $offset = 0, $limit = -1, $encode = true)
     {
-        $key  = $this->prefix . $key;
+        $key = $this->prefix . $key;
         $data = $this->redis->lRange($key, $offset, $limit);
         $list = array();
-        foreach ($data as $key => $val)
-        {
-            if ($encode)
-            {
+        foreach ($data as $key => $val) {
+            if ($encode) {
                 $list[$key] = json_decode($val, true);
-            }
-            else
-            {
+            } else {
                 $list[$key] = $val;
             }
         }
@@ -226,10 +215,9 @@ class RedisCacheClass
     //返回名称为key的list中index位置的元素
     public function lindex($key, $index = 0, $encode = true)
     {
-        $key  = $this->prefix . $key;
+        $key = $this->prefix . $key;
         $data = $this->redis->lGet($key, $index);
-        if ($encode)
-        {
+        if ($encode) {
             $data = json_decode($data, true);
         }
         return $data;
@@ -246,8 +234,7 @@ class RedisCacheClass
     public function lpush($key, $value, $encode = true)
     {
         $key = $this->prefix . $key;
-        if ($encode)
-        {
+        if ($encode) {
             $value = json_encode($value);
         }
         return $this->redis->lPush($key, $value);
@@ -256,10 +243,9 @@ class RedisCacheClass
     //输出名称为key的list左起的第一个元素，删除该元素
     public function lpop($key, $encode = true)
     {
-        $key  = $this->prefix . $key;
+        $key = $this->prefix . $key;
         $data = $this->redis->lPop($key);
-        if ($encode)
-        {
+        if ($encode) {
             $data = json_decode($data, true);
         }
         return $data;
@@ -269,8 +255,7 @@ class RedisCacheClass
     public function rpush($key, $value, $encode = true)
     {
         $key = $this->prefix . $key;
-        if ($encode)
-        {
+        if ($encode) {
             $value = json_encode($value);
         }
         return $this->redis->rPush($key, $value);
@@ -279,10 +264,9 @@ class RedisCacheClass
     //输出名称为key的list右起的第一个元素，删除该元素
     public function rpop($key, $encode = true)
     {
-        $key  = $this->prefix . $key;
+        $key = $this->prefix . $key;
         $data = $this->redis->rPop($key);
-        if ($encode)
-        {
+        if ($encode) {
             $data = json_decode($data, true);
         }
         return $data;
@@ -305,23 +289,22 @@ class RedisCacheClass
     //返回名称为key的list有多少个元素
     public function llen($key)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->lSize($key);
     }
 
     //给名称为key的list中index位置的元素赋值为value
     public function lset($key, $index, $value)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->lSet($key, $index, $value);
     }
 
     //向名称为key的set中添加元素value,如果value存在，不写入 return false
     public function sadd($key, $value, $encode = false)
     {
-        $key = $this->prefix.$key;
-        if ($encode)
-        {
+        $key = $this->prefix . $key;
+        if ($encode) {
             $value = json_encode($value);
         }
         return $this->redis->sAdd($key, $value);
@@ -330,52 +313,51 @@ class RedisCacheClass
     //回名称为key的set的元素个数
     public function scard($key)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->sCard($key);
     }
 
     //求差集
     public function sdiff($key)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->sDiff($key);
     }
 
     //求差集并将差集保存到output的集合
     public function sdiffstore($dest, $keys)
     {
-        
+
         return $this->redis->sDiffStore($dest, $keys);
     }
 
     // 随机返回并删除名称为key的set中一个元素
     public function spop($key, $encode = false)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->sPop($key);
     }
 
     //名称为key的集合中查找是否有value元素，有ture 没有false
     public function sismember($key, $value, $encode = false)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->sIsMember($key, $value);
     }
 
     //返回名称为key的set的所有元素
     public function smembers($key, $encode = false)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->sMembers($key);
     }
 
     //返回key的类型值
     public function type($key)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         $num = $this->redis->type($key);
-        switch ($num)
-        {
+        switch ($num) {
             case 1:
                 $str = 'string';
                 break;
@@ -421,28 +403,28 @@ class RedisCacheClass
      */
     public function sort($key, $params = array(), $encode = true)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->sort($key, $params);
     }
 
     //称为key的string的值在后面加上value
     public function append($key, $value)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->append($key, $value);
     }
 
     //返回原来key中的值，并将value写入到key中
     public function getset($key, $value, $encode = false)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->getSet($key, $value);
     }
 
     //返回名称为key的string中start到end之间的字符串
     public function getrange($key, $start = 0, $end = 0, $encode = false)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
         return $this->redis->getRange($key, $start, $end);
     }
 

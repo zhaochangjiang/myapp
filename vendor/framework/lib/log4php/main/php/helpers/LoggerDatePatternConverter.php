@@ -7,7 +7,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,32 +22,35 @@
  * @package log4php
  * @subpackage helpers
  */
-class LoggerDatePatternConverter extends LoggerPatternConverter {
+class LoggerDatePatternConverter extends LoggerPatternConverter
+{
 
-	/**
-	 * @var string
-	 */
-	private $df;
-	
-	/**
-	 * Constructor
-	 *
-	 * @param string $formattingInfo
-	 * @param string $df
-	 */
-	public function __construct($formattingInfo, $df) {
-		parent::__construct($formattingInfo);
-		$this->df = $df;
-	}
+    /**
+     * @var string
+     */
+    private $df;
 
-	/**
-	 * @param LoggerLoggingEvent $event
-	 * @return string
-	 */
-	public function convert($event) {
-		$timeStamp = $event->getTimeStamp();
-		$usecs = round(($timeStamp - (int)$timeStamp) * 1000);
-		$df = preg_replace('/((?<!\\\\)(?:\\\\{2})*)u/', '${1}' . sprintf('%03d', $usecs), $this->df);
-		return date($df, $timeStamp);
-	}
+    /**
+     * Constructor
+     *
+     * @param string $formattingInfo
+     * @param string $df
+     */
+    public function __construct($formattingInfo, $df)
+    {
+        parent::__construct($formattingInfo);
+        $this->df = $df;
+    }
+
+    /**
+     * @param LoggerLoggingEvent $event
+     * @return string
+     */
+    public function convert($event)
+    {
+        $timeStamp = $event->getTimeStamp();
+        $usecs = round(($timeStamp - (int)$timeStamp) * 1000);
+        $df = preg_replace('/((?<!\\\\)(?:\\\\{2})*)u/', '${1}' . sprintf('%03d', $usecs), $this->df);
+        return date($df, $timeStamp);
+    }
 }

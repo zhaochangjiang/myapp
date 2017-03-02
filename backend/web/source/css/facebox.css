@@ -1,21 +1,21 @@
 #facebox .b {
-    background:url(../../source/images/b.png);
+    background: url(../../source/images/b.png);
 }
 
 #facebox .tl {
-    background:url(../../source/images/facebox/tl.png);
+    background: url(../../source/images/facebox/tl.png);
 }
 
 #facebox .tr {
-    background:url(../../source/images/facebox/tr.png);
+    background: url(../../source/images/facebox/tr.png);
 }
 
 #facebox .bl {
-    background:url(../../source/images/facebox/bl.png);
+    background: url(../../source/images/facebox/bl.png);
 }
 
 #facebox .br {
-    background:url(../../source/images/facebox/br.png);
+    background: url(../../source/images/facebox/br.png);
 }
 
 #facebox {
@@ -76,12 +76,12 @@
     position: fixed;
     top: 0px;
     left: 0px;
-    height:100%;
-    width:100%;
+    height: 100%;
+    width: 100%;
 }
 
 .facebox_hide {
-    z-index:-100;
+    z-index: -100;
 }
 
 .facebox_overlayBG {

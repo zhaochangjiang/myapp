@@ -1,391 +1,391 @@
 // Popover
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction( $.fn['popover'] ) ) {
-		$( '[data-toggle=popover]' ).popover();
-	}
+    if ($.isFunction($.fn['popover'])) {
+        $('[data-toggle=popover]').popover();
+    }
 
-}).apply( this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Tooltip
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction( $.fn['tooltip'] ) ) {
-		$( '[data-toggle=tooltip],[rel=tooltip]' ).tooltip({ container: 'body' });
-	}
+    if ($.isFunction($.fn['tooltip'])) {
+        $('[data-toggle=tooltip],[rel=tooltip]').tooltip({container: 'body'});
+    }
 
-}).apply( this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Sidebar Widgets
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	function expand( content ) {
-		content.children( '.widget-content' ).slideDown( 'fast', function() {
-			$(this).css( 'display', '' );
-			content.removeClass( 'widget-collapsed' );
-		});
-	}
+    function expand(content) {
+        content.children('.widget-content').slideDown('fast', function () {
+            $(this).css('display', '');
+            content.removeClass('widget-collapsed');
+        });
+    }
 
-	function collapse( content ) {
-		content.children('.widget-content' ).slideUp( 'fast', function() {
-			content.addClass( 'widget-collapsed' );
-			$(this).css( 'display', '' );
-		});
-	}
+    function collapse(content) {
+        content.children('.widget-content').slideUp('fast', function () {
+            content.addClass('widget-collapsed');
+            $(this).css('display', '');
+        });
+    }
 
-	var $widgets = $( '.sidebar-widget' );
+    var $widgets = $('.sidebar-widget');
 
-	$widgets.each( function() {
+    $widgets.each(function () {
 
-		var $widget = $( this ),
-			$toggler = $widget.find( '.widget-toggle' );
+        var $widget = $(this),
+            $toggler = $widget.find('.widget-toggle');
 
-		$toggler.on('click.widget-toggler', function() {
-			$widget.hasClass('widget-collapsed') ? expand($widget) : collapse($widget);
-		});
-	});
+        $toggler.on('click.widget-toggler', function () {
+            $widget.hasClass('widget-collapsed') ? expand($widget) : collapse($widget);
+        });
+    });
 
-}).apply( this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Codemirror
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( typeof CodeMirror !== 'undefined' ) {
+    if (typeof CodeMirror !== 'undefined') {
 
-		$(function() {
-			$('[data-plugin-codemirror]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-codemirror]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginCodeMirror(opts);
-			});
-		});
+                $this.themePluginCodeMirror(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Colorpicker
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'colorpicker' ]) ) {
+    if ($.isFunction($.fn['colorpicker'])) {
 
-		$(function() {
-			$('[data-plugin-colorpicker]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-colorpicker]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginColorPicker(opts);
-			});
-		});
+                $this.themePluginColorPicker(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Datepicker
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'datepicker' ]) ) {
+    if ($.isFunction($.fn['datepicker'])) {
 
-		$(function() {
-			$('[data-plugin-datepicker]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-datepicker]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginDatePicker(opts);
-			});
-		});
+                $this.themePluginDatePicker(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // iosSwitcher
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( typeof Switch !== 'undefined' && $.isFunction( Switch ) ) {
+    if (typeof Switch !== 'undefined' && $.isFunction(Switch)) {
 
-		$(function() {
-			$('[data-plugin-ios-switch]').each(function() {
-				var $this = $( this );
+        $(function () {
+            $('[data-plugin-ios-switch]').each(function () {
+                var $this = $(this);
 
-				$this.themePluginIOS7Switch();
-			});
-		});
+                $this.themePluginIOS7Switch();
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Markdown
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'markdown' ]) ) {
+    if ($.isFunction($.fn['markdown'])) {
 
-		$(function() {
-			$('[data-plugin-markdown-editor]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-markdown-editor]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginMarkdownEditor(opts);
-			});
-		});
+                $this.themePluginMarkdownEditor(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Masked Input
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'mask' ]) ) {
+    if ($.isFunction($.fn['mask'])) {
 
-		$(function() {
-			$('[data-plugin-masked-input]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-masked-input]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginMaskedInput(opts);
-			});
-		});
+                $this.themePluginMaskedInput(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // MaxLength
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction( $.fn[ 'maxlength' ]) ) {
+    if ($.isFunction($.fn['maxlength'])) {
 
-		$(function() {
-			$('[data-plugin-maxlength]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-maxlength]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginMaxLength(opts);
-			});
-		});
+                $this.themePluginMaxLength(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // MultiSelect
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction( $.fn[ 'multiselect' ] ) ) {
+    if ($.isFunction($.fn['multiselect'])) {
 
-		$(function() {
-			$( '[data-plugin-multiselect]' ).each(function() {
+        $(function () {
+            $('[data-plugin-multiselect]').each(function () {
 
-				var $this = $( this ),
-					opts = {};
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginMultiSelect(opts);
+                $this.themePluginMultiSelect(opts);
 
-			});
-		});
+            });
+        });
 
-	}
+    }
 
-}).apply( this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction( $.fn[ 'placeholder' ]) ) {
+    if ($.isFunction($.fn['placeholder'])) {
 
-		$('input[placeholder]').placeholder();
+        $('input[placeholder]').placeholder();
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 
 // Select2
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'select2' ]) ) {
+    if ($.isFunction($.fn['select2'])) {
 
-		$(function() {
-			$('[data-plugin-selectTwo]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-selectTwo]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginSelect2(opts);
-			});
-		});
+                $this.themePluginSelect2(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Spinner
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'spinner' ]) ) {
+    if ($.isFunction($.fn['spinner'])) {
 
-		$(function() {
-			$('[data-plugin-spinner]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-spinner]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginSpinner(opts);
-			});
-		});
+                $this.themePluginSpinner(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // SummerNote
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'summernote' ]) ) {
+    if ($.isFunction($.fn['summernote'])) {
 
-		$(function() {
-			$('[data-plugin-summernote]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-summernote]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginSummerNote(opts);
-			});
-		});
+                $this.themePluginSummerNote(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // TextArea AutoSize
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'autosize' ]) ) {
+    if ($.isFunction($.fn['autosize'])) {
 
-		$(function() {
-			$('[data-plugin-textarea-autosize]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-textarea-autosize]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginTextAreaAutoSize(opts);
-			});
-		});
+                $this.themePluginTextAreaAutoSize(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // TimePicker
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	if ( $.isFunction($.fn[ 'timepicker' ]) ) {
+    if ($.isFunction($.fn['timepicker'])) {
 
-		$(function() {
-			$('[data-plugin-timepicker]').each(function() {
-				var $this = $( this ),
-					opts = {};
+        $(function () {
+            $('[data-plugin-timepicker]').each(function () {
+                var $this = $(this),
+                    opts = {};
 
-				var pluginOptions = $this.data('plugin-options');
-				if (pluginOptions)
-					opts = pluginOptions;
+                var pluginOptions = $this.data('plugin-options');
+                if (pluginOptions)
+                    opts = pluginOptions;
 
-				$this.themePluginTimePicker(opts);
-			});
-		});
+                $this.themePluginTimePicker(opts);
+            });
+        });
 
-	}
+    }
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
 
 // Mailbox
-(function( $ ) {
+(function ($) {
 
-	'use strict';
+    'use strict';
 
-	$(function() {
-		$('[data-mailbox]').each(function() {
-			var $this = $( this );
+    $(function () {
+        $('[data-mailbox]').each(function () {
+            var $this = $(this);
 
-			$this.themeMailbox();
-		});
-	});
+            $this.themeMailbox();
+        });
+    });
 
-}).apply(this, [ jQuery ]);
+}).apply(this, [jQuery]);
