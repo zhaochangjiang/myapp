@@ -1,5 +1,7 @@
 <?php
 
+define('DOMAIN', 'http://' . $_SERVER['HTTP_HOST'] . '/juetun');
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,10 +12,10 @@ return array(
     'params' => array(
         'sitename' => '掘囤网',
         'domain' => array(
-            'userProfile' => 'http://localhost/juetun/frontend/web',
-            'dashboard' => 'http://localhost/juetun/backend/web',
-            'web' => 'http://localhost/juetun/frontend/web',
-            'client' => 'http://localhost/juetun/client/web'
+            'userProfile' => DOMAIN . '/frontend/web',
+            'dashboard' => DOMAIN . '/backend/web',
+            'web' => DOMAIN . '/frontend/web',
+            'client' => DOMAIN . '/client/web'
         )
     ),
     'database' => array(

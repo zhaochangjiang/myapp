@@ -11,6 +11,7 @@ namespace framework\bin\database;
 use framework\bin\ADatabase;
 use PDO;
 use Exception;
+use RuntimeException;
 
 /**
  * Description of ADatabaseMysqlPDO
@@ -441,7 +442,7 @@ class ADatabaseMysqlPDO implements ADatabase
 
         $arrError = $obj->errorInfo();
         if (!empty($arrError[2])) { // 有错误信息
-            throw new Exception('Query was empty<br/><br/>[ ERROR ] :' . $arrError[2] . "<br/><br/> [ SQL语句 ] : " . self::$lastSql);
+            throw new RuntimeException('[ RESULT ] :Query was failure.' . PHP_EOL . '[ ERROR ] :' . $arrError[2] . '".' . PHP_EOL . '  [ SQL语句 ] : ' . self::$lastSql, FRAME_THROW_EXCEPTION);
         }
 
         if (empty($arrError[1])) {//没有结果集
@@ -670,7 +671,7 @@ class ADatabaseMysqlPDO implements ADatabase
             $setsStr = substr($setsStr, 0, -1);
             return $setsStr;
         }
-        throw new Exception("The format \$sets what you give  is wrong!");
+        throw new RuntimeException('The format $sets what you give  is wrong!', FRAME_THROW_EXCEPTION);
     }
 
     /**
@@ -715,15 +716,10 @@ class ADatabaseMysqlPDO implements ADatabase
     }
 
     /**
-     * +----------------------------------------------------------
      * 去掉空元素
-     * +----------------------------------------------------------
      * @access function
-     * +----------------------------------------------------------
      * @param mixed $value
-    +----------------------------------------------------------
      * @return mixed
-    +----------------------------------------------------------
      */
     private function removeEmpty($value)
     {
@@ -745,7 +741,7 @@ class ADatabaseMysqlPDO implements ADatabase
         self::$PDOStatement = self::$link->prepare($sql);
         $queryResult = self::$PDOStatement->execute();
 
-        // 有错误则抛出异常
+        // 有错误则抛出异常,系统捕获并输出调试信息
         self::haveErrorThrowException();
         return $queryResult;
     }

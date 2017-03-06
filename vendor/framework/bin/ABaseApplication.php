@@ -20,6 +20,11 @@ ini_set('date.timezone', 'Asia/Shanghai');
 // --------------------系统配置Start-----------------------------------/
 // 当前系统时间
 define('TIMESTAMP', time());
+
+
+//框架抛出的异常代码
+define("FRAME_THROW_EXCEPTION", 1000);
+
 defined('MICROTIME') or define('MICROTIME', microtime(true));
 define('D_S', DIRECTORY_SEPARATOR);
 
