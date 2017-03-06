@@ -18,6 +18,9 @@ return array(
             'client' => DOMAIN . '/client/web'
         )
     ),
+    'urlManager' => array(
+        'rewriteMod' => true,
+    ),
     'database' => array(
         'user' => array(
             'host' => '127.0.0.1',

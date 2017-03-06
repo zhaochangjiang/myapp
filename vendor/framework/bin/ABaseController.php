@@ -112,7 +112,7 @@ class ABaseController
             ob_start();
             extract($this->loadData);
             if (!file_exists($template)) {
-                throw new Exception("the file ：{$template} is not exists!");
+                throw new RuntimeException("the file ：{$template} is not exists!", FRAME_THROW_EXCEPTION);
             }
             require_once $template;
             $content = ob_get_contents();
@@ -626,164 +626,6 @@ class ABaseController
         return $match;
     }
 
-    public function parseUrlRuleRewrite($rule, $route, $regx)
-    {
-
-//        echo $route;
-
-
-        $delimiter = $this->delimiter;
-// 把路由规则和地址,分割到数组中，然后逐项匹配
-        $ruleArr = multipleExplode(array(
-            '/',
-            '_',
-            '-'), $rule);
-
-
-        $regxArr = explode($delimiter, $regx);
-        $routeArr = explode($delimiter, $route);
-        $newRegArr = $regxArr;
-        if (FALSE !== strpos($route, ':')) {
-            foreach ($routeArr as $key => $value) {
-
-                if (!in_array($value, $ruleArr) && strpos($value, ':') === FALSE) {
-                    unset($newRegArr[$key]);
-                }
-            }
-            $newRegArr = array_values($newRegArr);
-            foreach ($ruleArr as $key => $value) {
-                if (!in_array($value, $newRegArr) && strpos($value, ':') === FALSE) {
-                    unset($ruleArr[$key]);
-                }
-            }
-        } else {
-            if (strcasecmp($regx, $route) == 0) {
-                $match = true;
-                $this->rewriteUrl = $rule;
-            }
-            return $match;
-        }
-
-
-        $a1 = array(
-            "/(:\d+)/",
-            "/\//"
-        );
-        $a2 = array(
-            ".+",
-            "\/"
-        );
-        $rulex = preg_replace($a1, $a2, $route);
-        $rulex = "/^{$rulex}$/i";
-
-
-        if (!preg_match($rulex, $regx)) {
-
-            $match = false;
-            return $match;
-        }
-
-
-        $match = true;
-// 匹配检测
-        $omg = array();
-        if (count($ruleArr) > count($newRegArr)) {
-            $match = false;
-        } else {
-
-            foreach ($ruleArr as $key => $value) {
-
-                if (strpos($value, ':') === 0) {
-
-
-                    if (FALSE !== strpos($value, '\\d')) {
-                        $value = str_replace("\\d", "", $value);
-                        $rule = str_replace("\\d", "", $rule);
-                    }
-
-                    if (FALSE !== strpos($value, '\\w')) {
-                        $value = str_replace("\\w", "", $value);
-                        $rule = str_replace("\\w", "", $rule);
-                    }
-
-
-                    if (FALSE !== strpos($value, '\\AZ')) {
-                        $value = str_replace("\\AZ", "", $value);
-                        $rule = str_replace("\\AZ", "", $rule);
-                    }
-
-
-                    if (FALSE !== strpos($value, '\\AD')) {
-                        $value = str_replace("\\AD", "", $value);
-                        $rule = str_replace("\\AD", "", $rule);
-                    }
-
-                    if (FALSE !== strpos($value, '\\BD')) {
-                        $value = str_replace("\\BD", "", $value);
-                        $rule = str_replace("\\BD", "", $rule);
-                    }
-
-
-                    if (FALSE !== strpos($value, '\\CD')) {
-                        $value = str_replace("\\CD", "", $value);
-                        $rule = str_replace("\\CD", "", $rule);
-                    }
-
-
-                    $omg[$key] = '/' . $value . '/';
-
-                    if ($pos = strpos($value, '^')) {//排除
-                        $mk = substr($value, 0, $pos);
-                        $omg[$key] = '/' . $mk . '/';
-                        $rule = str_replace($value, $mk, $rule);
-                        $stripArr = explode('|', trim(strstr($value, '^'), '^'));
-                        if (!in_array($newRegArr[$key], $stripArr)) {
-                            $match = false;
-                            break;
-                        }
-                    }
-                    if ($pos = strpos($value, '.')) {
-                        $omg[$key] = '/' . substr($value, 0, $pos) . '/';
-                    }
-
-                    if (($pos = strpos($value, "\\d"))) {
-
-                        if (!preg_match("/(\d+)$/i", $newRegArr[$key])) {
-                            $match = false;
-                            break;
-                        }
-
-                        $mk = substr($value, 0, $pos);
-
-                        $rule = str_replace('\\d', '', $rule);
-                        $omg[$key] = '/' . $mk . '/';
-                    }
-
-// 静态项不区分大小写
-                } elseif (strcasecmp($value, $newRegArr[$key]) !== 0) {
-                    $match = false;
-                    break;
-                }
-            }
-        }
-// 匹配成功
-
-
-        if ($match) {
-
-            foreach ($routeArr as $key => $value) {
-                if (strpos($value, ':') === FALSE) {
-                    unset($regxArr[$key]);
-                }
-            }
-//            echo $rule;
-//            xmp($omg);
-//            xmp($regxArr);
-            $this->rewriteUrl = preg_replace(array_values($omg), array_values($regxArr), $rule);
-        }
-
-        return $match;
-    }
 
 }
 
@@ -1814,73 +1656,11 @@ class AController extends ABaseController
         if (empty(self::$urlManager)) {
             self::$urlManager = App::base()->urlManager;
         }
-        if (empty($domain)) {
-            $domain = baseUrl();
-        }
+        self::$urlManager->setCreateUrlParams($moduleAction, $params, $domain);
 
-        // 如果没有启rewrite模式
-        if (!self::$urlManager ['rewriteMod'] || $params['ajaxPage'] == 1 || $params['noReWrite'] == 1) {
+        return self::$urlManager->createURLPath();
 
-            $urlStr = empty($moduleAction) ? $domain : "{$domain}/index.php?r=" . urlencode($moduleAction);
 
-            if (!is_array($params)) {
-                return $urlStr;
-            }
-            foreach ($params as $k => $v) {
-                $urlStr .= "&{$k}=" . urlencode($v);
-            }
-            return $urlStr;
-        }
-        //xmp($domain);
-        // 如果开启了rewrite模式
-        $delimiter = $this->delimiter;
-        $ruleStr = $moduleAction;
-
-        $urlStr = empty($moduleAction) ? $domain : "{$domain}/" . $moduleAction; // 取消urlencode        
-        // apache下打不开
-        if (!is_array($params)) {
-            return $urlStr;
-        }
-
-        $urlStr .= '/';
-        $ruleStr .= '/';
-        foreach ($params as $k => $v) {
-            if ($v === '') {
-                continue;
-            }
-
-            // 处理特殊字符
-            if (is_array($v) && $v ['url']) {
-                empty($v ['doType']) ? $v ['doType'] = 'base64_encode' : '';
-                $urlStr .= $k . $delimiter . urlencode($v ['doType']($v ['url'])) . $delimiter;
-                //xmp($urlStr);
-                $ruleStr .= $k . $delimiter . urlencode($v ['doType']($v ['url'])) . $delimiter;
-                continue;
-            }
-            if (!is_array($v)) {
-                $urlStr .= $k . $delimiter . urlencode($v) . $delimiter;
-                $ruleStr .= $k . $delimiter . urlencode($v) . $delimiter;
-                continue;
-            }
-            foreach ($v as $v1) {
-                $urlStr .= $k . '[]' . $delimiter . $v1 . $delimiter;
-                $ruleStr .= $k . '[]' . $delimiter . $v1 . $delimiter;
-            }
-        }
-
-        $urlStr = substr($urlStr, 0, -1);
-        $ruleStr = substr($ruleStr, 0, -1);
-//          xmp($ruleStr);
-        $rules = self::$urlManager['rules'];
-        foreach ($rules as $key => $value) {
-            if ($this->parseUrlRuleRewrite($key, $value, $ruleStr)) {
-                break;
-            }
-        }
-
-        $urlStr = $this->rewriteUrl != $moduleAction ? $urlStr = $domain . $this->delimiterModuleAction . $this->rewriteUrl : $urlStr;
-
-        return $urlStr;
     }
 
     /**

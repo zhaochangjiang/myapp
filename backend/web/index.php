@@ -1,5 +1,5 @@
 <?php
-
+print_r(sdfsdf);exit;
 use framework\App;
 
 header("Content-type:text/html;charset=utf-8");

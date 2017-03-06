@@ -2,74 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dfc1c417-1747-4c1a-9e26-081311142c93" name="默认的" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/composer.json" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/Logger.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerAppender.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerAppenderPool.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerAutoloader.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerConfigurable.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerConfigurator.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerFilter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerHierarchy.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerLayout.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerLevel.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerLocationInfo.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerLoggingEvent.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerMDC.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerNDC.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerReflectionUtils.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerRoot.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/LoggerThrowableInformation.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderConsole.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderDailyFile.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderEcho.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderFile.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderMail.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderMailEvent.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderMongoDB.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderNull.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderPDO.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderPhp.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderRollingFile.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderSocket.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/appenders/LoggerAppenderSyslog.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/configurators/LoggerConfigurationAdapter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/configurators/LoggerConfigurationAdapterINI.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/configurators/LoggerConfigurationAdapterPHP.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/configurators/LoggerConfigurationAdapterXML.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/configurators/LoggerConfiguratorDefault.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/filters/LoggerFilterDenyAll.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/filters/LoggerFilterLevelMatch.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/filters/LoggerFilterLevelRange.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/filters/LoggerFilterStringMatch.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerBasicPatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerCategoryPatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerClassNamePatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerDatePatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerFormattingInfo.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerLiteralPatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerLocationPatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerMDCPatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerNamedPatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerOptionConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerPatternConverter.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/helpers/LoggerPatternParser.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/layouts/LoggerLayoutHtml.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/layouts/LoggerLayoutPattern.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/layouts/LoggerLayoutSerialized.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/layouts/LoggerLayoutSimple.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/layouts/LoggerLayoutTTCC.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/layouts/LoggerLayoutXml.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/renderers/LoggerRendererDefault.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/renderers/LoggerRendererException.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/renderers/LoggerRendererMap.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/renderers/LoggerRendererObject.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/vendor/framework/lib/log4php/main/php/xml/log4php.dtd" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/framework/bin/AUrlManager.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/framework/bin/widget/cache/ACache.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/framework/bin/widget/cache/ACacheFile.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vendor/framework/bin/widget/cache/ACacheRedis.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend/web/index.php" afterPath="$PROJECT_DIR$/backend/web/index.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/communal/config/DEV/config.php" afterPath="$PROJECT_DIR$/communal/config/DEV/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/communal/config/RUN/config.php" afterPath="$PROJECT_DIR$/communal/config/RUN/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/framework/bin/ABaseApplication.php" afterPath="$PROJECT_DIR$/vendor/framework/bin/ABaseApplication.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseMysqlPDO.php" afterPath="$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseMysqlPDO.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vendor/framework/bin/ABaseController.php" afterPath="$PROJECT_DIR$/vendor/framework/bin/ABaseController.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/newhtml.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vendor/framework/bin/database/ADBException.php" afterPath="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADBException.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseMysql.php" afterPath="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseMysql.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseMysqlPDO.php" afterPath="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseMysqlPDO.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseSQLite.php" afterPath="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseSQLite.php" />
     </list>
     <ignored path="myapp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -90,7 +35,28 @@
     <favorites_list name="myapp" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="ABaseController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vendor/framework/bin/ABaseController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.2608695">
+              <caret line="1658" column="45" selection-start-line="1658" selection-start-column="27" selection-end-line="1658" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/backend/web/index.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.04536489">
+              <caret line="1" column="2" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -101,8 +67,21 @@
         <option value="$PROJECT_DIR$/vendor/composer.json" />
         <option value="$PROJECT_DIR$/vendor/framework/bin/ABaseApplication.php" />
         <option value="$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseMysqlPDO.php" />
-        <option value="$PROJECT_DIR$/communal/config/DEV/config.php" />
         <option value="$PROJECT_DIR$/communal/config/RUN/config.php" />
+        <option value="$PROJECT_DIR$/vendor/apache/log4php/src/examples/php/appender_php.php" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/communal/config/DEV/config.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/AUrlManager.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/cache/ACache.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/cache/ACacheRedis.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/ABaseController.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/cache/ACacheFile.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseMysql.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseSQLite.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADBException.php" />
+        <option value="$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseMysqlPDO.php" />
+        <option value="$PROJECT_DIR$/backend/web/index.php" />
       </list>
     </option>
   </component>
@@ -110,6 +89,26 @@
   <component name="JsBuildToolPackageJson" detection-done="true" />
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
+  </component>
+  <component name="MessDetectorBlackList">
+    <option name="filePaths">
+      <list>
+        <option value="$PROJECT_DIR$/ip_address.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PHPCodeSnifferBlackList">
+    <option name="filePaths">
+      <list>
+        <option value="$PROJECT_DIR$/ip_address.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PHPCodeSnifferProjectConfiguration">
+    <option name="selectedConfigurationId" value="DEFAULT_INTERPRETER" />
+  </component>
+  <component name="PhpServers">
+    <servers />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
@@ -147,8 +146,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -167,6 +166,154 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vendor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="widget" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="communal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="web" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="myapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="juetun" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -176,9 +323,11 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/.gitignore&#10;true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\app_php\juetun\vendor\framework\bin\widget" />
       <recent name="D:\app_php\myapp" />
       <recent name="D:\app_php\myapp\vendor\framework\lib" />
       <recent name="D:\app_php\myapp\vendor" />
@@ -215,6 +364,9 @@
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="dfc1c417-1747-4c1a-9e26-081311142c93" name="默认的" comment="" />
@@ -226,9 +378,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1365" height="728" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.47185814" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.48111024" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="版本控制" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.085514836" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -248,16 +400,40 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/ip_address.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/communal/config/DEV/config.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -332,27 +508,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5443787">
-          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/backend/web/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45364892">
-          <caret line="49" column="32" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/framework/App.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6804734">
-          <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/framework/.htaccess">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.12801485">
@@ -360,42 +515,278 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseMysqlPDO.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23274162">
-          <caret line="621" column="0" selection-start-line="621" selection-start-column="0" selection-end-line="621" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/database/ADatabaseMysql.php">
+    <entry file="file://$PROJECT_DIR$/client/config/RUN/config.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/ABaseApplication.php">
+    <entry file="file://$PROJECT_DIR$/client/modules/site/controllers/ControllerPassport.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3530572">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        <state vertical-scroll-proportion="-2.6291914">
+          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/communal/config/DEV/config.php">
+    <entry file="file://$PROJECT_DIR$/nbproject/project.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17159763">
-          <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.31944445">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nbproject/private/private.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18253969">
+          <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/apache/log4php/src/examples/php/appender_dailyfile.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/apache/log4php/src/main/php/LoggerRoot.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.7238659">
+          <caret line="55" column="25" selection-start-line="55" selection-start-column="25" selection-end-line="55" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/apache/log4php/src/main/php/LoggerLevel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.38856">
+          <caret line="45" column="15" selection-start-line="45" selection-start-column="15" selection-end-line="45" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/apache/log4php/src/main/php/Logger.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.2361703">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/apache/log4php/src/examples/php/appender_php.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27218935">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.git/info/exclude">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2560297">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31944445">
+          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45364892">
+          <caret line="10" column="5" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ip_address.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3411017">
+          <caret line="7" column="2" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/modules/layout/header.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.3125">
+          <caret line="6" column="40" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/communal/config/RUN/config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36489153">
-          <caret line="14" column="15" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
+        <state vertical-scroll-proportion="-0.13412228">
+          <caret line="15" column="15" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
           <folding>
             <element signature="e#72#256#0#PHP" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/communal/config/DEV/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6804734">
+          <caret line="21" column="19" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/modules/data/controllers/ControllerCategory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16808511">
+          <caret line="137" column="6" selection-start-line="137" selection-start-column="6" selection-end-line="137" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/modules/data/views/category/picture/edit.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.59375">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/ABaseApplication.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.5652175">
+          <caret line="117" column="24" selection-start-line="117" selection-start-column="24" selection-end-line="117" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/config/DEV/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.75">
+          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/AUrlManager.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.3125">
+          <caret line="161" column="32" selection-start-line="161" selection-start-column="32" selection-end-line="161" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseMysql.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.875">
+          <caret line="6" column="31" selection-start-line="6" selection-start-column="31" selection-end-line="6" selection-end-column="31" />
+          <folding>
+            <marker date="1488793067045" expanded="true" signature="6209:6259" placeholder="DELETE FROM " />
+            <marker date="1488793067045" expanded="true" signature="11323:11427" placeholder="SELECT ${{$t... " />
+            <marker date="1488793067045" expanded="true" signature="12114:12231" placeholder="SELECT ${{$t... " />
+            <marker date="1488793067045" expanded="true" signature="12778:13019" placeholder="SELECT ${{$p... " />
+            <marker date="1488793067045" expanded="true" signature="13123:13363" placeholder="SELECT ${{$p... " />
+            <marker date="1488793067045" expanded="true" signature="13462:13688" placeholder="SELECT ${{$p... " />
+            <marker date="1488793067045" expanded="true" signature="14120:14201" placeholder="INSERT INTO `${{$tableName}}`... " />
+            <marker date="1488793067045" expanded="true" signature="16731:16772" placeholder="INSERT INTO `${{$table}}`... " />
+            <marker date="1488793067045" expanded="true" signature="17458:17513" placeholder="UPDATE `${{$... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseMysqlPDO.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.9275362">
+          <caret line="1011" column="33" selection-start-line="1011" selection-start-column="33" selection-end-line="1011" selection-end-column="33" />
+          <folding>
+            <element signature="e#235#270#0#PHP" expanded="true" />
+            <marker date="1488793309988" expanded="true" signature="3796:3825" placeholder="SELECT %s FR... " />
+            <marker date="1488793309988" expanded="true" signature="6553:6565" placeholder="DELETE FROM " />
+            <marker date="1488793309988" expanded="true" signature="9844:10303" placeholder="SELECT ORDIN... COLUMNS" />
+            <marker date="1488793309988" expanded="true" signature="25317:25416" placeholder="INSERT INTO ${$this-&gt;parseTableName($table)}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/widget/database/ADatabaseSQLite.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18145956">
+          <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+          <folding>
+            <marker date="1488793085971" expanded="true" signature="3422:3472" placeholder="DELETE FROM " />
+            <marker date="1488793085971" expanded="true" signature="8213:8317" placeholder="SELECT ${{$t... " />
+            <marker date="1488793085971" expanded="true" signature="8946:9063" placeholder="SELECT ${{$t... " />
+            <marker date="1488793085971" expanded="true" signature="9390:9631" placeholder="SELECT ${{$p... " />
+            <marker date="1488793085971" expanded="true" signature="9735:9975" placeholder="SELECT ${{$p... " />
+            <marker date="1488793085971" expanded="true" signature="10074:10300" placeholder="SELECT ${{$p... " />
+            <marker date="1488793085971" expanded="true" signature="11117:11199" placeholder="INSERT INTO `${{$tableName}}`... " />
+            <marker date="1488793085971" expanded="true" signature="12415:12454" placeholder="INSERT INTO $... " />
+            <marker date="1488793085971" expanded="true" signature="13361:13401" placeholder="UPDATE `${{$... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/widget/cache/ACacheRedis.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13609467">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/widget/cache/ACache.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22682446">
+          <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/App.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.019723866">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/widget/cache/ACacheFile.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13806707">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/widget/database/ADBException.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18145956">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/framework/bin/ABaseController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.2608695">
+          <caret line="1658" column="45" selection-start-line="1658" selection-start-column="27" selection-end-line="1658" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/web/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.04536489">
+          <caret line="1" column="2" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
+          <folding />
         </state>
       </provider>
     </entry>

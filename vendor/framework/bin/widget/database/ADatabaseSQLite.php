@@ -1,8 +1,8 @@
 <?php
 
-namespace framework\bin\database;
+namespace framework\bin\widget\database;
 
-use framework\bin\ADBException;
+use framework\bin\widget\ADBException;
 
 /*
    * 使用pdo连接sqlite

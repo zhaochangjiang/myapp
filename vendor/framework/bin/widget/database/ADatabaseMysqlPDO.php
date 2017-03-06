@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-namespace framework\bin\database;
+namespace framework\bin\widget\database;
 
-use framework\bin\ADatabase;
+use framework\bin\widget\ADatabase;
 use PDO;
 use Exception;
 use RuntimeException;
@@ -621,6 +621,16 @@ class ADatabaseMysqlPDO implements ADatabase
     }
 
     /**
+     * @param array $fields
+     */
+    static function walkFunction(array $fields)
+    {
+        foreach ($fields as $value) {
+            self::addSpecialChar($value);
+        }
+    }
+
+    /**
      * fields分析
      * @access function
      * @param mixed $fields
@@ -629,18 +639,14 @@ class ADatabaseMysqlPDO implements ADatabase
     static function parseFields($fields)
     {
         if (is_array($fields)) {
-            array_walk($fields, array(
-                $this,
-                'addSpecialChar'));
+            self::walkFunction($fields);
             $fieldsStr = implode(',', $fields);
             return $fieldsStr;
         }
         if (is_string($fields) && !empty($fields)) {
             if (false === strpos($fields, '`')) {
                 $fields = explode(',', $fields);
-                array_walk($fields, array(
-                    $this,
-                    'addSpecialChar'));
+                self::walkFunction($fields);
                 $fieldsStr = implode(',', $fields);
             } else {
                 $fieldsStr = $fields;

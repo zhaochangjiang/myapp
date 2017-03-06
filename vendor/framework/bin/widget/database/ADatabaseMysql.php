@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\bin\database;
+namespace framework\bin\widget\database;
 
 use framework\bin\ADatabase;
 use framework\App;
