@@ -8,7 +8,7 @@
 
 namespace framework\bin\widget\database;
 
-use framework\bin\widget\ADatabase;
+use framework\bin\ADatabase;
 use PDO;
 use Exception;
 use RuntimeException;

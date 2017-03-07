@@ -8,10 +8,10 @@ namespace framework\bin\cache;
  * Date: 2017/3/6
  * Time: 17:15
  */
-class ACacheRedis implements ACache
+class ACacheRedis extends AAbstractCache
 {
 
-    public function set($key, $value)
+    public function set($key, $value, $lifeTime)
     {
         // TODO: Implement set() method.
     }

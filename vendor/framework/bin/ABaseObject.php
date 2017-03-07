@@ -19,11 +19,47 @@ class ABaseObject
         self::$cache = $config ['cache'];
         unset($config['cache']);
         foreach ($config as $key => $val) {
-            $this->$key = $val;
+
+            switch ($key) {
+                case 'urlManager':
+                    $this->$key = $this->_initObject($val);
+                    break;
+                default:
+                    $this->$key = $val;
+                    break;
+            }
         }
         foreach (self::$cache as $key => $val) {
             self::$arr[$key] = $val;
         }
+    }
+
+
+    /**
+     * 实例化对象
+     * @return ABaseObject
+     */
+    public static function getInstance()
+    {
+        return new self();
+    }
+
+    /**
+     * 初始化对象
+     * @param $initObjectArgument
+     * @return mixed
+     */
+    private function _initObject(array $initObjectArgument)
+    {
+        $className = $initObjectArgument['class'];
+        unset($initObjectArgument['class']);
+        $object = new $className();
+
+        foreach ($initObjectArgument as $param => $argument) {
+            $function = "set" . ucfirst($param);
+            $object->$function($argument);
+        }
+        return $object;
     }
 
     private function __get($property_name)

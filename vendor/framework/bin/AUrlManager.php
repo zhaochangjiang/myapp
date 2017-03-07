@@ -17,6 +17,12 @@ class AUrlManager
     var $moduleAction = '';
     var $params = array();
     var $noReWrite = false;
+    var $routeRule;//路由规则
+
+    public static function getInstance()
+    {
+        return new self();
+    }
 
     /**
      * @return boolean
@@ -34,6 +40,11 @@ class AUrlManager
         $this->rewriteMod = $rewriteMod;
     }
 
+    /**
+     * @param $moduleAction
+     * @param $params
+     * @param $domain
+     */
     public function setCreateUrlParams($moduleAction, $params, $domain)
     {
         $this->setDomain($domain);
@@ -67,12 +78,12 @@ class AUrlManager
 
     public function createURLPath()
     {
+
         // 如果没有启rewrite模式
         if (!$this->rewriteMod || $this->noReWrite) {
 
             return $this->_notRewrite();
         }
-
         return $this->_reWrite();
     }
 
@@ -88,6 +99,7 @@ class AUrlManager
         $ruleStr = $this->moduleAction;
 
         $urlStr = empty($moduleAction) ? $this->domain : "{$this->domain}/" . $moduleAction; // 取消urlencode
+
         // apache下打不开
         if (!is_array($this->params)) {
             return $urlStr;
@@ -121,15 +133,14 @@ class AUrlManager
 
         $urlStr = substr($urlStr, 0, -1);
         $ruleStr = substr($ruleStr, 0, -1);
-//          xmp($ruleStr);
-        $rules = self::$urlManager['rules'];
-        foreach ($rules as $key => $value) {
+        foreach ((array)$this->routeRule as $key => $value) {
             if ($this->parseUrlRuleRewrite($key, $value, $ruleStr)) {
                 break;
             }
         }
-
-        $urlStr = $this->rewriteUrl != $moduleAction ? $urlStr = $this->domain . $this->delimiterModuleAction . $this->rewriteUrl : $urlStr;
+        if ($this->rewriteUrl !== $this->moduleAction) {
+            $urlStr = $this->domain . $this->delimiterModuleAction . $this->rewriteUrl .'/'. $this->moduleAction . $this->extendFile;
+        }
 
         return $urlStr;
     }

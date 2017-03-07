@@ -1,5 +1,5 @@
 <?php
-print_r(sdfsdf);exit;
+
 use framework\App;
 
 header("Content-type:text/html;charset=utf-8");
@@ -54,6 +54,7 @@ try {
     $config = dirname(dirname(__FILE__)) . '/config/' . DEFINE_ENVIORMENT . '/config.php';
     App::createApplication($config)->run();
 } catch (Exception $ex) {
+    print_r($ex->getMessage());
     throw $ex;
 }
 

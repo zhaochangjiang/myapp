@@ -75,9 +75,10 @@ abstract class ControllerBackend extends AController
     public function validateLogin()
     {
         if (empty($this->data['session'])) {
-            $this->redirect($this->createUrl(array(
+            $gotoUrl = $this->createUrl(array(
                 'passport',
-                'login'), array(), App::base()->params['domain']['web']));
+                'login'), array(), App::base()->params['domain']['web']);
+            $this->redirect();
         }
     }
 
@@ -90,7 +91,7 @@ abstract class ControllerBackend extends AController
         if (!empty($this->applicationDIr)) {
             return;
         }
-        $this->applicationDIr = dirname(dirname(__FILE__)) . D_S;
+        $this->applicationDIr = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
     }
 
 

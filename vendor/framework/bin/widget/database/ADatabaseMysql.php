@@ -4,7 +4,8 @@ namespace framework\bin\widget\database;
 
 use framework\bin\ADatabase;
 use framework\App;
-use framework\bin\ADBException;
+
+//use framework\bin\widget\database\ADBException;
 
 /**
  * 数据库操作接口

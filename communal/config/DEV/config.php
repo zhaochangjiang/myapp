@@ -20,6 +20,8 @@ return array(
     ),
     'urlManager' => array(
         'rewriteMod' => true,
+        'class' => 'framework\bin\AUrlManager',
+        'extendFile' => '.html'
     ),
     'database' => array(
         'user' => array(
