@@ -20,6 +20,7 @@ class Picture
         return $this->picture_id;
     }
 
+
     function getName()
     {
         return $this->name;
