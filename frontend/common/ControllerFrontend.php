@@ -18,7 +18,7 @@ class ControllerFrontend extends AController
     public function init()
     {
         parent::init();
-        $this->applicationDIr = dirname(dirname(__FILE__)) . D_S;
+        $this->applicationDIr = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR;
     }
 
     /**

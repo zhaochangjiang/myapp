@@ -3,8 +3,7 @@
 namespace framework\bin;
 
 use framework\App;
-use framework\bin\database\ADatabaseMysql;
-use framework\bin\database\ADBException;
+
 
 /**
  * 系统基础Model
@@ -94,7 +93,8 @@ abstract class AModel
      */
     public static function getModel($linkName)
     {
-        $modelClass = "ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
+        $dbType = self::$_db_config[$linkName]['DATABASE_TYPE'];
+        $modelClass = "ADatabase{$dbType}";
         return new $modelClass($linkName);
     }
 
@@ -486,7 +486,7 @@ abstract class AModel
         if (empty($this->_db_config [$linkName] ['DATABASE_TYPE'])) {
             $this->_db_config [$linkName] ['DATABASE_TYPE'] = 'Mysql';
         }
-        return __NAMESPACE__ . "\database\ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
+        return __NAMESPACE__ . "\widget\database\ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
     }
 
 }

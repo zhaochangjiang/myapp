@@ -19,9 +19,11 @@ ini_set('date.timezone', 'Asia/Shanghai');
  */
 // --------------------系统配置Start-----------------------------------/
 // 当前系统时间
-define('TIMESTAMP', time());
-defined('MICROTIME') or define('MICROTIME', microtime(true));
-define('D_S', DIRECTORY_SEPARATOR);
+define('FRAME_MICROTIME', microtime(true));
+define('FRAME_TIMESTAMP', time());
+
+//框架抛出的异常代码
+define("FRAME_THROW_EXCEPTION", 1000);
 
 // 所用数据库类型？
 defined('DATABASE_TYPE') or define('DATABASE_TYPE', 'Mysql');
@@ -33,16 +35,16 @@ defined('TOKEN') or define('TOKEN', 'f#jPk9$0');
  * *******************服务目录配置 start*******************
  */
 // 当前系统服务器目录
-defined('DIR_SERVER') or define('DIR_SERVER', dirname(dirname(dirname(dirname(__FILE__)))) . D_S);
+defined('DIR_SERVER') or define('DIR_SERVER', dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR);
 // --------------------系统配置Over-----------------------------------/
 // 框架基础类所在文件位置
-defined('DIR_FRAMEWORK') or define('DIR_FRAMEWORK', DIR_SERVER . 'vendor/framework' . D_S);
+defined('DIR_FRAMEWORK') or define('DIR_FRAMEWORK', DIR_SERVER . 'vendor/framework' . DIRECTORY_SEPARATOR);
 
 //是否为接口访问
 defined('IS_CLIENT') or define('IS_CLIENT', false);
 // 本地访问接口位置
 //defined('DIR_IMPORT_LOCATE') or define('DIR_IMPORT_LOCATE',
-//                                       DIR_SERVER . 'Cimport' . D_S);
+//                                       DIR_SERVER . 'Cimport' . DIRECTORY_SEPARATOR);
 
 /**
  * *******************服务目录配置 over*******************
@@ -99,7 +101,7 @@ class ABaseApplication
     // 系统views路径
     public static function getSystemViewPath()
     {
-        return DIR_FRAMEWORK . D_S . 'views';
+        return DIR_FRAMEWORK . DIRECTORY_SEPARATOR . 'views';
     }
 
     public function sessionDestory()
@@ -124,7 +126,7 @@ class ABaseApplication
                 '..'))) {//如果为.或..
                 continue;
             }
-            $tmp = $path . D_S . $d;
+            $tmp = $path . DIRECTORY_SEPARATOR . $d;
 
             //如果为文件 //如果为目录
             (!is_dir($tmp)) ? unlink($tmp) : self::deleteDir($tmp);
@@ -183,6 +185,7 @@ class ABaseApplication
 
     private static function initSelfBasePathMap()
     {
+
         if (isset(self::$_config['selfBasePathMap']) && is_array(self::$_config['selfBasePathMap'])) {
             self::$selfBasePathMap = array_merge(self::$selfBasePathMap, self::$_config['selfBasePathMap']);
         }
@@ -203,7 +206,7 @@ class ABaseApplication
             throw new Exception("The config file:\"{$configFile}\" can't null!");
         }
 
-        include_once DIR_FRAMEWORK . 'bin' . D_S . 'AFunction.php'; // 加载函数库
+        include_once DIR_FRAMEWORK . 'bin' . DIRECTORY_SEPARATOR . 'AFunction.php'; // 加载函数库
 
         $instance::$_config = include_once $configFile;
 
@@ -239,6 +242,10 @@ class ABaseApplication
         return md5(TOKEN . session_id());
     }
 
+
+    /**
+     *
+     */
     public function clientReturnDataOrg()
     {
         if (IS_CLIENT === false) {
@@ -273,7 +280,7 @@ class ABaseApplication
             session_start();
             return;
         }
-        include_once DIR_FRAMEWORK . 'bin' . D_S . 'ASession.php';
+        include_once DIR_FRAMEWORK . 'bin' . DIRECTORY_SEPARATOR . 'ASession.php';
     }
 
     /**
@@ -290,23 +297,34 @@ class ABaseApplication
         //开启session
         $this->initSession();
 
-
         // 获得当前请求动作是什么
         $controller = new ABaseController ();
+
         // $moduleString     = $controllerString = $action           = '';
         //如果不是 Afunction 中函数C控制的方法
         if ($moduleString === null && $controllerString === null && $action === null) {
+            $moduleAction = '';
+            //如果是URL重写的请求
+            if ($_config ['urlManager'] ['rewriteMod']) {
+                $dirScriptName = dirname($_SERVER['SCRIPT_NAME']);
 
-            //如果不是PHP文件请求
-            if ($_config ['urlManager'] ['rewriteMod'] && strrpos($_SERVER['REQUEST_URI'], '.php') === false) {
+                $baseName = ltrim(substr($_SERVER['REQUEST_URI'], strlen($dirScriptName)), '/');
+                if (stripos($baseName, '?') !== false) {
+                    $baseName = substr($baseName, 0, stripos($baseName, '?'));
 
+                }
+
+                empty($_config ['urlManager']['extendFile']) ? '' : $moduleAction = rtrim($baseName, $_config ['urlManager']['extendFile']);
+
+                if ($moduleAction === $baseName) {//如果是php的请求
+                    $moduleAction = $controller->getInput('r');
+                }
             } else {
-
                 $moduleAction = $controller->getInput('r');
-                list ($moduleString, $controllerString, $action) = self:: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
             }
-        }
+            list ($moduleString, $controllerString, $action) = self:: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
 
+        }
 
         if (empty($controllerString) || empty($action)) {
 
@@ -323,10 +341,11 @@ class ABaseApplication
         $moduleDeal->init();
 
 
+        //加载插件
         self::loadAWidget($moduleDeal);
+
+        //获得方法名称
         $methodName = self:: getMethodName($action);
-
-
         // 如果方法不存在，新增动态action
         if (!method_exists($moduleDeal, $methodName)) {//&& !isset($moduleDeal->actionMaps [$methodName])
             throw new AHttpException(404, "The Method \"$methodName\" doesn't exist! in {$className}!");
@@ -398,10 +417,6 @@ class ABaseApplication
         }
     }
 
-//      private static function getDefaultModuleAction()
-//      {
-//          return self::$_config ['defaultModuleAction'];
-//      }
 
     /**
      * 获取路由路径
@@ -422,9 +437,7 @@ class ABaseApplication
             case 0:
                 throw new Exception("the program is error on creating Path! ");
             case 1:
-
-                $moduleActionStringArray = explode(self::$delimiterModuleAction, $defaultModuleAction);
-                list($result [1], $result [2]) = $moduleActionStringArray;
+                list($result [1], $result [2]) = explode(self::$delimiterModuleAction, $defaultModuleAction);
                 $result[0] = array_pop($temp);
                 break;
 
@@ -464,7 +477,7 @@ class ABaseApplication
     public static function error($message, $code = 404)
     {
 
-        require_once dirname(__FILE__) . D_S . 'AHttpException.php';
+        require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AHttpException.php';
         throw new AHttpException($code, $message);
     }
 
@@ -591,7 +604,7 @@ class ABaseApplication
      */
     public static function setBasePathMap($path)
     {
-        return self::$selfBasePathMap["@{$path}"] = DIR_SERVER . $path . D_S;
+        return self::$selfBasePathMap["@{$path}"] = DIR_SERVER . $path . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -622,7 +635,6 @@ class ABaseApplication
      */
     public static function autoload($className)
     {
-
         if (empty($className)) {
             return true;
         }
@@ -658,10 +670,11 @@ class ABaseApplication
             class_exists($classNameBase) ? $flagClassExists = true : '';
         }
 
-        $includeFile = $pathBase . implode(D_S, $namespaceDividString) . D_S . "{$classNameBase}.php";
+        $includeFile = $pathBase . implode(DIRECTORY_SEPARATOR, $namespaceDividString) . DIRECTORY_SEPARATOR . "{$classNameBase}.php";
 
         if (!file_exists($includeFile)) {
-            throw new AHttpException(404, "the file：{$includeFile}  is not exists!");
+
+            throw new AHttpException(404, "[ ERROR ]the file：{$includeFile}  is not exists ." . PHP_EOL . "[ MESSAGE ] throw Exception at line:" . __LINE__ . ",in file:" . __FILE__ . "!");
         }
         if (file_exists($includeFile) && !$flagClassExists) {
             require_once $includeFile;

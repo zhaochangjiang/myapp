@@ -3,7 +3,7 @@
 namespace framework\bin;
 
 use framework\App;
-use Exception;
+use RuntimeException;
 
 /**
  *
@@ -90,48 +90,43 @@ class ABaseController
      */
     public function loadViewCell($template, $isCache = false, $name = '', $lifeTime = 0)
     {
-
+        $template = trim($template, '/');
+        $_key = $template . '_' . $name;
         if ($isCache) {
-            $fileCache = App:: base()->fileCache;
-            $path = App:: getBasePath() . D_S . 'cache' . D_S . 'tpl' . D_S;
-            $fileCache->setCacheDir($path);
-            $_key = $template . '_' . $name;
-            $content = $fileCache->get($_key);
+            $cache = App:: base()->fileCache;
+            $content = $cache->get($_key);
         }
-
-        $array = explode('/', $template); // 如果render了模板，则解析
+        // 如果render了模板，则解析
         $path = App:: getPathOfAlias('application.template');
+        $template = $path . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR . $template . '.php';
 
-        if (count($array) < 2) {
-            $template = $path . D_S . 'layout' . D_S . $template . '.php';
-        } else {
-            $template = $path . D_S . $array [0] . D_S . $array [1] . '.php';
-        }
-
+        //如果缓存内容为空,
         if (empty($content)) {
             ob_start();
-            extract($this->loadData);
+
+            foreach ($this->loadData as $key => $value) {
+                ${$key} = $value;
+            }
             if (!file_exists($template)) {
-                throw new Exception("the file ：{$template} is not exists!");
+                throw new RuntimeException("the file ：{$template} is not exists!", FRAME_THROW_EXCEPTION);
             }
             require_once $template;
             $content = ob_get_contents();
+
             ob_end_clean();
-            $isCache && $fileCache->set($_key, $content, $lifeTime);
+
+            $isCache && $cache->set($_key, $content, $lifeTime);
         }
 
         echo $content;
-        return;
     }
 
     /**
      * <p>从$_GET和$_POST中获得传入的FLOAT类型参数</p>
      * <p>当传入的数值超过PHP_INT_MAX或者传入的不是正整数，则返回零</p>
      *
-     * @param
-     *            - precision    -小数位数
-     * @param $param string
-     *            - 参数名
+     * @param $precision -小数位数
+     * @param $param string - 参数名
      * @param $param is_round
      *            - enum(1,2,3):1四舍五入,2去尾加1,3去尾
      * @return - float类型的参数的值
@@ -143,13 +138,11 @@ class ABaseController
             $i = 0;
         switch ($is_round) {
             case 2 :
-                $i = $i * (pow(10, $precision));
-                $i = floor($i);
+                $i = floor($i * (pow(10, $precision)));
                 $i = $i / (pow(10, $precision));
                 break;
             case 3 :
-                $i = $i * (pow(10, $precision));
-                $i = ceil($i);
+                $i = ceil($i * (pow(10, $precision)));
                 $i = $i / (pow(10, $precision));
                 break;
             default :
@@ -626,164 +619,6 @@ class ABaseController
         return $match;
     }
 
-    public function parseUrlRuleRewrite($rule, $route, $regx)
-    {
-
-//        echo $route;
-
-
-        $delimiter = $this->delimiter;
-// 把路由规则和地址,分割到数组中，然后逐项匹配
-        $ruleArr = multipleExplode(array(
-            '/',
-            '_',
-            '-'), $rule);
-
-
-        $regxArr = explode($delimiter, $regx);
-        $routeArr = explode($delimiter, $route);
-        $newRegArr = $regxArr;
-        if (FALSE !== strpos($route, ':')) {
-            foreach ($routeArr as $key => $value) {
-
-                if (!in_array($value, $ruleArr) && strpos($value, ':') === FALSE) {
-                    unset($newRegArr[$key]);
-                }
-            }
-            $newRegArr = array_values($newRegArr);
-            foreach ($ruleArr as $key => $value) {
-                if (!in_array($value, $newRegArr) && strpos($value, ':') === FALSE) {
-                    unset($ruleArr[$key]);
-                }
-            }
-        } else {
-            if (strcasecmp($regx, $route) == 0) {
-                $match = true;
-                $this->rewriteUrl = $rule;
-            }
-            return $match;
-        }
-
-
-        $a1 = array(
-            "/(:\d+)/",
-            "/\//"
-        );
-        $a2 = array(
-            ".+",
-            "\/"
-        );
-        $rulex = preg_replace($a1, $a2, $route);
-        $rulex = "/^{$rulex}$/i";
-
-
-        if (!preg_match($rulex, $regx)) {
-
-            $match = false;
-            return $match;
-        }
-
-
-        $match = true;
-// 匹配检测
-        $omg = array();
-        if (count($ruleArr) > count($newRegArr)) {
-            $match = false;
-        } else {
-
-            foreach ($ruleArr as $key => $value) {
-
-                if (strpos($value, ':') === 0) {
-
-
-                    if (FALSE !== strpos($value, '\\d')) {
-                        $value = str_replace("\\d", "", $value);
-                        $rule = str_replace("\\d", "", $rule);
-                    }
-
-                    if (FALSE !== strpos($value, '\\w')) {
-                        $value = str_replace("\\w", "", $value);
-                        $rule = str_replace("\\w", "", $rule);
-                    }
-
-
-                    if (FALSE !== strpos($value, '\\AZ')) {
-                        $value = str_replace("\\AZ", "", $value);
-                        $rule = str_replace("\\AZ", "", $rule);
-                    }
-
-
-                    if (FALSE !== strpos($value, '\\AD')) {
-                        $value = str_replace("\\AD", "", $value);
-                        $rule = str_replace("\\AD", "", $rule);
-                    }
-
-                    if (FALSE !== strpos($value, '\\BD')) {
-                        $value = str_replace("\\BD", "", $value);
-                        $rule = str_replace("\\BD", "", $rule);
-                    }
-
-
-                    if (FALSE !== strpos($value, '\\CD')) {
-                        $value = str_replace("\\CD", "", $value);
-                        $rule = str_replace("\\CD", "", $rule);
-                    }
-
-
-                    $omg[$key] = '/' . $value . '/';
-
-                    if ($pos = strpos($value, '^')) {//排除
-                        $mk = substr($value, 0, $pos);
-                        $omg[$key] = '/' . $mk . '/';
-                        $rule = str_replace($value, $mk, $rule);
-                        $stripArr = explode('|', trim(strstr($value, '^'), '^'));
-                        if (!in_array($newRegArr[$key], $stripArr)) {
-                            $match = false;
-                            break;
-                        }
-                    }
-                    if ($pos = strpos($value, '.')) {
-                        $omg[$key] = '/' . substr($value, 0, $pos) . '/';
-                    }
-
-                    if (($pos = strpos($value, "\\d"))) {
-
-                        if (!preg_match("/(\d+)$/i", $newRegArr[$key])) {
-                            $match = false;
-                            break;
-                        }
-
-                        $mk = substr($value, 0, $pos);
-
-                        $rule = str_replace('\\d', '', $rule);
-                        $omg[$key] = '/' . $mk . '/';
-                    }
-
-// 静态项不区分大小写
-                } elseif (strcasecmp($value, $newRegArr[$key]) !== 0) {
-                    $match = false;
-                    break;
-                }
-            }
-        }
-// 匹配成功
-
-
-        if ($match) {
-
-            foreach ($routeArr as $key => $value) {
-                if (strpos($value, ':') === FALSE) {
-                    unset($regxArr[$key]);
-                }
-            }
-//            echo $rule;
-//            xmp($omg);
-//            xmp($regxArr);
-            $this->rewriteUrl = preg_replace(array_values($omg), array_values($regxArr), $rule);
-        }
-
-        return $match;
-    }
 
 }
 
@@ -1010,7 +845,7 @@ class AController extends ABaseController
             $object = array_slice($object, -DEBUG_SQL_NUM, DEBUG_SQL_NUM);
         }
 
-        $path = App:: getSystemViewPath() . D_S . 'bottom_trace.php';
+        $path = App:: getSystemViewPath() . DIRECTORY_SEPARATOR . 'bottom_trace.php';
         include_once $path;
     }
 
@@ -1058,11 +893,11 @@ class AController extends ABaseController
         $path = ($this->theme != null ? $templateDir . $this->theme : $templateDir) . DIRECTORY_SEPARATOR;
         $extendPathString = '';
         if ($this->moduleString) {
-            $extendPathString = $this->moduleString . D_S;
+            $extendPathString = $this->moduleString . DIRECTORY_SEPARATOR;
         } else {
-            $extendPathString = ABaseApplication::getDefaultModule() . D_S;
+            $extendPathString = ABaseApplication::getDefaultModule() . DIRECTORY_SEPARATOR;
         }
-        $path .= $extendPathString .= 'views' . D_S;
+        $path .= $extendPathString .= 'views' . DIRECTORY_SEPARATOR;
         return $path;
     }
 
@@ -1082,7 +917,7 @@ class AController extends ABaseController
             return;
         }
 
-        $this->templateFile = $this->getTemplateDir() . $this->controllerString . D_S . $this->action . '.php';
+        $this->templateFile = $this->getTemplateDir() . $this->controllerString . DIRECTORY_SEPARATOR . $this->action . '.php';
     }
 
     /**
@@ -1242,11 +1077,11 @@ class AController extends ABaseController
         $template = $this->getTemplateFile();
         // 判断模板文件是否存在
         if (!file_exists($template)) {
-            throw new Exception("The template file:{$template} is not exist");
+            throw new RuntimeException("The template file:{$template} is not exist! at line:" . __LINE__ . ',in file：' . __FILE__, FRAME_THROW_EXCEPTION);
         }
 
         if (!file_exists($layout)) {
-            throw new Exception("The layout file:{$layout} is not exist");
+            throw new RuntimeException("The layout file:{$layout} is not exist. at line:" . __LINE__ . ',in file：' . __FILE__, FRAME_THROW_EXCEPTION);
         }
 
         ob_start();
@@ -1275,7 +1110,8 @@ class AController extends ABaseController
 
         // 判断模板文件是否存在
         if (!file_exists($this->templateFile)) {
-            throw new Exception("The template file:{$this->templateFile} is not exist");
+            throw new RuntimeException("The template file:{
+                $this->templateFile} is not exist", FRAME_THROW_EXCEPTION);
         }
         extract($params);
 
@@ -1298,13 +1134,14 @@ class AController extends ABaseController
             $array = explode('.', $templateFile); // 如果render了模板，则解析
             $n = count($array);
             if ($n < 2) {
-                $template = $path . D_S . 'layout' . D_S . "{$templateFile}.php";
+                $template = $path . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR . "{
+                $templateFile}.php";
             } else if ($n == 3) {
-                $template = $path . D_S . $array[0] .
-                    D_S . $array[1] . D_S . $array[2] . '.php';
+                $template = $path . DIRECTORY_SEPARATOR . $array[0] .
+                    DIRECTORY_SEPARATOR . $array[1] . DIRECTORY_SEPARATOR . $array[2] . '.php';
             } else {
-                $template = $path . D_S . $array[0] .
-                    D_S . $array[1] . '.php';
+                $template = $path . DIRECTORY_SEPARATOR . $array[0] .
+                    DIRECTORY_SEPARATOR . $array[1] . '.php';
             }
         }
 
@@ -1369,12 +1206,14 @@ class AController extends ABaseController
         return $breadCrumbString;
     }
 
-    public function setLoadData($data = array())
+    public
+    function setLoadData($data = array())
     {
         $this->loadData = $data;
     }
 
-    public function getAppTemplatePath()
+    public
+    function getAppTemplatePath()
     {
         return $this->templateFile;
     }
@@ -1388,11 +1227,12 @@ class AController extends ABaseController
      *            0 为无限生命
      *
      */
-    public function loadViewCell($template, $isCache = false, $name = '', $lifeTime = 0)
+    public
+    function loadViewCell($template, $isCache = false, $name = '', $lifeTime = 0)
     {
         if ($isCache) {
             $fileCache = App:: base()->fileCache;
-            $path = App:: getBasePath() . D_S . 'cache' . D_S . 'tpl' . D_S;
+            $path = App:: getBasePath() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR;
             $fileCache->setCacheDir($path);
             $_key = $template . '_' . $name;
             $content = $fileCache->get($_key);
@@ -1418,7 +1258,8 @@ class AController extends ABaseController
     /**
      * 验证规则内容返回
      */
-    protected function rules()
+    protected
+    function rules()
     {
         require_once DIR_FRAMEWORK_LIB . 'Verify.php';
         $result = array();
@@ -1492,7 +1333,8 @@ class AController extends ABaseController
         return $outName;
     }
 
-    protected function file_merger($arrFile, $outName, $cache = false)
+    protected
+    function file_merger($arrFile, $outName, $cache = false)
     {
 
         $url = baseUrl() . '/source/'; //静态资源url地址，根据自己的情况修改
@@ -1745,7 +1587,8 @@ class AController extends ABaseController
      *            'message'=>'输入的内容',
      *            );
      */
-    protected function outPutIframeMessage(ResultContent $message)
+    protected
+    function outPutIframeMessage(ResultContent $message)
     {
         echo '<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>' . $message->message . $message->javascriptContent . '</body></html>';
         if (empty($message->notexit)) {
@@ -1812,75 +1655,16 @@ class AController extends ABaseController
     private function createURLPath($moduleAction, $params = array(), $domain = '')
     {
         if (empty(self::$urlManager)) {
-            self::$urlManager = App::base()->urlManager;
-        }
-        if (empty($domain)) {
-            $domain = baseUrl();
-        }
-
-        // 如果没有启rewrite模式
-        if (!self::$urlManager ['rewriteMod'] || $params['ajaxPage'] == 1 || $params['noReWrite'] == 1) {
-
-            $urlStr = empty($moduleAction) ? $domain : "{$domain}/index.php?r=" . urlencode($moduleAction);
-
-            if (!is_array($params)) {
-                return $urlStr;
-            }
-            foreach ($params as $k => $v) {
-                $urlStr .= "&{$k}=" . urlencode($v);
-            }
-            return $urlStr;
-        }
-        //xmp($domain);
-        // 如果开启了rewrite模式
-        $delimiter = $this->delimiter;
-        $ruleStr = $moduleAction;
-
-        $urlStr = empty($moduleAction) ? $domain : "{$domain}/" . $moduleAction; // 取消urlencode        
-        // apache下打不开
-        if (!is_array($params)) {
-            return $urlStr;
-        }
-
-        $urlStr .= '/';
-        $ruleStr .= '/';
-        foreach ($params as $k => $v) {
-            if ($v === '') {
-                continue;
-            }
-
-            // 处理特殊字符
-            if (is_array($v) && $v ['url']) {
-                empty($v ['doType']) ? $v ['doType'] = 'base64_encode' : '';
-                $urlStr .= $k . $delimiter . urlencode($v ['doType']($v ['url'])) . $delimiter;
-                //xmp($urlStr);
-                $ruleStr .= $k . $delimiter . urlencode($v ['doType']($v ['url'])) . $delimiter;
-                continue;
-            }
-            if (!is_array($v)) {
-                $urlStr .= $k . $delimiter . urlencode($v) . $delimiter;
-                $ruleStr .= $k . $delimiter . urlencode($v) . $delimiter;
-                continue;
-            }
-            foreach ($v as $v1) {
-                $urlStr .= $k . '[]' . $delimiter . $v1 . $delimiter;
-                $ruleStr .= $k . '[]' . $delimiter . $v1 . $delimiter;
+            self::$urlManager = App::base()->getInstance('urlManager');
+            if (!is_a(self::$urlManager, 'AUrlManager')) {
+                throw new RuntimeException("The flow class is not the  AUrlManager or it's sub class." . PHP_EOL . var_export(self::$urlManager
+                        , true), FRAME_THROW_EXCEPTION);
             }
         }
 
-        $urlStr = substr($urlStr, 0, -1);
-        $ruleStr = substr($ruleStr, 0, -1);
-//          xmp($ruleStr);
-        $rules = self::$urlManager['rules'];
-        foreach ($rules as $key => $value) {
-            if ($this->parseUrlRuleRewrite($key, $value, $ruleStr)) {
-                break;
-            }
-        }
+        self::$urlManager->setCreateUrlParams($moduleAction, $params, $domain);
 
-        $urlStr = $this->rewriteUrl != $moduleAction ? $urlStr = $domain . $this->delimiterModuleAction . $this->rewriteUrl : $urlStr;
-
-        return $urlStr;
+        return self::$urlManager->createURLPath();
     }
 
     /**
@@ -1891,7 +1675,8 @@ class AController extends ABaseController
      * * @param $url
      * @return string *
      */
-    public function createSourcePath($url)
+    public
+    function createSourcePath($url)
     {
 
         return baseUrl() . "/source/{$url}";
@@ -1903,7 +1688,8 @@ class AController extends ABaseController
      * @param $domain
      * @return String -URL格式
      */
-    public function getLoginUrl($domain = '')
+    public
+    function getLoginUrl($domain = '')
     {
         return $this->createUrl(App:: base()->loginUrl, null, $domain);
     }
@@ -1911,15 +1697,17 @@ class AController extends ABaseController
     /**
      * 获得网站首页链接地址
      */
-    public function getIndex($domain = '')
+    public
+    function getIndex($domain = '')
     {
         return $this->createUrl('Site/index', array(), $domain);
     }
 
-    public function parse_script($urls, $path = "")
+    public
+    function parse_script($urls, $path = "")
     {
         $url = md5(implode(',', $urls));
-        empty($path) && $path = App:: getBasePath() . D_S . 'assets' . D_S;
+        empty($path) && $path = App:: getBasePath() . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
         $js_url = $path . $url . '.js';
         if (!file_exists($js_url)) {
             if (!file_exists($path))
@@ -1936,7 +1724,8 @@ class AController extends ABaseController
         return $js_url;
     }
 
-    protected function enmcrypt($post = array())
+    protected
+    function enmcrypt($post = array())
     {
         $this->initEmcrypt();
         // $iv = '0000000000000000';
@@ -1947,14 +1736,16 @@ class AController extends ABaseController
         return base64_encode(mcrypt_encrypt(CIPHER, MCRYPT_KEY, trim($post), MODES));
     }
 
-    private function initEmcrypt()
+    private
+    function initEmcrypt()
     {
         define('MCRYPT_KEY', '_12WE*E$');
         define('CIPHER', MCRYPT_DES); // MCRYPT_RIJNDAEL_128;
         define('MODES', MCRYPT_MODE_ECB);
     }
 
-    protected function demcrypt($post = '')
+    protected
+    function demcrypt($post = '')
     {
         $this->initEmcrypt();
         $post = base64_decode($post);
@@ -1971,7 +1762,8 @@ class AController extends ABaseController
     /**
      * 获得当前请求的全部参数已一维数组的形式返回
      */
-    protected function getRequestParams()
+    protected
+    function getRequestParams()
     {
         $requestParams = array_merge($_GET, $_POST);
         unset($requestParams['r'], $requestParams['actionName'], $requestParams['actionName'], $requestParams['finalUrl']);

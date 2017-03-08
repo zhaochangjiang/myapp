@@ -18,7 +18,6 @@ class ControllerSite extends ControllerFrontend
     {
 
         $this->render();
-        print_r(App::getSession());
     }
 
     public function action404()

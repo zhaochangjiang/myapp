@@ -1,0 +1,13 @@
+{
+  "name": "log4php",
+  "description": "The apache Log4PHP.",
+  "require": {
+    "apache/log4php": "2.3.0"
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}
