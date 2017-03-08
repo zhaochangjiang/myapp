@@ -32,7 +32,9 @@ class AErrorHandler
 
     public function handleException(Exception $exception)
     {
+
         $trace = array_slice($exception->getTrace(), 0, 5);
+
         //$trace = $this->getExactTrace($exception);
         $fileName = $exception->getFile();
         $errorLine = $exception->getLine();
@@ -51,7 +53,7 @@ class AErrorHandler
         }
 
         $data = array(
-            'code' => ($exception instanceof HttpException) ? $exception->getStatusCode() : 500,
+            'code' => ($exception instanceof AHttpException) ? $exception->getStatusCode() : 500,
             'type' => get_class($exception),
             'errorCode' => $exception->getCode(),
             'message' => $exception->getMessage(),
@@ -61,10 +63,11 @@ class AErrorHandler
             'traces' => $trace,
         );
 
-        if (!headers_sent())
+        if (!headers_sent()) {
             $this->response
                 ->status($data['code'])
                 ->sendHeaders();
+        }
 
         if (!IS_DEBUG) {
             if ($exception instanceof ADBException) {
@@ -72,10 +75,7 @@ class AErrorHandler
             }
             $this->render('error', $data);
         } else {
-            if ($this->isAjaxRequest())
-                $this->displayException($exception);
-            else
-                $this->render('exception', $data);
+            ($this->isAjaxRequest()) ? $this->displayException($exception) : $this->render('exception', $data);
         }
     }
 
@@ -90,7 +90,9 @@ class AErrorHandler
      */
     public function handleError($level, $message, $file = null, $line = null)
     {
+
         if ($level & $this->isLevelFatal($level)) {
+
             $exception = new \ErrorException($message, $level, 0, $file, $line);
             if ($this->canThrowExceptions) {
                 $trace = debug_backtrace();
@@ -171,6 +173,7 @@ class AErrorHandler
      */
     public function handleShutdown()
     {
+
         // If we reached this step, we are in shutdown handler.
         // An exception thrown in a shutdown handler will not be propagated
         // to the exception handler. Pass that information along.
@@ -254,7 +257,6 @@ class AErrorHandler
 
     protected function render($view, $data)
     {
-
         // additional information to be passed to view
         $data['version'] = $this->getVersionInfo();
         $data['time'] = time();
@@ -262,14 +264,14 @@ class AErrorHandler
             $view = 'error' . $data['code'];
             $data['version'] = '';
         }
-        if (file_exists(App::getPathOfAlias('application.template.error') . D_S . $view . '.php')) {
+        if (file_exists(App::getPathOfAlias('template.error') . DIRECTORY_SEPARATOR . $view . '.php')) {
             App::base()->controller->loadViewCell('error/' . $view);
         } else {
-            $path = App::getSystemViewPath() . D_S . $view . '.php';
+            $path = App::getSystemViewPath() . DIRECTORY_SEPARATOR . $view . '.php';
             $data['admin'] = '';
             include_once($path);
         }
-        exit();
+        exit;
     }
 
     protected function getVersionInfo()

@@ -7,7 +7,8 @@ use backend\common\Pager;
 use communal\models\data\ingredient\ModelIngredient;
 use backend\common\BreadCrumb;
 use backend\common\ReusltData;
-
+use framework\bin\AUtils;
+use Exception;
 /**
  *  食材管理
  *
@@ -65,7 +66,7 @@ class ControllerIngredient extends ControllerBackend
 
         $this->setBreadCrumbs(array(
             'name' => $this->pageSmallTitle,
-            'href' => currentUrl()
+            'href' => AUtils::currentUrl()
         ));
         $this->render();
     }
@@ -173,7 +174,7 @@ class ControllerIngredient extends ControllerBackend
         $this->data['goto'] = $params['goto'];
 
         $model = $this->_getModel();
-
+        throw new Exception("dsfsdf");
         $this->data['data'] = $model->fetchOne($params);
 
         $this->data['type'] = $params['type'];
@@ -186,7 +187,7 @@ class ControllerIngredient extends ControllerBackend
             $this->moduleString));
         $this->setBreadCrumbs($breadCrumb);
         $breadCrumb['name'] = $this->pageSmallTitle = '添加食材';
-        $breadCrumb['href'] = currentUrl();
+        $breadCrumb['href'] = AUtils::currentUrl();
         $this->setBreadCrumbs($breadCrumb);
         $this->render();
     }
