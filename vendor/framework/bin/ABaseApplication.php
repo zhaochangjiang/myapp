@@ -27,8 +27,7 @@ define("FRAME_THROW_EXCEPTION", 1000);
 
 // 所用数据库类型？
 defined('DATABASE_TYPE') or define('DATABASE_TYPE', 'Mysql');
-// 当前是否是DEBUG状态
-// defined('IS_DEBUG') or define('IS_DEBUG', false);
+
 // 接口令牌,用户调用接口时判断是否合法.
 defined('TOKEN') or define('TOKEN', 'f#jPk9$0');
 /**
@@ -39,21 +38,17 @@ defined('DIR_SERVER') or define('DIR_SERVER', dirname(dirname(dirname(dirname(__
 // --------------------系统配置Over-----------------------------------/
 // 框架基础类所在文件位置
 defined('DIR_FRAMEWORK') or define('DIR_FRAMEWORK', DIR_SERVER . 'vendor/framework' . DIRECTORY_SEPARATOR);
+defined('IS_DEBUG') or define('IS_DEBUG', true);
 
 //是否为接口访问
 defined('IS_CLIENT') or define('IS_CLIENT', false);
-// 本地访问接口位置
-//defined('DIR_IMPORT_LOCATE') or define('DIR_IMPORT_LOCATE',
-//                                       DIR_SERVER . 'Cimport' . DIRECTORY_SEPARATOR);
+
 
 /**
  * *******************服务目录配置 over*******************
- */
-/**
- * *服务目录配置over*
- */
-
-/**
+ *
+ * *服务目录配置over
+ *
  * 系统核心类
  *
  * @author zhaocj
@@ -62,14 +57,15 @@ class ABaseApplication
 {
 
     // 异常错误
-    const EXCEPTION_HANDLER = "handleException";
-    const ERROR_HANDLER = "handleError";
-    const SHUTDOWN_HANDLER = "handleShutdown";
+    const EXCEPTION_HANDLER = "handleException";//设置异常处理类中的异常对应方法
+    const ERROR_HANDLER = "handleError";//设置异常处理类中的错误对应方法
+    const SHUTDOWN_HANDLER = "handleShutdown";//设置异常处理类中的结束对应方法
 
     private static $_instance = null;
     private static $_config = null;
     private static $_basePath = null;
     public static $enableIncludePath = true;
+
     // private static $_basePath;
     public static $classMap = array();
     public static $delimiterModuleAction = '_';
@@ -77,8 +73,8 @@ class ABaseApplication
         '@framework' => DIR_FRAMEWORK,
     );
     //默认引入的文件
-    private static $_aliases = array(
-        'system' => DIR_FRAMEWORK); // alias
+//    private static $_aliases = array(
+//        'system' => DIR_FRAMEWORK); // alias
     private $clientResultData;
 
     /**
@@ -109,37 +105,6 @@ class ABaseApplication
         session_destroy();
     }
 
-    /**
-     *  递归删除目录
-     *
-     * @param type $path
-     */
-    public static function deleteDir($path)
-    {
-        if (!file_exists($path)) {
-            return true;
-        }
-        $dh = opendir($path);
-        while (($d = readdir($dh)) !== false) {
-            if (in_array($d, array(
-                '.',
-                '..'))) {//如果为.或..
-                continue;
-            }
-            $tmp = $path . DIRECTORY_SEPARATOR . $d;
-
-            //如果为文件 //如果为目录
-            (!is_dir($tmp)) ? unlink($tmp) : self::deleteDir($tmp);
-        }
-        closedir($dh);
-        rmdir($path);
-
-        //如果删除成功，则返回TRUE，如果删除失败则返回FALSE
-        if (!file_exists($tmp)) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      *  校验 合并两个数组
@@ -200,19 +165,6 @@ class ABaseApplication
     public static function createApplication($configFile)
     {
 
-        $instance = self:: getInstance();
-
-        if (empty($configFile) || !file_exists($configFile)) {
-            throw new Exception("The config file:\"{$configFile}\" can't null!");
-        }
-
-        include_once DIR_FRAMEWORK . 'bin' . DIRECTORY_SEPARATOR . 'AFunction.php'; // 加载函数库
-
-        $instance::$_config = include_once $configFile;
-
-        //初始化基础配置
-        self::initSelfBasePathMap();
-
         // 注册__autoload()函数
         spl_autoload_register(array(
             __NAMESPACE__ . '\\' . 'ABaseApplication',
@@ -220,15 +172,21 @@ class ABaseApplication
 
         // 错误控制
         $errorHandler = new AErrorHandler ();
-        set_error_handler(array(
-            $errorHandler,
-            self::ERROR_HANDLER));
-        set_exception_handler(array(
-            $errorHandler,
-            self::EXCEPTION_HANDLER));
-        register_shutdown_function(array(
-            $errorHandler,
-            self::SHUTDOWN_HANDLER));
+        set_error_handler(array($errorHandler, self::ERROR_HANDLER));
+        set_exception_handler(array($errorHandler, self::EXCEPTION_HANDLER));
+        register_shutdown_function(array($errorHandler, self::SHUTDOWN_HANDLER));
+
+        $instance = self:: getInstance();
+
+        if (empty($configFile) || !file_exists($configFile)) {
+            throw new Exception("The config file:\"{$configFile}\" can't null!");
+        }
+
+        $instance::$_config = include_once $configFile;
+
+        //初始化基础配置
+        self::initSelfBasePathMap();
+
 
         return $instance;
     }
@@ -283,17 +241,21 @@ class ABaseApplication
         include_once DIR_FRAMEWORK . 'bin' . DIRECTORY_SEPARATOR . 'ASession.php';
     }
 
+
     /**
      * 框架启动运行方法
-     *
-     * @param String $class
-     * @param String $method
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * * @param null $controllerString
+     * @param null $action
+     * @param null $moduleString
+     * * @throws Exception
      */
     public function run($controllerString = null, $action = null, $moduleString = null)
     {
 
         $_config = self::$_config;
-
         //开启session
         $this->initSession();
 
@@ -307,28 +269,27 @@ class ABaseApplication
             //如果是URL重写的请求
             if ($_config ['urlManager'] ['rewriteMod']) {
                 $dirScriptName = dirname($_SERVER['SCRIPT_NAME']);
-
                 $baseName = ltrim(substr($_SERVER['REQUEST_URI'], strlen($dirScriptName)), '/');
                 if (stripos($baseName, '?') !== false) {
                     $baseName = substr($baseName, 0, stripos($baseName, '?'));
-
                 }
-
-                empty($_config ['urlManager']['extendFile']) ? '' : $moduleAction = rtrim($baseName, $_config ['urlManager']['extendFile']);
-
+                $moduleActionLength = strlen($moduleAction);
+                empty($_config ['urlManager']['extendFile']) ? '' : $moduleAction =
+                    substr($baseName, 0, $moduleActionLength - strlen($_config ['urlManager']['extendFile']));
                 if ($moduleAction === $baseName) {//如果是php的请求
                     $moduleAction = $controller->getInput('r');
                 }
             } else {
                 $moduleAction = $controller->getInput('r');
             }
-            list ($moduleString, $controllerString, $action) = self:: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
 
+            //生成路由地址
+            list ($moduleString, $controllerString, $action) = self:: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
         }
 
         if (empty($controllerString) || empty($action)) {
 
-            throw new AHttpException(404, "你要查看的页面不存在!");
+            throw new AHttpException(404, "The page is not exists!");
         }
 
         // 获得控制器
@@ -364,7 +325,11 @@ class ABaseApplication
 
     /**
      * 获得conrotller的命名空间
-     * @return string
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * * @param $moduleString
+     * @return string * * @throws Exception
      */
     private function getControllerNameSpace($moduleString)
     {
@@ -391,6 +356,7 @@ class ABaseApplication
         return $defaultModuleAction;
     }
 
+
     private static function loadAWidget($moduleDeal)
     {
         $widget = new AHelper();
@@ -413,7 +379,8 @@ class ABaseApplication
     public static function setBasePath($path)
     {
         if ((self::$_basePath = realpath($path)) === false || !is_dir(self::$_basePath)) {
-            throw new Exception("{$path} 不是一个有效的目录");
+            throw new RuntimeException("{$path} is not a directory! the Error is at line:" .
+                __LINE__ . ', in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
     }
 
@@ -435,7 +402,8 @@ class ABaseApplication
         $result = array();
         switch ($count) {
             case 0:
-                throw new Exception("the program is error on creating Path! ");
+                throw new RuntimeException("the program is error on creating Path!  the Error is at line:" .
+                    __LINE__ . ', in file:' . __FILE__, FRAME_THROW_EXCEPTION);
             case 1:
                 list($result [1], $result [2]) = explode(self::$delimiterModuleAction, $defaultModuleAction);
                 $result[0] = array_pop($temp);
@@ -552,22 +520,6 @@ class ABaseApplication
         return (empty($module) && empty($action)) ? '' : "{$module}/{$action}";
     }
 
-    /**
-     *
-     * @param String $dirname
-     * @param type $mode Description
-     * @return boolean
-     */
-    public static function createDir($dirname, $mode)
-    {
-        if (is_dir($dirname) || mkdir($dirname, $mode)) {
-            return true;
-        }
-        if (!self:: createDirLinux(dirname($dirname), $mode)) {
-            return false;
-        }
-        return mkdir($dirname, $mode);
-    }
 
     /**
      * 根据KEY 获得缓存内容
@@ -706,23 +658,23 @@ class ABaseApplication
         //   $instance    =
         self:: getInstance();
         $cache_array = $_config ['cache'];
-        $arr = array();
+        $resultData = array();
         foreach ($cache_array as $key => $val) {
             $class = ucfirst($val ['class']);
             switch ($class) {
                 case 'Redis' : // redis
-                    $arr [$key] = new RedisClass($val ['host'], $val ['port']);
+                    $resultData [$key] = new RedisClass($val ['host'], $val ['port']);
                     break;
                 case 'FileCache' : // 文件缓存
                     $fileCache = new FileCacheClass ();
                     $val ['file_name_prefix'] != '' && $fileCache->setCacheDir($val ['file_name_prefix']);
                     $val ['mode'] != '' && $fileCache->setCacheMode($val ['mode']);
-                    $arr [$key] = $fileCache;
+                    $resultData [$key] = $fileCache;
                     break;
             }
         }
         unset($_config);
-        return $arr;
+        return $resultData;
     }
 
     /**
@@ -751,7 +703,6 @@ class ABaseApplication
     public static function getServerIp()
     {
         $ip = $_SERVER['SERVER_ADDR'];
-
         if (isset($_SERVER['SERVER_ADDR'])) {//如果有针对本机的私有配置
             if (in_array($_SERVER['SERVER_ADDR'], array(
                 '::1',

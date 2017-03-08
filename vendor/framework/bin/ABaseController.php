@@ -20,12 +20,15 @@ class ABaseController
     protected $controllerString; // 本次链接所对应的Controller
     protected $action; // 本次链接Controller所对应的 $action
     protected $moduleString;
+    protected $version = '1.0';
 
     public function __construct($controllerString = null, $action = null, $moduleString = null)
     {
         $this->controllerString = $controllerString;
         $this->action = $action;
         $this->moduleString = $moduleString;
+
+
     }
 
     public function redirect($url)
@@ -269,7 +272,7 @@ class ABaseController
      */
     public function zhcut($str, $len, $dot = "")
     {
-        return AUtils::zhcut($str, $len, $dot);
+        return AUtils::cutStringUtf8($str, $len, $dot);
     }
 
     /**
@@ -632,7 +635,6 @@ class AController extends ABaseController
 {
 
     protected $lifeTime = 0; // 本页面缓存的时间分钟数
-    public $version = null; // 版本
     protected $model = null; // 本Controller对应的Model
     protected $authValue = null; //
     protected $importLocation = 'inside'; // 调用系统接口位置
@@ -665,7 +667,7 @@ class AController extends ABaseController
      */
     public function init()
     {
-        $this->version = App:: base()->version;
+
         /* 路由模式start* */
         self::$urlManager = App:: base()->urlManager;
         $this->before();
@@ -1333,11 +1335,9 @@ class AController extends ABaseController
         return $outName;
     }
 
-    protected
-    function file_merger($arrFile, $outName, $cache = false)
+    protected function file_merger($arrFile, $outName, $cache = false)
     {
-
-        $url = baseUrl() . '/source/'; //静态资源url地址，根据自己的情况修改
+        $url = AUtils::baseUrl() . '/source/'; //静态资源url地址，根据自己的情况修改
         $static = App::getBasePath() . '/source/'; //静态资源在服务器上的存储路径，根据自己的情况修改
         if (substr($arrFile[0], -2) == 'js') {
             $type = 'js';
@@ -1611,7 +1611,7 @@ class AController extends ABaseController
             unset($moduleActionArray[2]);
         }
         if (empty($domain)) {
-            $domain = baseUrl();
+            $domain = AUtils::baseUrl();
         }
         if (empty($moduleActionArray[0]) && empty($moduleActionArray[1])) {
             unset($moduleActionArray[0], $moduleActionArray[1]);

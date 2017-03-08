@@ -6,6 +6,7 @@ use backend\common\ControllerBackend;
 use backend\common\Pager;
 use communal\models\data\picture\ModelPictureCategory;
 use communal\models\data\picture\ModelPicture;
+use framework\bin\AUtils;
 
 /**
  * Description of PictureController
@@ -96,7 +97,7 @@ class ControllerPicture extends ControllerBackend
         $this->pageSmallTitle = '图片';
         $this->setBreadCrumbs(array(
             'name' => $this->pageSmallTitle,
-            'href' => currentUrl()
+            'href' => AUtils::currentUrl()
         ));
         $this->render();
     }
