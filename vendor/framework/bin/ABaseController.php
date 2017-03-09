@@ -9,7 +9,7 @@ use RuntimeException;
  *
  * @author zhaocj
  */
-class ABaseController
+class ABaseController extends AppBase
 {
 
     public $rewriteUrl;
@@ -623,6 +623,23 @@ class ABaseController
     }
 
 
+    /**
+     * 开始方法
+     * @return mixed
+     */
+    public function before()
+    {
+        // TODO: Implement before() method.
+    }
+
+    /**
+     * 结束方法
+     * @return mixed
+     */
+    public function after()
+    {
+        // TODO: Implement after() method.
+    }
 }
 
 /**

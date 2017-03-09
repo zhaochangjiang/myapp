@@ -19,6 +19,20 @@ class AErrorHandler
     private $request;
     private $response;
 
+    protected $canThrowExceptions = true;
+
+    protected $errorLevel = array(
+        E_ERROR,
+        E_PARSE,
+        E_WARNING,
+        E_CORE_ERROR,
+        E_CORE_WARNING,
+        E_COMPILE_ERROR,
+        E_COMPILE_WARNING
+    );
+
+    protected $debugFlag = true;
+
     public function __construct()
     {
         $this->request = new ARequest();
@@ -69,7 +83,7 @@ class AErrorHandler
                 ->sendHeaders();
         }
 
-        if (!IS_DEBUG) {
+        if (!$this->debugFlag) {
             if ($exception instanceof ADBException) {
                 $data['message'] = '';
             }
@@ -157,10 +171,11 @@ class AErrorHandler
 
                     if ($this->isAjaxRequest())
                         $this->displayError($level, $message, $file, $line);
-                    elseif (IS_DEBUG)
+                    elseif ($this->debugFlag) {
                         $this->render('exception', $data);
-                    else
+                    } else {
                         $this->render('error', $data);
+                    }
                 }
             } else {
                 $this->handleException($exception);
@@ -198,7 +213,8 @@ class AErrorHandler
      */
     public function displayError($code, $message, $file, $line)
     {
-        if (IS_DEBUG) {
+
+        if ($this->debugFlag) {
             echo "<h1>PHP Error [$code]</h1>\n";
             echo "<p>$message ($file:$line)</p>\n";
             echo '<pre>';
@@ -233,14 +249,15 @@ class AErrorHandler
      */
     public function displayException($exception)
     {
-        if (IS_DEBUG) {
+        if ($this->debugFlag) {
             echo '<h1>' . get_class($exception) . "</h1>\n";
             echo '<p>' . $exception->getMessage() . ' (' . $exception->getFile() . ':' . $exception->getLine() . ')</p>';
             echo '<pre>' . $exception->getTraceAsString() . '</pre>';
-        } else {
-            echo '<h1>' . get_class($exception) . "</h1>\n";
-            echo '<p>' . $exception->getMessage() . '</p>';
+            return;
         }
+        echo '<h1>' . get_class($exception) . "</h1>\n";
+        echo '<p>' . $exception->getMessage() . '</p>';
+
     }
 
     protected function getExactTrace($exception)
@@ -255,8 +272,14 @@ class AErrorHandler
         return null;
     }
 
+    /**
+     * 渲染信息接口
+     * @param $view
+     * @param $data
+     */
     protected function render($view, $data)
     {
+
         // additional information to be passed to view
         $data['version'] = $this->getVersionInfo();
         $data['time'] = time();
@@ -267,16 +290,28 @@ class AErrorHandler
         if (file_exists(App::getPathOfAlias('template.error') . DIRECTORY_SEPARATOR . $view . '.php')) {
             App::base()->controller->loadViewCell('error/' . $view);
         } else {
-            $path = App::getSystemViewPath() . DIRECTORY_SEPARATOR . $view . '.php';
+            $path = $this->getSystemViewPath() . DIRECTORY_SEPARATOR . $view . '.php';
             $data['admin'] = '';
             include_once($path);
         }
         exit;
     }
 
+    /**
+     * 系统默认的views路径,重写此方法可以实现不同的View效果
+     * @return string
+     */
+    protected static function getSystemViewPath()
+    {
+        return DIR_FRAMEWORK . DIRECTORY_SEPARATOR . 'views';
+    }
+
+    /**
+     * @return string
+     */
     protected function getVersionInfo()
     {
-        if (IS_DEBUG) {
+        if ($this->debugFlag) {
             $version = '';
             if (isset($_SERVER['SERVER_SOFTWARE']))
                 $version = $_SERVER['SERVER_SOFTWARE'] . ' ' . $version;
@@ -320,22 +355,43 @@ class AErrorHandler
                     $args[$key] = '...';
                 continue;
             }
+            //
+            $dataType = gettype($value);
 
-            if (is_object($value))
-                $args[$key] = get_class($value);
-            elseif (is_bool($value))
-                $args[$key] = $value ? 'true' : 'false';
-            elseif (is_string($value)) {
-                if (strlen($value) > 64)
-                    $args[$key] = '"' . substr($value, 0, 64) . '..."';
-                else
-                    $args[$key] = '"' . $value . '"';
-            } elseif (is_array($value))
-                $args[$key] = 'array(' . $this->argumentsToString($value) . ')';
-            elseif ($value === null)
-                $args[$key] = 'null';
-            elseif (is_resource($value))
-                $args[$key] = 'resource';
+            switch ($dataType) {
+                case 'boolean':
+                    $args[$key] = $value ? 'true' : 'false';
+                    break;
+                case 'object':
+                    $args[$key] = get_class($value);
+                    break;
+                case 'array':
+                    $args[$key] = 'array(' . $this->argumentsToString($value) . ')';
+                    break;
+                case 'integer':
+                    break;
+                case 'double':
+                    break;
+                case 'string':
+                    if (strlen($value) > 64)
+                        $args[$key] = '"' . substr($value, 0, 64) . '..."';
+                    else
+                        $args[$key] = '"' . $value . '"';
+                    break;
+                case 'resource':
+                    $args[$key] = 'resource';
+                    break;
+                case 'NULL':
+                    $args[$key] = 'null';
+                    break;
+                case 'user function':
+                    break;
+                case 'unknown type':
+                    break;
+                default:
+                    break;
+
+            }
 
             if (is_string($key)) {
                 $args[$key] = '"' . $key . '" => ' . $args[$key];
@@ -398,20 +454,15 @@ class AErrorHandler
         return $this->request->ajax;
     }
 
-    private $canThrowExceptions = true;
 
-    private static function isLevelFatal($level)
+    /**
+     * @param $level
+     * @return bool
+     */
+    private function isLevelFatal($level)
     {
         return in_array(
-            $level, array(
-                E_ERROR,
-                E_PARSE,
-                E_WARNING,
-                E_CORE_ERROR,
-                E_CORE_WARNING,
-                E_COMPILE_ERROR,
-                E_COMPILE_WARNING
-            )
+            $level, $this->errorLevel
         );
     }
 
