@@ -2,6 +2,7 @@
 
 namespace framework\bin;
 
+use framework\bin\AppBase;
 use framework\bin\AHttpException;
 use framework\bin\ARequest;
 use framework\bin\AResponse;
@@ -38,6 +39,7 @@ defined('DIR_SERVER') or define('DIR_SERVER', dirname(dirname(dirname(dirname(__
 // --------------------系统配置Over-----------------------------------/
 // 框架基础类所在文件位置
 defined('DIR_FRAMEWORK') or define('DIR_FRAMEWORK', DIR_SERVER . 'vendor/framework' . DIRECTORY_SEPARATOR);
+
 defined('IS_DEBUG') or define('IS_DEBUG', true);
 
 //是否为接口访问
@@ -53,29 +55,34 @@ defined('IS_CLIENT') or define('IS_CLIENT', false);
  *
  * @author zhaocj
  */
-class ABaseApplication
+class ABaseApplication extends AppBase
 {
 
-    // 异常错误
-    const EXCEPTION_HANDLER = "handleException";//设置异常处理类中的异常对应方法
-    const ERROR_HANDLER = "handleError";//设置异常处理类中的错误对应方法
-    const SHUTDOWN_HANDLER = "handleShutdown";//设置异常处理类中的结束对应方法
+    private static $app;//本类实例对象
 
-    private static $_instance = null;
-    private static $_config = null;
+    private static $_config;//系统配置
     private static $_basePath = null;
-    public static $enableIncludePath = true;
+//    public static $enableIncludePath = true;
 
-    // private static $_basePath;
-    public static $classMap = array();
-    public static $delimiterModuleAction = '_';
-    public static $selfBasePathMap = array(
+    //命名空间与目录的对应关系
+    public static $nameSpacePathMap = array(
         '@framework' => DIR_FRAMEWORK,
     );
+    // private static $_basePath;
+    //public static $classMap = array();
+    //public static $delimiterModuleAction = '_';
+
     //默认引入的文件
-//    private static $_aliases = array(
-//        'system' => DIR_FRAMEWORK); // alias
-    private $clientResultData;
+    //    private static $_aliases = array(
+    //        'system' => DIR_FRAMEWORK); // alias
+    //private $clientResultData;
+
+
+    // 异常错误
+    const EXCEPTION_HANDLER = "handleException";    //设置异常处理类中的异常对应方法
+    const ERROR_HANDLER = "handleError";            //设置异常处理类中的错误对应方法
+    const SHUTDOWN_HANDLER = "handleShutdown";      //设置异常处理类中的结束对应方法
+
 
     /**
      * 实例对象
@@ -83,76 +90,19 @@ class ABaseApplication
      */
     public static function getInstance()
     {
-        if (self::$_instance === null) {
-            self::$_instance = new self ();
+        if (self::$app === null) {
+            self::$app = new self ();
         }
-        return self::$_instance;
-    }
-
-    public function init()
-    {
-        // 初始化方法，留待具体实现类需要时去实现
-    }
-
-    // 系统views路径
-    public static function getSystemViewPath()
-    {
-        return DIR_FRAMEWORK . DIRECTORY_SEPARATOR . 'views';
-    }
-
-    public function sessionDestory()
-    {
-        session_destroy();
+        return self::$app;
     }
 
 
-    /**
-     *  校验 合并两个数组
-     * @param array $array1
-     * @param array $array2
-     */
-    public static function arrayMerge(array $array1, array $array2)
+    private static function mergeNameSpacePathMap()
     {
-        foreach ($array1 as $key => $value) {
-            if (is_int($key)) {//如果键为整数则 不处理只有为字符串时 再处理
-                continue;
-            }
-            if (!isset($array2[$key])) {
-                $array2[$key] = $value;
-                unset($array1[$key]);
-                continue;
-            }
-            if (self::haveChildArray($value) === false) {
-                $array2[$key] = array_merge($value, $array2[$key]);
-                unset($array1[$key]);
-                continue;
-            }
-
-            $array2[$key] = self::arrayMerge($value, $array2[$key]);
-        }
-        return $array2;
-    }
-
-    /**
-     * 判断一个数组是否有子数组
-     */
-    private static function haveChildArray(array $array)
-    {
-        $flag = false;
-        foreach ($array as $value) {
-            if (is_array($value)) {
-                $flag = true;
-                break;
-            }
-        }
-        return $flag;
-    }
-
-    private static function initSelfBasePathMap()
-    {
-
-        if (isset(self::$_config['selfBasePathMap']) && is_array(self::$_config['selfBasePathMap'])) {
-            self::$selfBasePathMap = array_merge(self::$selfBasePathMap, self::$_config['selfBasePathMap']);
+        if (is_array(self::$_config['nameSpacePathMap'])) {
+            self::$nameSpacePathMap = array_merge(self::$nameSpacePathMap,
+                self::$_config['nameSpacePathMap']
+            );
         }
     }
 
@@ -176,19 +126,17 @@ class ABaseApplication
         set_exception_handler(array($errorHandler, self::EXCEPTION_HANDLER));
         register_shutdown_function(array($errorHandler, self::SHUTDOWN_HANDLER));
 
-        $instance = self:: getInstance();
-
         if (empty($configFile) || !file_exists($configFile)) {
-            throw new Exception("The config file:\"{$configFile}\" can't null!");
+            throw new RuntimeException("The config file:\"{$configFile}\" can't null! at line:" . __LINE__
+                . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
 
-        $instance::$_config = include_once $configFile;
+        self::$_config = include_once $configFile;
 
-        //初始化基础配置
-        self::initSelfBasePathMap();
+        //初始化基础配置合并命名空间
+        self::mergeNameSpacePathMap();
 
-
-        return $instance;
+        return self;
     }
 
     /**
@@ -376,7 +324,8 @@ class ABaseApplication
      * 设置应用程序根目录 @param string $path 应用程序根目录
      */
 
-    public static function setBasePath($path)
+    public
+    static function setBasePath($path)
     {
         if ((self::$_basePath = realpath($path)) === false || !is_dir(self::$_basePath)) {
             throw new RuntimeException("{$path} is not a directory! the Error is at line:" .
@@ -424,7 +373,8 @@ class ABaseApplication
      * @param string $key
      * @return Ambigous <unknown, string>
      */
-    public static function getSession($key = '')
+    public
+    static function getSession($key = '')
     {
         $session = $_SESSION;
         return empty($key) ? $session : (isset($session[$key]) ? $session[$key] : '');
@@ -433,7 +383,8 @@ class ABaseApplication
     /**
      * 销毁Session
      */
-    public static function sessionDestroy()
+    public
+    static function sessionDestroy()
     {
         session_destroy();
     }
@@ -442,7 +393,8 @@ class ABaseApplication
      * HTTP错误 @param $message 错误内容 @param $code 错误代码
      */
 
-    public static function error($message, $code = 404)
+    public
+    static function error($message, $code = 404)
     {
 
         require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AHttpException.php';
@@ -455,7 +407,8 @@ class ABaseApplication
      * @param Object $object
      * @return multitype:
      */
-    public static function objectToArray($object)
+    public
+    static function objectToArray($object)
     {
         $result = array();
         $_array = is_object($object) ? get_object_vars($object) : $object;
@@ -473,7 +426,8 @@ class ABaseApplication
      * @param String $key
      * @param String $value
      */
-    public static function setSession($key, $value)
+    public
+    static function setSession($key, $value)
     {
         $session = self::getSession();
         $session[$key] = $value;
@@ -554,9 +508,9 @@ class ABaseApplication
      * @param $path
      * @return string *
      */
-    public static function setBasePathMap($path)
+    public static function setNameSpacePathMap($path)
     {
-        return self::$selfBasePathMap["@{$path}"] = DIR_SERVER . $path . DIRECTORY_SEPARATOR;
+        return self::$nameSpacePathMap["@{$path}"] = DIR_SERVER . $path . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -570,12 +524,12 @@ class ABaseApplication
     public static function getPathOfAlias($alias)
     {
         $namespaceDividString = explode('/', str_replace('\\', '/', ltrim($alias, '@')));
-        $nameSpaceBasePath = array_shift($namespaceDividString);
+        $nameSpacePath = array_shift($namespaceDividString);
 
-        if (!isset(self::$selfBasePathMap['@' . $nameSpaceBasePath])) {
-            self::setBasePathMap($nameSpaceBasePath);
+        if (!isset(self::$nameSpacePathMap['@' . $nameSpacePath])) {
+            self::setNameSpacePathMap($nameSpacePath);
         }
-        return self::$selfBasePathMap['@' . $nameSpaceBasePath] . implode('/', $namespaceDividString);
+        return self::$nameSpacePathMap['@' . $nameSpacePath] . implode('/', $namespaceDividString);
 
     }
 
@@ -607,7 +561,7 @@ class ABaseApplication
         }
 
 
-        $pathBase = self::$selfBasePathMap['@' . $nameSpaceBasePath];
+        $pathBase = self::$nameSpacePathMap['@' . $nameSpaceBasePath];
 
 
         //如果命令空间不存在或者类已加载，则不需要重新加载
@@ -640,7 +594,8 @@ class ABaseApplication
      * @param String $method
      * @return String
      */
-    public static function getMethodName($method)
+    public
+    static function getMethodName($method)
     {
         return 'action' . ucfirst($method);
     }
@@ -653,7 +608,8 @@ class ABaseApplication
      * @param $_config
      * @return array *
      */
-    public static function cache($_config)
+    public
+    static function cache($_config)
     {
         //   $instance    =
         self:: getInstance();
@@ -700,7 +656,8 @@ class ABaseApplication
     /**
      * 或得本机的IP地址
      */
-    public static function getServerIp()
+    public
+    static function getServerIp()
     {
         $ip = $_SERVER['SERVER_ADDR'];
         if (isset($_SERVER['SERVER_ADDR'])) {//如果有针对本机的私有配置
@@ -721,9 +678,27 @@ class ABaseApplication
      * 当前代码部署的服务器机房,保留方法
      * @return string
      */
-    public static function getMachineRoom()
+    public
+    static function getMachineRoom()
     {
         return 'default';
     }
 
+    /**
+     * 开始方法
+     * @return mixed
+     */
+    public function before()
+    {
+        // TODO: Implement before() method.
+    }
+
+    /**
+     * 结束方法
+     * @return mixed
+     */
+    public function after()
+    {
+        // TODO: Implement after() method.
+    }
 }

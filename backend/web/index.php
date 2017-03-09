@@ -50,11 +50,12 @@ define('IS_MERAGE', TRUE);
 // * 默认访问方法          indexAction
 
 try {
-    require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . "vendor/framework/App.php");
+    
     $config = dirname(dirname(__FILE__)) . '/config/' . DEFINE_ENVIORMENT . '/config.php';
+
+    require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . "vendor/framework/App.php");
     App::createApplication($config)->run();
 } catch (Exception $ex) {
-    print_r($ex->getMessage());
     throw $ex;
 }
 
