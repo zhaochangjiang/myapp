@@ -50,7 +50,7 @@ define('IS_MERAGE', TRUE);
 // * 默认访问方法          indexAction
 
 try {
-    
+
     $config = dirname(dirname(__FILE__)) . '/config/' . DEFINE_ENVIORMENT . '/config.php';
 
     require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . "vendor/framework/App.php");

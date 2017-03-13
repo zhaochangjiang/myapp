@@ -6,6 +6,7 @@ use framework\bin\ARequest;
 use framework\bin\AResponse;
 use framework\App;
 use framework\bin\ADBException;
+use Exception;
 
 /**
  * 错误异常处理
