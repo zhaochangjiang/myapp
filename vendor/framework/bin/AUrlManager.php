@@ -9,15 +9,15 @@
 namespace framework\bin;
 
 
-class AUrlManager
+class AUrlManager extends AppBase
 {
-    var $rewriteMod = false;//是否重写
-    var $extendFile = '.html';
-    var $domain = '';
-    var $moduleAction = '';
-    var $params = array();
-    var $noReWrite = false;
-    var $routeRule;//路由规则
+    protected $rewriteMod = false;//是否重写
+    protected $extendFile = '.html';
+    protected $domain = '';
+    protected $moduleAction = '';
+    protected $params = array();
+    protected $noReWrite = false;
+    protected $routeRule;//路由规则
 
     public static function getInstance()
     {
@@ -38,6 +38,32 @@ class AUrlManager
     public function setRewriteMod($rewriteMod)
     {
         $this->rewriteMod = $rewriteMod;
+    }
+
+
+    public function _initModuleAction()
+    {
+        // 获得当前请求动作是什么
+        $controller = new ABaseController ();
+
+        //如果是URL重写的请求
+        if ($this->rewriteMod) {
+            $dirScriptName = dirname($_SERVER['SCRIPT_NAME']);
+            $baseName = ltrim(substr($_SERVER['REQUEST_URI'], strlen($dirScriptName)), '/');
+            if (stripos($baseName, '?') !== false) {
+                $baseName = substr($baseName, 0, stripos($baseName, '?'));
+            }
+            $moduleActionLength = strlen($baseName);
+            if (!empty($this->extendFile)) {
+                $this->moduleAction =
+                    substr($baseName, 0, $moduleActionLength - strlen($this->extendFile));
+            }
+            if ($this->moduleAction === $baseName) {//如果是php的请求
+                $this->moduleAction = $controller->getInput('r');
+            }
+        } else {
+            $this->moduleAction = $controller->getInput('r');
+        }
     }
 
     /**
@@ -139,7 +165,7 @@ class AUrlManager
             }
         }
         if ($this->rewriteUrl !== $this->moduleAction) {
-            $urlStr = $this->domain . $this->delimiterModuleAction . $this->rewriteUrl .'/'. $this->moduleAction . $this->extendFile;
+            $urlStr = $this->domain . $this->delimiterModuleAction . $this->rewriteUrl . '/' . $this->moduleAction . $this->extendFile;
         }
 
         return $urlStr;
@@ -301,15 +327,14 @@ class AUrlManager
                         $omg[$key] = '/' . $mk . '/';
                     }
 
-// 静态项不区分大小写
+                    // 静态项不区分大小写
                 } elseif (strcasecmp($value, $newRegArr[$key]) !== 0) {
                     $match = false;
                     break;
                 }
             }
         }
-// 匹配成功
-
+        // 匹配成功
 
         if ($match) {
 
@@ -318,9 +343,7 @@ class AUrlManager
                     unset($regxArr[$key]);
                 }
             }
-//            echo $rule;
-//            xmp($omg);
-//            xmp($regxArr);
+
             $this->rewriteUrl = preg_replace(array_values($omg), array_values($regxArr), $rule);
         }
 
@@ -360,12 +383,20 @@ class AUrlManager
     }
 
     /**
-     * @param array $params
+     * 开始方法
+     * @return mixed
      */
-    public function setParams($params)
+    public function before()
     {
-        $this->params = $params;
+        // TODO: Implement before() method.
     }
 
-
+    /**
+     * 结束方法
+     * @return mixed
+     */
+    public function after()
+    {
+        // TODO: Implement after() method.
+    }
 }

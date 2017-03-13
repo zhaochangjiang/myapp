@@ -20,7 +20,7 @@ function stop($obj = null)
 
 function getEnvironment()
 {
-    $enviorment = 'RUN';
+    $enviorment = 'DEV';
     if ($enviorment) {
         $enviormentIni = get_cfg_var('enviorment');
         if ($enviormentIni) {

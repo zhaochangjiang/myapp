@@ -8,7 +8,6 @@ use communal\models\data\ingredient\ModelIngredient;
 use backend\common\BreadCrumb;
 use backend\common\ReusltData;
 use framework\bin\AUtils;
-use Exception;
 /**
  *  食材管理
  *

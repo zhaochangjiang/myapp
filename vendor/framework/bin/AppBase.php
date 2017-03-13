@@ -21,12 +21,26 @@ abstract class AppBase
      * 开始方法
      * @return mixed
      */
-    public abstract function before();
+    public function before()
+    {
+    }
 
     /**
      * 结束方法
      * @return mixed
      */
-    public abstract function after();
+    public function after()
+    {
+    }
 
+    /**
+     * @param array $params
+     */
+    public function setParams(array $params)
+    {
+
+        foreach ($params as $key => $value) {
+            $this->{$key} = $value;
+        }
+    }
 }

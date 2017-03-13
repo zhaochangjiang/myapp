@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\bin;
+namespace framework\bin\interfaceLib;
 
 /**
  * 数据库规范接口
