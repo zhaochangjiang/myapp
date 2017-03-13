@@ -1,6 +1,7 @@
 <?php
 
 namespace framework\bin;
+
 /**
  * 容器
  *

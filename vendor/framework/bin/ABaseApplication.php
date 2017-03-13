@@ -9,6 +9,7 @@ use framework\bin\ABaseController;
 use framework\bin\AErrorHandler;
 use framework\helpers\AHelper;
 use Exception;
+use RuntimeException;
 use client\common\ClientResultData;
 use client\common\ErrorCode;
 
@@ -59,10 +60,14 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AppBase.php';
 class ABaseApplication extends AppBase
 {
 
-    private static $app;//本类实例对象
+    public static $app;//本类实例对象
 
     private static $_config;//系统配置
     private static $_basePath = null;
+
+    public $urlManager;//URL对象管理
+    public $session;
+
 //    public static $enableIncludePath = true;
 
     //命名空间与目录的对应关系
@@ -87,6 +92,33 @@ class ABaseApplication extends AppBase
     const ERROR_HANDLER = "handleError";            //设置异常处理类中的错误对应方法
     const SHUTDOWN_HANDLER = "handleShutdown";      //设置异常处理类中的结束对应方法
 
+
+    private function _initUrlManager()
+    {
+        if (empty(self::$_config['urlManager']['class'])) {
+            $this->urlManager = new AUrlManager();
+
+        } else {
+            $className = self::$_config['urlManager']['class'];
+            unset(self::$_config['urlManager']['class']);
+            $this->urlManager = new $className();
+        }
+        $this->urlManager->setParams((array)self::$_config['urlManager']);
+    }
+
+    /**
+     * 构造函数
+     *
+     */
+    private function __construct()
+    {
+        //开启session
+        $this->initSession();
+
+        //初始化URL管理
+        $this->_initUrlManager();
+
+    }
 
     /**
      * 实例对象
@@ -202,34 +234,12 @@ class ABaseApplication extends AppBase
     public function run($controllerString = null, $action = null, $moduleString = null)
     {
 
-        $_config = self::$_config;
-
-        //开启session
-        $this->initSession();
-
-        // 获得当前请求动作是什么
-        $controller = new ABaseController ();
 
         // $moduleString     = $controllerString = $action           = '';
         //如果不是 Afunction 中函数C控制的方法
         if ($moduleString === null && $controllerString === null && $action === null) {
-            $moduleAction = '';
-            //如果是URL重写的请求
-            if ($_config ['urlManager'] ['rewriteMod']) {
-                $dirScriptName = dirname($_SERVER['SCRIPT_NAME']);
-                $baseName = ltrim(substr($_SERVER['REQUEST_URI'], strlen($dirScriptName)), '/');
-                if (stripos($baseName, '?') !== false) {
-                    $baseName = substr($baseName, 0, stripos($baseName, '?'));
-                }
-                $moduleActionLength = strlen($moduleAction);
-                empty($_config ['urlManager']['extendFile']) ? '' : $moduleAction =
-                    substr($baseName, 0, $moduleActionLength - strlen($_config ['urlManager']['extendFile']));
-                if ($moduleAction === $baseName) {//如果是php的请求
-                    $moduleAction = $controller->getInput('r');
-                }
-            } else {
-                $moduleAction = $controller->getInput('r');
-            }
+            $this->urlManager->_initModuleAction();
+            $moduleAction = $this->urlManager->getModuleAction();
 
             //生成路由地址
             list ($moduleString, $controllerString, $action) = self:: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
@@ -575,8 +585,7 @@ class ABaseApplication extends AppBase
         $includeFile = self::$nameSpacePathMap['@' . $nameSpaceBasePath] . implode(DIRECTORY_SEPARATOR, $namespaceDividString) . DIRECTORY_SEPARATOR . "{$classNameBase}.php";
 
         if (!file_exists($includeFile)) {
-
-            throw new AHttpException(404, "[ ERROR ]the file：{$includeFile}  is not exists ." . PHP_EOL . "[ MESSAGE ] throw Exception at line:" . __LINE__ . ",in file:" . __FILE__ . "!");
+            throw new AHttpException(404, "[ ERROR ] the file：{$includeFile}  is not exists ." . PHP_EOL . "[ MESSAGE ] throw Exception at line:" . __LINE__ . ",in file:" . __FILE__ . "!");
         }
         if (file_exists($includeFile) && !$flagClassExists) {
             require_once $includeFile;
@@ -590,8 +599,7 @@ class ABaseApplication extends AppBase
      * @param String $method
      * @return String
      */
-    public
-    static function getMethodName($method)
+    public static function getMethodName($method)
     {
         return 'action' . ucfirst($method);
     }
@@ -604,8 +612,7 @@ class ABaseApplication extends AppBase
      * @param $_config
      * @return array *
      */
-    public
-    static function cache($_config)
+    public static function cache($_config)
     {
         //   $instance    =
         self:: getInstance();
@@ -629,31 +636,30 @@ class ABaseApplication extends AppBase
         return $resultData;
     }
 
-    /**
-     * 简单缓存操作
-     * @author karl.zhao<zhaocj2009@hotmail.com>
-     * @Date: ${DATE}
-     * @Time: ${TIME}
-     * @return ABaseObject *
-     */
-    public static function base()
-    {
-        $instance = self:: getInstance();
-        $controller = new AController ();
-        $_config = $instance::$_config;
-        $obj = new ABaseObject($_config);
-        $obj->controller = $controller;
-        $obj->request = new ARequest ();
-        $obj->response = new AResponse ();
-        unset($_config);
-        return $obj;
-    }
+//    /**
+//     * 简单缓存操作
+//     * @author karl.zhao<zhaocj2009@hotmail.com>
+//     * @Date: ${DATE}
+//     * @Time: ${TIME}
+//     * @return ABaseObject *
+//     */
+//    public static function base()
+//    {
+//        $instance = self:: getInstance();
+//        $controller = new AController ();
+//        $_config = $instance::$_config;
+//        $obj = new ABaseObject($_config);
+//        $obj->controller = $controller;
+//        $obj->request = new ARequest ();
+//        $obj->response = new AResponse ();
+//        unset($_config);
+//        return $obj;
+//    }
 
     /**
      * 或得本机的IP地址
      */
-    public
-    static function getServerIp()
+    public static function getServerIp()
     {
         $ip = $_SERVER['SERVER_ADDR'];
         if (isset($_SERVER['SERVER_ADDR'])) {//如果有针对本机的私有配置
@@ -674,27 +680,10 @@ class ABaseApplication extends AppBase
      * 当前代码部署的服务器机房,保留方法
      * @return string
      */
-    public
-    static function getMachineRoom()
+    public static function getMachineRoom()
     {
         return 'default';
     }
 
-    /**
-     * 开始方法
-     * @return mixed
-     */
-    public function before()
-    {
-        // TODO: Implement before() method.
-    }
 
-    /**
-     * 结束方法
-     * @return mixed
-     */
-    public function after()
-    {
-        // TODO: Implement after() method.
-    }
 }

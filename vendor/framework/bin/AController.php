@@ -55,7 +55,7 @@ class AController extends ABaseController
     {
 
         /* 路由模式start* */
-        self::$urlManager = App:: base()->urlManager;
+        self::$urlManager = App::$app->urlManager;
         $this->before();
         /* 路由模式end* */
     }
@@ -344,7 +344,7 @@ class AController extends ABaseController
      */
     protected function httpConnectionByBase($moduleAction, $gets = array(), $posts = array())
     {
-        return $this->httpConnectionByUrl($this->createUrl($moduleAction, $gets, App::base()->params['domain']['client']), $posts);
+        return $this->httpConnectionByUrl($this->createUrl($moduleAction, $gets, App::$app->params['domain']['client']), $posts);
     }
 
     /**
@@ -742,9 +742,9 @@ class AController extends ABaseController
 
             foreach ($arrFile as $key => $file) {
                 if ($type == 'js') {
-                    $outHtml .= "<script type=\"text/javascript\" src=\"{$url}js/{$file}?v=" . App::base()->version . "\"></script>\n";
+                    $outHtml .= "<script type=\"text/javascript\" src=\"{$url}js/{$file}?v=" . App::$app->version . "\"></script>\n";
                 } elseif ($type == 'css') {
-                    $outHtml .= "<link href=\"{$url}css/{$file}?v=" . App::base()->version . "\" rel=\"stylesheet\" type=\"text/css\">\n";
+                    $outHtml .= "<link href=\"{$url}css/{$file}?v=" . App::$app->version . "\" rel=\"stylesheet\" type=\"text/css\">\n";
                 }
             }
 
@@ -1040,23 +1040,18 @@ class AController extends ABaseController
      */
     private function createURLPath($moduleAction, $params = array(), $domain = '')
     {
-        if (empty(self::$urlManager)) {
-            self::$urlManager = App::base()->getInstance('urlManager');
-
-            //self::$urlManager不是 ，类AUrlManager的实例对象，或者AUrlManager的子类对象
-            if (!is_a(self::$urlManager, 'AUrlManager')) {
-                throw new RuntimeException(
-                    "The flow class is not the  AUrlManager or it's sub class."
-                    . PHP_EOL . var_export(self::$urlManager, true)
-                    . '.the error is at line:' . __LINE__
-                    . ',in file:' . __FILE__
-                    , FRAME_THROW_EXCEPTION);
-            }
+        //self::$urlManager不是 ，类AUrlManager的实例对象，或者AUrlManager的子类对象
+        if (!is_a(App::$app->urlManager, 'framework\\bin\\AUrlManager')) {
+            throw new RuntimeException(
+                "The flow class is not the  framework\\bin\\AUrlManager or it's sub class."
+                . PHP_EOL . var_export(App::$app->urlManager, true)
+                . '.the error is at line:' . __LINE__
+                . ',in file:' . __FILE__
+                , FRAME_THROW_EXCEPTION);
         }
+        App::$app->urlManager->setCreateUrlParams($moduleAction, $params, $domain);
 
-        self::$urlManager->setCreateUrlParams($moduleAction, $params, $domain);
-
-        return self::$urlManager->createURLPath();
+        return App::$app->urlManager->createURLPath();
     }
 
     /**

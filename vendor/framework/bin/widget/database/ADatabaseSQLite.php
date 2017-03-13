@@ -3,6 +3,7 @@
 namespace framework\bin\widget\database;
 
 use framework\bin\widget\ADBException;
+use framework\bin\interfaceLib\ADatabase;
 
 /*
    * 使用pdo连接sqlite
