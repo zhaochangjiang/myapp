@@ -2,7 +2,6 @@
 
 namespace framework\bin;
 
-use framework\bin\AppBase;
 use framework\bin\AHttpException;
 use framework\bin\ARequest;
 use framework\bin\AResponse;
@@ -46,6 +45,8 @@ defined('IS_DEBUG') or define('IS_DEBUG', true);
 defined('IS_CLIENT') or define('IS_CLIENT', false);
 
 
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AppBase.php';
+
 /**
  * *******************服务目录配置 over*******************
  *
@@ -66,11 +67,14 @@ class ABaseApplication extends AppBase
 
     //命名空间与目录的对应关系
     public static $nameSpacePathMap = array(
-        '@framework' => DIR_FRAMEWORK,
+        '@framework' => DIR_FRAMEWORK,//框架与命名空间对应关系
     );
     // private static $_basePath;
     //public static $classMap = array();
-    //public static $delimiterModuleAction = '_';
+
+
+    //URL路径拼接分割符
+    public static $delimiterModuleAction = '_';
 
     //默认引入的文件
     //    private static $_aliases = array(
@@ -96,7 +100,6 @@ class ABaseApplication extends AppBase
         return self::$app;
     }
 
-
     private static function mergeNameSpacePathMap()
     {
         if (is_array(self::$_config['nameSpacePathMap'])) {
@@ -114,11 +117,8 @@ class ABaseApplication extends AppBase
      */
     public static function createApplication($configFile)
     {
-
         // 注册__autoload()函数
-        spl_autoload_register(array(
-            __NAMESPACE__ . '\\' . 'ABaseApplication',
-            'autoload'));
+        spl_autoload_register(array(__CLASS__, 'autoload'));
 
         // 错误控制
         $errorHandler = new AErrorHandler ();
@@ -126,17 +126,16 @@ class ABaseApplication extends AppBase
         set_exception_handler(array($errorHandler, self::EXCEPTION_HANDLER));
         register_shutdown_function(array($errorHandler, self::SHUTDOWN_HANDLER));
 
-        if (empty($configFile) || !file_exists($configFile)) {
+        if (!file_exists($configFile)) {
             throw new RuntimeException("The config file:\"{$configFile}\" can't null! at line:" . __LINE__
                 . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
-
         self::$_config = include_once $configFile;
 
         //初始化基础配置合并命名空间
         self::mergeNameSpacePathMap();
 
-        return self;
+        return self::getInstance();
     }
 
     /**
@@ -204,6 +203,7 @@ class ABaseApplication extends AppBase
     {
 
         $_config = self::$_config;
+
         //开启session
         $this->initSession();
 
@@ -556,12 +556,9 @@ class ABaseApplication extends AppBase
             return $flag;
         }
         $nameSpaceBasePath = array_shift($namespaceDividString);
-        if (!isset(self::$selfBasePathMap['@' . $nameSpaceBasePath])) {
-            self::setBasePathMap($nameSpaceBasePath);
+        if (!isset(self::$nameSpacePathMap['@' . $nameSpaceBasePath])) {
+            self::setNameSpacePathMap($nameSpaceBasePath);
         }
-
-
-        $pathBase = self::$nameSpacePathMap['@' . $nameSpaceBasePath];
 
 
         //如果命令空间不存在或者类已加载，则不需要重新加载
@@ -575,8 +572,7 @@ class ABaseApplication extends AppBase
         if (!empty($classNameBase)) {
             class_exists($classNameBase) ? $flagClassExists = true : '';
         }
-
-        $includeFile = $pathBase . implode(DIRECTORY_SEPARATOR, $namespaceDividString) . DIRECTORY_SEPARATOR . "{$classNameBase}.php";
+        $includeFile = self::$nameSpacePathMap['@' . $nameSpaceBasePath] . implode(DIRECTORY_SEPARATOR, $namespaceDividString) . DIRECTORY_SEPARATOR . "{$classNameBase}.php";
 
         if (!file_exists($includeFile)) {
 
