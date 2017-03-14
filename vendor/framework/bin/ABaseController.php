@@ -9,7 +9,7 @@ use RuntimeException;
  *
  * @author zhaocj
  */
-class ABaseController extends AppBase
+abstract class ABaseController extends AppBase
 {
 
     public $rewriteUrl;
@@ -21,6 +21,30 @@ class ABaseController extends AppBase
     protected $action; // 本次链接Controller所对应的 $action
     protected $moduleString;
     protected $version = '1.0';
+    protected $importLocation = 'inside'; // 调用系统接口位置  // enum('inside'：内部调用，'outside':外部调用);
+
+    protected $model = null; // 本Controller对应的Model
+
+    /**
+     * 调用方法前执行的函数
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     * @return mixed *
+     */
+    public abstract function beforeMethod();
+
+    /**
+     * 调用方法后执行函数
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     * @return mixed *
+     */
+    public abstract function afterMethod();
+
 
     public function __construct($controllerString = null, $action = null, $moduleString = null)
     {

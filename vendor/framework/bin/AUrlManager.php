@@ -18,6 +18,8 @@ class AUrlManager extends AppBase
     protected $params = array();
     protected $noReWrite = false;
     protected $routeRule;//路由规则
+    protected $actionParamsSeparator = '/';//r和 实际参数之间分隔符;
+
 
     public static function getInstance()
     {
@@ -44,7 +46,7 @@ class AUrlManager extends AppBase
     public function _initModuleAction()
     {
         // 获得当前请求动作是什么
-        $controller = new ABaseController ();
+        $controller = new AController();
 
         //如果是URL重写的请求
         if ($this->rewriteMod) {
@@ -165,7 +167,7 @@ class AUrlManager extends AppBase
             }
         }
         if ($this->rewriteUrl !== $this->moduleAction) {
-            $urlStr = $this->domain . $this->delimiterModuleAction . $this->rewriteUrl . '/' . $this->moduleAction . $this->extendFile;
+            $urlStr = $this->domain . $this->delimiterModuleAction . $this->rewriteUrl . $this->actionParamsSeparator . $this->moduleAction . (empty($this->moduleAction) ? '' : $this->extendFile);
         }
 
         return $urlStr;

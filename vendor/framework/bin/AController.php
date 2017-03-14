@@ -21,10 +21,9 @@ class AController extends ABaseController
 {
 
     protected $lifeTime = 0; // 本页面缓存的时间分钟数
-    protected $model = null; // 本Controller对应的Model
+
     protected $authValue = null; //
-    protected $importLocation = 'inside'; // 调用系统接口位置
-// enum('inside'：内部调用，'outside':外部调用);
+
     protected $templateFile; // 本URL对应的HTML模板文件路径
     protected $data; // 本页面对应的路径
     protected $breadCrumbs = array(); // 面包屑内容
@@ -33,11 +32,12 @@ class AController extends ABaseController
     protected $jsFileAfter = array(); // 网页后边的JS文件
     protected $jsStr;
     protected $params = null;
-    protected static $urlManager;
-    protected $permitAllModule;
+
+
     protected $theme; // 模板风格
     protected $layout = 'main';
-// seo相关
+
+    // seo相关
     protected $pageTitle; // 标题
     protected $pageKeywords;
     protected $pageDescription;
@@ -53,11 +53,32 @@ class AController extends ABaseController
      */
     public function init()
     {
-
-        /* 路由模式start* */
-        self::$urlManager = App::$app->urlManager;
         $this->before();
-        /* 路由模式end* */
+    }
+
+
+    /**
+     * 调用方法前执行的函数
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     * @return mixed *
+     */
+    public function beforeMethod()
+    {
+    }
+
+    /**
+     * 调用方法后执行函数
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     * @return mixed *
+     */
+    public function afterMethod()
+    {
     }
 
     /**
@@ -79,14 +100,14 @@ class AController extends ABaseController
         return $this->pageCache;
     }
 
-// 清除页面缓存
+    // 清除页面缓存
     protected function clearPageCache()
     {
         //$cache = new PageCacheClass ( );
         $this->pageCacheClass->clearCache();
     }
 
-// action前
+    // action前
     public function before()
     {
         $pageAction = explode(',', $this->pageCache ['action']);
@@ -103,7 +124,7 @@ class AController extends ABaseController
         }
     }
 
-// action后
+    // action后
     public function after()
     {
         $pageAction = explode(',', $this->pageCache ['action']);
@@ -118,7 +139,6 @@ class AController extends ABaseController
     /*
      * 片断缓存 示例：<?php if($this->beginCache('commonQuestion',array('lifeTime'=>'24*3600'))){;?> 缓存的内容 <?php $this->endCache();}?>
      */
-
     protected function beginCache($id, $options = array())
     {
         $pageCacheClass = new PageRedisCacheClass ();
@@ -132,7 +152,6 @@ class AController extends ABaseController
 
     protected function endCache()
     {
-
         $this->pageCacheClassFragment->endCache();
     }
 
@@ -151,41 +170,10 @@ class AController extends ABaseController
         return $session;
     }
 
-    /*
-     * 检查模块和action权限
-     */
-
-    protected function checkModule()
-    {
-        if (NEEDAUTH === false) {
-            return true;
-        }
-        $m = strtolower($this->module);
-        $a = strtolower($this->action);
-        $module = array();
-        if (empty($this->permitAllModule)) {
-            return false;
-        }
-        foreach ($this->permitAllModule as $key => $value) {
-            $module[strtolower($key)] = $value;
-        }
-        $actionArr = $module [$m];
-
-        if ($actionArr && is_array($actionArr)) {
-            if (in_array('*', $actionArr)) {
-                return true;
-            }
-            if (in_array($a, $actionArr)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /*
      * 魔术方法
      */
-
     public function __call($name, $args)
     {
         if (isset($this->actionMaps [$name])) {
@@ -196,7 +184,6 @@ class AController extends ABaseController
     /*
      * 动态创建action @param $name action名称 @param $mCallable 执行调用的方法
      */
-
     protected function createAction($name, $mCallable)
     {
         $name = $name . 'Action';
@@ -227,12 +214,9 @@ class AController extends ABaseController
     public function debugSQL()
     {
         $object = ADatabaseMysql::$debugMessage;
-
-
         if (defined('DEBUG_SQL_NUM')) {
             $object = array_slice($object, -DEBUG_SQL_NUM, DEBUG_SQL_NUM);
         }
-
         $path = App:: getSystemViewPath() . DIRECTORY_SEPARATOR . 'bottom_trace.php';
         include_once $path;
     }
@@ -244,7 +228,7 @@ class AController extends ABaseController
     public function encryption($password)
     {
         try {
-// return @md5 ( '~2' . md5 ( "!@{$password}!@" ) . '9' );
+            // return @md5 ( '~2' . md5 ( "!@{$password}!@" ) . '9' );
             return substr('d2sf' . md5($password) . md5($password) . 'g51s', -40);
         } catch (Exception $e) {
             throw $e;
@@ -594,14 +578,12 @@ class AController extends ABaseController
         return $breadCrumbString;
     }
 
-    public
-    function setLoadData($data = array())
+    public function setLoadData($data = array())
     {
         $this->loadData = $data;
     }
 
-    public
-    function getAppTemplatePath()
+    public function getAppTemplatePath()
     {
         return $this->templateFile;
     }
@@ -615,8 +597,7 @@ class AController extends ABaseController
      *            0 为无限生命
      *
      */
-    public
-    function loadViewCell($template, $isCache = false, $name = '', $lifeTime = 0)
+    public function loadViewCell($template, $isCache = false, $name = '', $lifeTime = 0)
     {
         if ($isCache) {
             $fileCache = App:: base()->fileCache;
@@ -646,8 +627,7 @@ class AController extends ABaseController
     /**
      * 验证规则内容返回
      */
-    protected
-    function rules()
+    protected function rules()
     {
         require_once DIR_FRAMEWORK_LIB . 'Verify.php';
         $result = array();
@@ -742,19 +722,16 @@ class AController extends ABaseController
 
             foreach ($arrFile as $key => $file) {
                 if ($type == 'js') {
-                    $outHtml .= "<script type=\"text/javascript\" src=\"{$url}js/{$file}?v=" . App::$app->version . "\"></script>\n";
+                    $outHtml .= "<script type=\"text/javascript\" src=\"{$url}js/{$file}?v=" . App::$app->parameters->version . "\"></script>\n";
                 } elseif ($type == 'css') {
-                    $outHtml .= "<link href=\"{$url}css/{$file}?v=" . App::$app->version . "\" rel=\"stylesheet\" type=\"text/css\">\n";
+                    $outHtml .= "<link href=\"{$url}css/{$file}?v=" . App::$app->parameters->version . "\" rel=\"stylesheet\" type=\"text/css\">\n";
                 }
             }
-
             return $outHtml;
         } else {
             //正式环境启动压缩
             $this->file_merger_do($arrFile, $outName, $type);
         }
-
-
         if ($cache) {
             switch ($type) {
                 case 'js':
@@ -767,9 +744,9 @@ class AController extends ABaseController
         } else {
             switch ($type) {
                 case 'js':
-                    return "<script type=\"text/javascript\" src=\"{$return}?v=" . App::base()->version . "\"></script>\n";
+                    return "<script type=\"text/javascript\" src=\"{$return}?v=" . App::$app->parameters->version . "\"></script>\n";
                 case 'css':
-                    return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$return}?v=" . App::base()->version . "\">\n";
+                    return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$return}?v=" . App::$app->parameters->version . "\">\n";
                 default:
                     break;
             }

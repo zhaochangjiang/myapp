@@ -14,6 +14,7 @@ class ControllerCategory extends ControllerBackend
 
     public function init()
     {
+
         $this->setBreadCrumbs(array(
             'name' => '系统配置'));
         parent::init();

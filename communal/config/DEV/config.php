@@ -8,8 +8,9 @@ define('DOMAIN', 'http://' . $_SERVER['HTTP_HOST'] . '/juetun');
  * and open the template in the editor.
  */
 return array(
-    'version' => '1.0',
-    'params' => array(
+
+    'parameters' => array(
+        'version' => '1.0',
         'sitename' => '掘囤网',
         'domain' => array(
             'userProfile' => DOMAIN . '/frontend/web',

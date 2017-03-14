@@ -12,6 +12,7 @@ use Exception;
 use RuntimeException;
 use client\common\ClientResultData;
 use client\common\ErrorCode;
+use stdClass;
 
 // error_reporting(0);
 ini_set('date.timezone', 'Asia/Shanghai');
@@ -68,6 +69,7 @@ class ABaseApplication extends AppBase
     public $urlManager;//URL对象管理
     public $session;
 
+    public $parameters;//配置参数
 //    public static $enableIncludePath = true;
 
     //命名空间与目录的对应关系
@@ -113,11 +115,36 @@ class ABaseApplication extends AppBase
     private function __construct()
     {
         //开启session
-        $this->initSession();
+        $this->_initSession();
 
         //初始化URL管理
         $this->_initUrlManager();
 
+        $this->_initParameters();
+    }
+
+    /**
+     * 获得数据库配置
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     * @return mixed *
+     */
+    public function getDatabaseConfig()
+    {
+        return self::$_config['database'];
+    }
+
+
+    private function _initParameters()
+    {
+        if (!empty(self::$_config['parameters'])) {
+            $this->parameters = new stdClass();
+            foreach (self::$_config['parameters'] as $key => $value) {
+                $this->parameters->$key = $value;
+            }
+        }
     }
 
     /**
@@ -204,7 +231,7 @@ class ABaseApplication extends AppBase
      *
      * @return void
      */
-    private function initSession()
+    private function _initSession()
     {
 
         $accessToken = $this->clientReturnDataOrg();
@@ -269,7 +296,9 @@ class ABaseApplication extends AppBase
         if (!method_exists($moduleDeal, $methodName)) {//&& !isset($moduleDeal->actionMaps [$methodName])
             throw new AHttpException(404, "The Method \"$methodName\" doesn't exist! in {$className}!");
         }
+        $moduleDeal->beforeMethod();
         $moduleDeal->$methodName();
+        $moduleDeal->afterMethod();
     }
 
     /**

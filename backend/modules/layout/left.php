@@ -13,9 +13,7 @@ use framework\App;
             <div class="pull-left info">
                 <p><?php echo $this->data['session']['username'] ?></p>
                 <a href="<?php
-                echo $this->createUrl(
-                    array('Passport', 'logout'),
-                    null, App::base()->params['domain']['web']);
+                echo $this->createUrl(['Passport', 'logout'], null, App::$app->parameters->domain['web']);
                 ?>"><i class="fa fa-circle text-success"></i> 在线</a>
             </div>
         </div>

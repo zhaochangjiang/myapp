@@ -5,7 +5,7 @@ use framework\App;
 ?>
 <header class="header">
     <a href="<?php echo $this->createUrl(array()); ?>" class="logo">
-        <?php echo App::base()->params['sitename'] . ' 后台管理中心'; ?>
+        <?php echo App::$app->parameters->sitename . ' 后台管理中心'; ?>
     </a>
     <nav class="navbar navbar-static-top" role="navigation">
         <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
@@ -251,17 +251,12 @@ use framework\App;
                         <li class="user-footer">
                             <div class="pull-left">
                                 <a href="<?php
-                                echo $this->createUrl(array(
-                                    'User',
-                                    'setting'), null, App::base()->params['domain']['userProfile']);
+                                echo $this->createUrl(['User', 'setting'], [], App::$app->parameters->domain['userProfile']);
                                 ?>" class="btn btn-default btn-flat">个人设置</a>
                             </div>
                             <div class="pull-right">
-                                <a href="<?php
-                                echo $this->createUrl(array(
-                                    'Passport',
-                                    'logout'), null, App::base()->params['domain']['web']);
-                                ?>" class="btn btn-default btn-flat">退出</a>
+                                <a href="<?php echo $this->createUrl(['Passport', 'logout'], null, App::$app->parameters->domain['web']); ?>"
+                                   class="btn btn-default btn-flat">退出</a>
                             </div>
                         </li>
                     </ul>

@@ -8,7 +8,7 @@ define('DOMAIN', 'http://' . $_SERVER['HTTP_HOST'] . '/juetun');
  */
 return array(
     'version' => '1.0',
-    'params' => array(
+    'parameters' => array(
         'sitename' => '掘囤网',
         'domain' => array(
             'userProfile' => DOMAIN . '/frontend/web',

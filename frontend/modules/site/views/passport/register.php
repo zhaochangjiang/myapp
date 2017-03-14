@@ -10,8 +10,11 @@ use communal\common\UtilsFormFormat;
     <div class="panel-body">
         <?php
         echo UtilsFormFormat::open($this->createUrl(
-            $this->controllerString . '.iframe' . ucfirst($this->action), array(
-            'goto' => $this->data['goto'])));
+            [
+                $this->controllerString,
+                'iframe' . ucfirst($this->action)
+            ], ['goto' => $this->data['goto']]
+        ))
         ?>
         <div class="alert alert-danger" style="display: none">
             <p class="m-none text-semibold h6"></p>
@@ -20,9 +23,7 @@ use communal\common\UtilsFormFormat;
             <div class="clearfix">
                 <label>用户名</label>
                 <a href="<?php
-                echo $this->createURl("{$this->controllerString}.login"
-                    , array(
-                        'goto' => $this->data['goto']));
+                echo $this->createURl([$this->controllerString, 'login'], ['goto' => $this->data['goto']]);
                 ?>" class="pull-right">已有账号，去登录?</a>
             </div>
             <div class="input-group input-group-icon">
@@ -98,13 +99,9 @@ use communal\common\UtilsFormFormat;
                 </div>
             </div>
             <div class="col-xs-7 text-left">
-                <img border="0" onclick="$(this).attr('src', '<?php
-                echo $this->createUrl(
-                    $this->controllerString . '.authcode')
-                ?>' + '/?t=' + new Date().getTime())" src="<?php
-                echo $this->createUrl("{$this->controllerString}.authcode", array(
-                    't' => microtime(true)));
-                ?>"/>
+                <img border="0"
+                     onclick="$(this).attr('src', '<?php echo $this->createUrl([$this->controllerString, 'authcode'], ['t' => 'js' . microtime(true)]) ?>"
+                     src="<?php echo $this->createUrl([$this->controllerString, 'authcode'], ['t' => microtime(true)]); ?>"/>
             </div>
         </div>
         <div class="row">
@@ -122,7 +119,7 @@ use communal\common\UtilsFormFormat;
         </span>
         <p class="text-center">回到&nbsp;
             <a href="<?php
-            echo $this->createUrl('');
+            echo $this->createUrl();
             ?>">首页</a></p>
         <?php UtilsFormFormat::close();
         ?>
