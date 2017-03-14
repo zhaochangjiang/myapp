@@ -17,12 +17,6 @@ class ControllerPassport extends ControllerFrontend
 
     public $layout = 'passport';
 
-    public function init()
-    {
-
-        parent::init();
-    }
-
     /**
      * 退出登录
      */
@@ -31,7 +25,7 @@ class ControllerPassport extends ControllerFrontend
 
         $result = $this->httpConnectionByBase(array('Passport', 'logout'), null, $this->params);
         //  stop($result);
-        header("Location:" . App::base()->params['domain']['web']);
+        header("Location:" . App::$app->parameters->domain['web']);
         App::sessionDestroy();
     }
 

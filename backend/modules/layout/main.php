@@ -1,12 +1,11 @@
 <?php
 use framework\App;
-
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title><?php echo App::base()->params['sitename'] . ' 后台管理中心' ?></title>
+    <title><?php echo App::$app->parameters->sitename . ' 后台管理中心' ?></title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <?php
     echo $this->getCssFile();

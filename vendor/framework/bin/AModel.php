@@ -4,6 +4,7 @@ namespace framework\bin;
 
 use framework\App;
 
+use framework\bin\widget\database\ADBException;
 
 /**
  * 系统基础Model
@@ -41,8 +42,7 @@ abstract class AModel
     private function initDBConfig()
     {
 
-        $this->_db_config = App:: base()->database;
-
+        $this->_db_config = App:: $app->getDatabaseConfig();
         if (empty($this->linkName)) {
             throw new ADBException("Model linkName:'{$this->linkName}' is empty!");
         }
@@ -64,10 +64,9 @@ abstract class AModel
 
         $this->initDBConfig();
 
-        $databaseConfig = App:: base()->database;
         // 获得当前数据库类型，默认数据库类型为Mysql
         $modelClass = $this->getDatabaseType($this->linkName);
-        $this->model = new $modelClass($databaseConfig[$this->linkName]);
+        $this->model = new $modelClass($this->_db_config[$this->linkName]);
 
 //如果是设置了数据库名称
         if (!empty($this->dbname)) {

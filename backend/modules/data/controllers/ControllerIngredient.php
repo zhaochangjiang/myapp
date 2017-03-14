@@ -8,6 +8,7 @@ use communal\models\data\ingredient\ModelIngredient;
 use backend\common\BreadCrumb;
 use backend\common\ReusltData;
 use framework\bin\AUtils;
+
 /**
  *  食材管理
  *
@@ -171,14 +172,9 @@ class ControllerIngredient extends ControllerBackend
     {
         $params = $this->getRequestParams();
         $this->data['goto'] = $params['goto'];
-
         $model = $this->_getModel();
-        throw new Exception("dsfsdf");
         $this->data['data'] = $model->fetchOne($params);
-
         $this->data['type'] = $params['type'];
-
-
         $breadCrumb['name'] = $this->pageTitle = '基础数据';
         $breadCrumb['href'] = $this->createUrl(array(
             $this->controllerString,

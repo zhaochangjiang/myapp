@@ -1,0 +1,9 @@
+.idea
+.idea/*
+
+# ignore eclipse files
+.project
+.classpath
+.settings
+.metadata
+/.idea

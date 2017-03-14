@@ -5,6 +5,8 @@ namespace backend\common;
 use framework\bin\AController;
 use communal\models\admin\permit\ModelPermit;
 use framework\App;
+use framework\bin\AUtils;
+
 use communal\models\admin\permit\ModelPermitGroup;
 
 /**
@@ -12,9 +14,9 @@ use communal\models\admin\permit\ModelPermitGroup;
  *
  * @author zhaocj
  */
-abstract class ControllerBackend extends AController
+class ControllerBackend extends AController
 {
-
+    protected $permitAllModule;
     public $permitList;
     public $applicationDIr;
     public $pageSmallTitle;
@@ -67,6 +69,36 @@ abstract class ControllerBackend extends AController
 
         //权限验证
         $this->permitInit();
+    }
+
+    /**
+     * 检查模块和action权限
+     */
+    protected function checkModule()
+    {
+        if (NEEDAUTH === false) {
+            return true;
+        }
+        $m = strtolower($this->module);
+        $a = strtolower($this->action);
+        $module = array();
+        if (empty($this->permitAllModule)) {
+            return false;
+        }
+        foreach ($this->permitAllModule as $key => $value) {
+            $module[strtolower($key)] = $value;
+        }
+        $actionArr = $module [$m];
+
+        if ($actionArr && is_array($actionArr)) {
+            if (in_array('*', $actionArr)) {
+                return true;
+            }
+            if (in_array($a, $actionArr)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -143,6 +175,14 @@ abstract class ControllerBackend extends AController
         return false;
     }
 
+    /**
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * * @param $param
+     * @param string $default
+     * @return string *
+     */
     protected function outputHtml($param, $default = '')
     {
         if (empty($param)) {
@@ -157,7 +197,7 @@ abstract class ControllerBackend extends AController
      */
     protected function base64encodeCurrentUrl()
     {
-        return \framework\bin\AUtils::base64encodeCurrentUrl();
+        return AUtils::base64encodeCurrentUrl();
     }
 
     /**
@@ -169,11 +209,6 @@ abstract class ControllerBackend extends AController
     protected function getBreadCrumbs($separator = '&raquo;')
     {
         $breadCrumbString = ' <ol class="breadcrumb">';
-
-
-//          <li><a href = "#"><i class = "fa fa-dashboard"></i> Home</a></li>
-//          <li><a href = "#">Tables</a></li>
-//          <li class = "active">Simple</li>
         $count = count($this->breadCrumbs);
         if ($count) {
             $class = $href = '';
