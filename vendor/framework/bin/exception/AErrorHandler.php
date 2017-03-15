@@ -1,9 +1,9 @@
 <?php
 
-namespace framework\bin;
+namespace framework\bin\exception;
 
-use framework\bin\ARequest;
-use framework\bin\AResponse;
+use framework\bin\exception\ARequest;
+use framework\bin\exception\AResponse;
 use framework\App;
 use framework\bin\ADBException;
 use Exception;

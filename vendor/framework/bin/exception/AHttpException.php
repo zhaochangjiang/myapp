@@ -1,8 +1,8 @@
 <?php
 
-namespace framework\bin;
+namespace framework\bin\exception;
 
-use framework\bin\AHttpExceptionInterface;
+use framework\bin\exception\AHttpExceptionInterface;
 use RuntimeException;
 
 /**

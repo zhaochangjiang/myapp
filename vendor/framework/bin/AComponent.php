@@ -2,12 +2,13 @@
 
 namespace framework\bin;
 
+
 /**
  * 容器
  *
  * @author heypigg
  */
-class AComponent
+class AComponent extends AppBase
 {
 
     private $_e;

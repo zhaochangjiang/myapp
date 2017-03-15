@@ -1,5 +1,5 @@
 <?php
-namespace framework\bin;
+namespace framework\bin\exception;
 /**
  * The Response class represents an HTTP response. The object
  * contains the response headers, HTTP status code, and response

@@ -4,6 +4,8 @@ namespace framework\bin;
 
 use framework\App;
 use RuntimeException;
+use framework\bin\utils\AUtils;
+use framework\bin\exception\AHttpException;
 
 /**
  *

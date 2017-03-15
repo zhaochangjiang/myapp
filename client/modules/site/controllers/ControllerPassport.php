@@ -62,11 +62,6 @@ class ControllerPassport extends ControllerClient
      */
     public function actionIframeLogin()
     {
-        $params = $this->getRequestParams();
-
-        list ($this->params['username'], $this->params['password']) = array(
-            $params['username'],
-            $params['password']);
 
         if (empty($this->params['username'])) {
             $this->clientResultData->setResult(ErrorCode::$USERNAMENOTNULL);

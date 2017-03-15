@@ -2,15 +2,18 @@
 
 namespace framework\bin;
 
-use framework\bin\AHttpException;
-use framework\bin\ARequest;
-use framework\bin\AResponse;
+use framework\bin\exception\AHttpException;
+use framework\bin\exception\ARequest;
+use framework\bin\exception\AResponse;
 use framework\bin\ABaseController;
-use framework\bin\AErrorHandler;
+use framework\bin\urlrewrite\AUrlManager;
+use framework\bin\exception\AErrorHandler;
+use framework\bin\utils\AUtils;
+use framework\bin\session\ASession;
 use framework\helpers\AHelper;
-use Exception;
+
 use RuntimeException;
-use client\common\ClientResultData;
+
 use client\common\ErrorCode;
 use stdClass;
 
@@ -109,6 +112,23 @@ class ABaseApplication extends AppBase
     }
 
     /**
+     *
+     * @return void
+     */
+    private function _initSession()
+    {
+        //加载Session信息
+        if (empty(self::$_config['session']['class'])) {
+            $this->session = new ASession();
+        } else {
+            $className = self::$_config['session']['class'];
+            unset(self::$_config['session']['class']);
+            $this->session = new $className();
+        }
+        $this->session->setParams((array)self::$_config['session']);
+    }
+
+    /**
      * 构造函数
      *
      */
@@ -197,56 +217,6 @@ class ABaseApplication extends AppBase
         return self::getInstance();
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function getAccessToken()
-    {
-        return md5(TOKEN . session_id());
-    }
-
-
-    /**
-     *
-     */
-    public function clientReturnDataOrg()
-    {
-        if (IS_CLIENT === false) {
-            return;
-        }
-        $accessToken = $_POST['accessToken'];
-
-        if (empty($accessToken)) {
-            $this->clientResultData = new ClientResultData();
-            $this->clientResultData->setResult(ErrorCode::$ERRORACCESSTOKEN);
-            $this->clientResultData->setData($this->getAccessToken());
-            //    $this->clientResultData->setSessionid();
-            die(json_encode($this->clientResultData));
-        }
-        return $accessToken;
-    }
-
-    /**
-     *
-     * @return void
-     */
-    private function _initSession()
-    {
-
-        $accessToken = $this->clientReturnDataOrg();
-
-        // 如果有设置Session数据库缓存,否则开启Session
-        if (self::$_config ['session'] == null) {
-            if (IS_CLIENT !== FALSE) {
-                session_id($accessToken);
-            }
-            session_start();
-            return;
-        }
-        include_once DIR_FRAMEWORK . 'bin' . DIRECTORY_SEPARATOR . 'ASession.php';
-    }
-
 
     /**
      * 框架启动运行方法
@@ -322,7 +292,7 @@ class ABaseApplication extends AppBase
     {
 
         if (empty(self::$_config['controllerNameSpace'])) {
-            throw new Exception('ther controller $_config[\'controllerNameSpace\'] is null,you need set it in config!');
+            throw new RuntimeException('ther controller $_config[\'controllerNameSpace\'] is null,you need set it in config! the error is at line:' . __LINE__ . ',in file:' . __FILE__);
         }
         if (empty($moduleString)) {
             $moduleString = self::getDefaultModule();
@@ -406,34 +376,19 @@ class ABaseApplication extends AppBase
         return $result;
     }
 
-    /**
-     * 获得SESSION内容，不传值表示返回所有的Session
-     *
-     * @param string $key
-     * @return Ambigous <unknown, string>
-     */
-    public
-    static function getSession($key = '')
-    {
-        $session = $_SESSION;
-        return empty($key) ? $session : (isset($session[$key]) ? $session[$key] : '');
-    }
 
     /**
      * 销毁Session
      */
-    public
-    static function sessionDestroy()
+    public static function sessionDestroy()
     {
         session_destroy();
     }
 
-    /*
+    /**
      * HTTP错误 @param $message 错误内容 @param $code 错误代码
      */
-
-    public
-    static function error($message, $code = 404)
+    public static function error($message, $code = 404)
     {
 
         require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AHttpException.php';
@@ -446,8 +401,7 @@ class ABaseApplication extends AppBase
      * @param Object $object
      * @return multitype:
      */
-    public
-    static function objectToArray($object)
+    public static function objectToArray($object)
     {
         $result = array();
         $_array = is_object($object) ? get_object_vars($object) : $object;
@@ -459,35 +413,6 @@ class ABaseApplication extends AppBase
         return $result;
     }
 
-    /**
-     * 设置Session的内容
-     *
-     * @param String $key
-     * @param String $value
-     */
-    public
-    static function setSession($key, $value)
-    {
-        $session = self::getSession();
-        $session[$key] = $value;
-        self::setSessionArray($session);
-    }
-
-    /**
-     * 设置Session的内容
-     *
-     * @param String $key
-     * @param String $value
-     */
-    public static function setSessionArray($sessionArray, $sessionAll = false)
-    {
-        if ($sessionAll === true) {
-            $_SESSION = $sessionArray;
-            return;
-        }
-        //  session_destroy();
-        $_SESSION = array_merge($_SESSION, $sessionArray);
-    }
 
     /**
      * 获取路由路径

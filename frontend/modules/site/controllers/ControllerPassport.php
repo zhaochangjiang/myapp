@@ -44,7 +44,6 @@ class ControllerPassport extends ControllerFrontend
     public function actionIframeRegister()
     {
 
-        $this->params = $this->getRequestParams();
         $this->data['goto'] = base64_decode($this->params('goto'));
         $result = (array)parent::httpConnectionByBase(
             array('Passport', 'iframeRegister'), array(), $this->params);
@@ -68,17 +67,13 @@ class ControllerPassport extends ControllerFrontend
      */
     public function actionIframeLogin()
     {
-//        $_POST = array(
-//            'username' => 'admin',
-//            'password' => '111111'
-//        );
-        $this->params = $this->getRequestParams();
+
         $this->data['goto'] = base64_decode($this->getInput('goto'));
 
         $result = (array)$this->httpConnectionByBase(array('Passport', 'iframeLogin')
             , null, $this->params);
         $jsString = '';
-        if ($result['code'] != 200) {
+        if (200 != $result['code']) {
             $jsString .= 'parent.showerror("' . $result['message'] . '");';
         }
         App::setSessionArray($result['data']);
