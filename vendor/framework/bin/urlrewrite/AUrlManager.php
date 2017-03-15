@@ -6,8 +6,11 @@
  * Time: 16:45
  */
 
-namespace framework\bin;
+namespace framework\bin\urlrewrite;
 
+use framework\bin\AppBase;
+use framework\bin\AController;
+use framework\bin\utils\AUtils;
 
 class AUrlManager extends AppBase
 {

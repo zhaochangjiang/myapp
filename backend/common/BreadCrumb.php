@@ -11,7 +11,5 @@ class BreadCrumb
 {
     var $name;
     var $href;
-
-
 }
   

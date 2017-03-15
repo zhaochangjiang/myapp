@@ -107,10 +107,8 @@ class ControllerBackend extends AController
     public function validateLogin()
     {
         if (empty($this->data['session'])) {
-            $gotoUrl = $this->createUrl(array(
-                'passport',
-                'login'), array(), App::base()->params['domain']['web']);
-            $this->redirect();
+            $gotoUrl = $this->createUrl(['passport', 'login'], null, App::$app->parameters->domain['web']);
+            $this->redirect($gotoUrl);
         }
     }
 

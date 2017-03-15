@@ -10,6 +10,8 @@ namespace framework\bin;
 
 use framework\App;
 use RuntimeException;
+use framework\bin\utils\AUtils;
+use framework\bin\http\ACurlManager;
 
 /**
  * 系统控制器基类
@@ -67,6 +69,7 @@ class AController extends ABaseController
      */
     public function beforeMethod()
     {
+        $this->params = $this->getRequestParams();
     }
 
     /**
@@ -292,128 +295,28 @@ class AController extends ABaseController
         $this->templateFile = $this->getTemplateDir() . $this->controllerString . DIRECTORY_SEPARATOR . $this->action . '.php';
     }
 
-    /**
-     * 抓取和提交数据,如果就加密验证失败，则再请求一次
-     * @param
-     *            target    调用的m和a参数
-     * @param
-     *            gets    url中的其他get参数
-     * @param
-     *            posts url中的post参数
-     */
-    protected function httpConnection($target, $gets, $posts = array())
-    {
-        $connectUrl = App:: base()->importApi [$target];
-
-        if (empty($connectUrl)) {
-            exit("你请求的URL地址：{$target}错误!");
-        }
-
-        $data = $this->_grabimport($connectUrl, $gets, $posts);
-
-        if ($data ['error'] == '2001') {
-            ABaseApplication::setSession('session_code', $data ['session_id']);
-            return $this->_grabimport($connectUrl, $gets, $posts);
-        }
-        return $data;
-    }
 
     /**
      * 调用接口工具方法
      * @param String $moduleAction
-     * @param String $action
-     * @param Array|null $gets
-     * @param Array|null $posts
+     * @param array|null $gets
+     * @param array|null $posts
      * @return String
      */
     protected function httpConnectionByBase($moduleAction, $gets = array(), $posts = array())
     {
-        return $this->httpConnectionByUrl($this->createUrl($moduleAction, $gets, App::$app->params['domain']['client']), $posts);
+        $aCurlManager = new ACurlManager();
+        $url = $this->createUrl($moduleAction, $gets, App::$app->parameters->domain['client']);
+        return $aCurlManager->httpConnectionByUrl($url, $posts);
     }
 
     /**
-     * @author Karl.zhao <zhaocj2009@126.com>
-     * @since 2016/09/20
-     * @param
-     *            String
-     *            target    调用的m和a参数
-     * @param
-     *            gets    url中的其他get参数
-     * @param
-     *            posts url中的post参数
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     * @return mixed *
      */
-    protected function httpConnectionByUrl($connectUrl, $gets, $posts = array())
-    {
-
-        if (empty($connectUrl)) {
-            throw new Exception("the param what you give \$connectUrl is null!");
-        }
-
-        $data = $this->_grabimport($connectUrl, $gets, $posts);
-
-        if (isset($data ['code']) && $data ['code'] == '100') {
-            App::setSession('accessToken', $data['data']);
-            //    $_SESSION ['session_code'] = $data ['session_id'];
-            $data = $this->_grabimport($connectUrl, $gets, $posts);
-            return $data;
-        }
-        if ($data ['code'] == '200') {
-            return $data;
-        }
-        throw new Exception("Error Description:the client return is wrong!" . PHP_EOL . PHP_EOL . PHP_EOL .
-            'URL:' . $connectUrl . PHP_EOL . PHP_EOL .
-            (empty($posts) ? '' : '$_POST:' . var_export($posts, true) . PHP_EOL . PHP_EOL) .
-            (empty($gets) ? '' : '$_GET:' . var_export($gets, true) . PHP_EOL . PHP_EOL) .
-            'return data:' . var_export($data, true));
-    }
-
-    /**
-     * 获取远程端口的值
-     * @author Karl.zhao <zhaocj2009@126.com>
-     * @since 2016/09/20
-     * @param String $target
-     * @param Array $gets
-     * @param Array $posts
-     * @return mixed
-     */
-    private function _grabimport($target_url, $gets, $posts = array(), $headers = array())
-    {
-
-
-        // 处理get参数
-        foreach ($gets as $k => $v) {
-            $target_url .= "&$k=$v";
-        }
-
-        $posts['accessToken'] = App::getSession('accessToken');
-        // 加入加密code
-        // debug($target_url.'<br />');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $target_url);
-
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-
-        if ($headers) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        }
-        // 模拟浏览器cookie，提交session_id,不能url rewrite
-        curl_setopt($ch, CURLOPT_COOKIE, session_name() . '=' . session_id());
-
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $posts);
-        $data = curl_exec($ch);
-
-        curl_close($ch);
-
-        $result = json_decode($data, true);
-        if (empty($result)) {
-            return $data;
-        }
-        return $result;
-    }
-
     private function getTemplateFile()
     {
         return $this->templateFile;
@@ -1018,7 +921,7 @@ class AController extends ABaseController
     private function createURLPath($moduleAction, $params = array(), $domain = '')
     {
         //self::$urlManager不是 ，类AUrlManager的实例对象，或者AUrlManager的子类对象
-        if (!is_a(App::$app->urlManager, 'framework\\bin\\AUrlManager')) {
+        if (!is_a(App::$app->urlManager, 'framework\\bin\\urlrewrite\\AUrlManager')) {
             throw new RuntimeException(
                 "The flow class is not the  framework\\bin\\AUrlManager or it's sub class."
                 . PHP_EOL . var_export(App::$app->urlManager, true)

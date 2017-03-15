@@ -1,13 +1,18 @@
 <?php
-namespace framework\bin;
+namespace framework\bin\session;
 
+use client\common\ClientResultData;
+use framework\App;
+use framework\bin\AReturn;
+use framework\bin\http\ARequestParameter;
+use framework\bin\AppBase;
 
 /**
  *
  * @author zhaocj
  *
  */
-class ASession
+class ASession extends AppBase
 {
 
     var $configSession;
@@ -26,6 +31,58 @@ class ASession
 //        $session_model = D($this->configSession['dblink']);
 //        $str_sql = " CREATE TABLE IF NOT EXISTS `user_session`( `sid` varchar(50) NOT NULL COMMENT '用户Session_ID', `expire` int(10) NOT NULL COMMENT '最近一次使用本站时间', `ip` varchar(50) NOT NULL, `data` text NOT NULL COMMENT 'Session内容', PRIMARY KEY (`sid`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 //        $session_model->query($str_sql);
+
+        return true;
+    }
+
+    /**
+     * 销毁Session
+     */
+    public static function sessionDestroy()
+    {
+        session_destroy();
+    }
+
+    /**
+     * 获得SESSION内容，不传值表示返回所有的Session
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @param string $key
+     * @param string $key
+     * @return string *
+     */
+    public static function getSession($key = '')
+    {
+        $session = $_SESSION;
+        return empty($key) ? $session : (isset($session[$key]) ? $session[$key] : '');
+    }
+
+    /**
+     * 设置Session的内容
+     *
+     * @param String $key
+     * @param String $value
+     */
+    public static function setSessionArray($sessionArray, $sessionAll = false)
+    {
+        if ($sessionAll === true) {
+            $_SESSION = $sessionArray;
+            return;
+        }
+        //  session_destroy();
+        $_SESSION = array_merge($_SESSION, $sessionArray);
+    }
+
+    /**
+     * 设置Session的内容
+     * @param String $key
+     * @param String
+     * @return boolean
+     */
+    public static function setSession($key, $value)
+    {
+        $session = self::getSession();
+        $session[$key] = $value;
+        self::setSessionArray($session);
 
         return true;
     }
@@ -103,8 +160,23 @@ class ASession
         return true;
     }
 
-    private function __construct($session)
+    public function __construct()
     {
+
+    }
+
+    protected function _init()
+    {
+        $accessToken = $this->requestReturnData();
+
+        // 如果有设置Session数据库缓存,否则开启Session
+        if (self::$_config ['session'] == null) {
+            if (IS_CLIENT !== FALSE) {
+                session_id($accessToken);
+            }
+            session_start();
+            return;
+        }
         /**
          * [S]开始session*
          */
@@ -127,27 +199,57 @@ class ASession
         session_module_name('user');
         //$session = $this;
         session_set_save_handler(array(
-            $this,
+            self,
             'session_open'), array(
-            $this,
+            self,
             'session_close'), array(
-            $this,
+            self,
             'session_read'), array(
-            $this,
+            self,
             'session_write'), array(
-            $this,
+            self,
             'session_destroy'), array(
-            $this,
+            self,
             'session_gc'));
         session_start();
     }
 
+    /**
+     *
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        return md5(TOKEN . session_id());
+    }
+
+    /**
+     *
+     */
+    public function requestReturnData()
+    {
+        if (IS_CLIENT === false) {
+            return;
+        }
+        $accessToken = ARequestParameter::getSingleton()->getGet('accessToken');;
+        if (empty($accessToken)) {
+
+            $return = new AReturn();
+            $return->setCode(ErrorCode::$ERRORACCESSTOKEN);
+            $return->setData($this->getAccessToken());
+            die(json_encode($this->$return));
+        }
+        return $accessToken;
+    }
+
     public static function getInstance()
     {
-        new ASession(App::base()->session);
+
+        $session = new self();
+        $session->_init();
+        return $session;
     }
 
 }
 
-//加载Session信息
-ASession::getInstance();
+

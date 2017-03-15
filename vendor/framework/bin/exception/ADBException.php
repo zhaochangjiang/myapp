@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\bin\widget\database;
+namespace framework\bin\exception;
 
 use Exception;
 use framework\bin\AUtils;

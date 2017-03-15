@@ -47,7 +47,6 @@ class ControllerFrontend extends AController
      */
     protected function httpConnectionByBase($moduleAction, $gets = array(), $posts = array())
     {
-
         return parent::httpConnectionByBase($moduleAction, $gets, $posts);
     }
 
