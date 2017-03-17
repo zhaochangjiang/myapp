@@ -2,7 +2,8 @@
 
 namespace communal\models\data\ingredient;
 
-use framework\bin\AModel;
+use framework\bin\database\AModel;
+
 use communal\models\data\ingredient\ModelIngredientDesc;
 
 /**

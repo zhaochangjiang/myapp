@@ -2,7 +2,7 @@
 
 namespace communal\models\admin;
 
-use framework\bin\AModel;
+use framework\bin\database\AModel;
 use framework\App;
 
 /**

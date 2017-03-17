@@ -5,7 +5,7 @@
  * @Date: 2017/3/15
  * @Time: 23:24
  */
-namespace framework\bin;
+namespace framework\bin\base;
 
 class AReturn
 {

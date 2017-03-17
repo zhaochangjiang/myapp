@@ -3,7 +3,7 @@
 namespace frontend\common;
 
 use framework\App;
-use framework\bin\AController;
+use framework\bin\base\AController;
 
 /**
  * 网站前台基类

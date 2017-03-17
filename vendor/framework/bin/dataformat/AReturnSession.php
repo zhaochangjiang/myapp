@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\bin\dataformat;
+namespace framework\bin\dataFormat;
 
 use framework\bin\AReturn;
 

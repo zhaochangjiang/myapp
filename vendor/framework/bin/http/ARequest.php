@@ -1,8 +1,8 @@
 <?php
 
-namespace framework\bin\exception;
+namespace framework\bin\http;
 
-use framework\bin\ACollection;
+use framework\bin\base\ACollection;
 /**
  * The Request class represents an HTTP request. Data from
  * all the super globals $_GET, $_POST, $_COOKIE, and $_FILES

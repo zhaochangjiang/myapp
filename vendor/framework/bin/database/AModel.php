@@ -1,10 +1,10 @@
 <?php
 
-namespace framework\bin;
+namespace framework\bin\database;;
 
 use framework\App;
 
-use framework\bin\widget\database\ADBException;
+use framework\bin\exception\ADBException;
 
 /**
  * 系统基础Model
@@ -485,7 +485,7 @@ abstract class AModel
         if (empty($this->_db_config [$linkName] ['DATABASE_TYPE'])) {
             $this->_db_config [$linkName] ['DATABASE_TYPE'] = 'Mysql';
         }
-        return __NAMESPACE__ . "\widget\database\ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
+        return __NAMESPACE__ . "\ADatabase{$this->_db_config[$linkName]['DATABASE_TYPE']}";
     }
 
 }

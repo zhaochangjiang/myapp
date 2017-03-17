@@ -2,7 +2,7 @@
 
 namespace client\common;
 
-use framework\bin\AController;
+use framework\bin\base\AController;
 use client\common\ClientResultData;
 
 /*

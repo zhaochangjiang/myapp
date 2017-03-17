@@ -6,7 +6,7 @@
  * Time: 10:03
  */
 
-namespace framework\bin;
+namespace framework\bin\base;
 
 use framework\App;
 use RuntimeException;

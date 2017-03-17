@@ -2,13 +2,12 @@
 
 namespace framework\bin\exception;
 
-use framework\bin\exception\AHttpExceptionInterface;
 use RuntimeException;
 
 /**
  * 处理HTTP异常
  */
-class AHttpException extends RuntimeException implements AHttpExceptionInterface
+class AHttpException extends RuntimeException // implements AHttpExceptionInterface
 {
 
     private $statusCode;

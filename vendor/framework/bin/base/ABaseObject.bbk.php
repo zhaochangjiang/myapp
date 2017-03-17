@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\bin;
+namespace framework\bin\base;
 /**
  * 基础对象
  *

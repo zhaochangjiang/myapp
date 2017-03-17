@@ -1,9 +1,9 @@
 <?php
 
-namespace framework\bin\widget\database;
+namespace framework\bin\database;
 
-use framework\bin\widget\ADBException;
-use framework\bin\interfaceLib\ADatabase;
+use framework\bin\database\ADBException;
+use framework\bin\database\ADatabase;
 
 /*
    * 使用pdo连接sqlite

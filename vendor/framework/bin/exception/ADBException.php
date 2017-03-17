@@ -3,7 +3,7 @@
 namespace framework\bin\exception;
 
 use Exception;
-use framework\bin\AUtils;
+use framework\bin\base\AUtils;
 use framework\lib\Log;
 
 /**
