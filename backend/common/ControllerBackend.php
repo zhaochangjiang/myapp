@@ -2,7 +2,7 @@
 
 namespace backend\common;
 
-use framework\bin\AController;
+use framework\bin\base\AController;
 use communal\models\admin\permit\ModelPermit;
 use framework\App;
 use framework\bin\AUtils;
@@ -58,7 +58,7 @@ class ControllerBackend extends AController
     public function init()
     {
         parent::init();
-        $this->data['session'] = App::getSession();
+        $this->data['session'] = App::$app->session->getSession();
 
         //验证是否登录
         $this->validateLogin();
@@ -260,7 +260,7 @@ class ControllerBackend extends AController
 
     private function _getSession()
     {
-        return App::getSession();
+        return App::$app->session->getSession();
     }
 
     /**

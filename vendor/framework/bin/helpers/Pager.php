@@ -1,13 +1,8 @@
 <?php
 
-namespace framework\helpers;
+namespace framework\bin\helpers;
 
-use framework\helpers\ABasePager;
-
-/*
-   * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
-   */
-
+use framework\bin\helpers\ABasePager;
 /**
  * 改进分页类
  *

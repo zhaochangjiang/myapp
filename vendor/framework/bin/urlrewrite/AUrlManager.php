@@ -8,9 +8,9 @@
 
 namespace framework\bin\urlrewrite;
 
-use framework\bin\AppBase;
-use framework\bin\AController;
-use framework\bin\utils\AUtils;
+use framework\bin\base\AppBase;
+use framework\bin\base\AController;
+//use framework\bin\utils\AUtils;
 
 class AUrlManager extends AppBase
 {

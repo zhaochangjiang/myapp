@@ -2,7 +2,7 @@
 
 namespace communal\models\admin\permit;
 
-use framework\bin\AModel;
+use framework\bin\database\AModel;
 use communal\common\ResultData;
 
 /**

@@ -2,8 +2,10 @@
 
 namespace framework;
 
-use framework\bin\ABaseApplication;
+use framework\bin\base\ABaseApplication;
 
+
+require(dirname(__FILE__) . '/bin/base/ABaseApplication.php');
 
 /**
  * 框架入口
@@ -11,8 +13,6 @@ use framework\bin\ABaseApplication;
  *
  * @author heypigg
  */
-require(dirname(__FILE__) . '/bin/ABaseApplication.php');
-
 class App extends ABaseApplication
 {
 

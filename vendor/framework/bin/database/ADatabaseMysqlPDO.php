@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-namespace framework\bin\widget\database;
+namespace framework\bin\database;
 
-use framework\bin\interfaceLib\ADatabase;
+use framework\bin\database\ADatabase;
 use PDO;
 use Exception;
 use RuntimeException;

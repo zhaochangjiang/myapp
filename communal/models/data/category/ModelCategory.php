@@ -2,7 +2,7 @@
 
 namespace communal\models\data\category;
 
-use framework\bin\AModel;
+use framework\bin\database\AModel;
 use communal\common\UtilsCommunalTools;
 use Exception;
 

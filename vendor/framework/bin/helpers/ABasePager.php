@@ -1,8 +1,8 @@
 <?php
 
-namespace framework\helpers;
+namespace framework\bin\helpers;
 
-use framework\helpers\AHelper;
+use framework\bin\base\AHelper;
 
 /**
  * 分页类主类,继承自Awidget

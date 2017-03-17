@@ -2,10 +2,10 @@
 
 namespace framework\bin\exception;
 
-use framework\bin\exception\ARequest;
-use framework\bin\exception\AResponse;
+use framework\bin\http\ARequest;
+use framework\bin\http\AResponse;
 use framework\App;
-use framework\bin\ADBException;
+use framework\bin\database\ADBException;
 use Exception;
 
 /**

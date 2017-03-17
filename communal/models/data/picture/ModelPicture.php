@@ -2,7 +2,8 @@
 
 namespace communal\models\data\picture;
 
-use framework\bin\AModel;
+use framework\bin\database\AModel;
+
 
 /**
  * Description of ModelPictureCategory

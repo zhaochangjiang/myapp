@@ -1,8 +1,8 @@
 <?php
 
-namespace framework\bin\widget\database;
+namespace framework\bin\database;
 
-use framework\bin\interfaceLib\ADatabase;
+use framework\bin\database\ADatabase;
 use framework\App;
 
 //use framework\bin\widget\database\ADBException;

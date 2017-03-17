@@ -1,8 +1,8 @@
 <?php
 
-namespace framework\helpers;
+namespace framework\bin\base;
 
-use framework\bin\AController;
+use framework\bin\base\AController;
 use ReflectionClass;
 use Exception;
 

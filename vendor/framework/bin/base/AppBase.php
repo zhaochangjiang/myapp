@@ -7,7 +7,7 @@
  * Time: 10:58
  */
 
-namespace framework\bin;
+namespace framework\bin\base;
 
 
 abstract class AppBase

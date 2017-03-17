@@ -3,9 +3,11 @@ namespace framework\bin\session;
 
 use client\common\ClientResultData;
 use framework\App;
-use framework\bin\AReturn;
+use framework\bin\base\AReturn;
+use framework\bin\base\AppBase;
+
 use framework\bin\http\ARequestParameter;
-use framework\bin\AppBase;
+
 
 /**
  *
@@ -50,7 +52,7 @@ class ASession extends AppBase
      * @param string $key
      * @return string *
      */
-    public static function getSession($key = '')
+    public function getSession($key = '')
     {
         $session = $_SESSION;
         return empty($key) ? $session : (isset($session[$key]) ? $session[$key] : '');

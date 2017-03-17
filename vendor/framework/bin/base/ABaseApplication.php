@@ -1,23 +1,16 @@
 <?php
 
-namespace framework\bin;
+namespace framework\bin\base;
 
 use framework\bin\exception\AHttpException;
-use framework\bin\exception\ARequest;
-use framework\bin\exception\AResponse;
-use framework\bin\ABaseController;
-use framework\bin\urlrewrite\AUrlManager;
+
 use framework\bin\exception\AErrorHandler;
-use framework\bin\utils\AUtils;
-use framework\bin\session\ASession;
-use framework\helpers\AHelper;
+use framework\bin\base\AHelper;
 
 use RuntimeException;
-
-use client\common\ErrorCode;
 use stdClass;
+use ReflectionClass;
 
-// error_reporting(0);
 ini_set('date.timezone', 'Asia/Shanghai');
 /**
  * *****************domain over**************************
@@ -39,7 +32,7 @@ defined('TOKEN') or define('TOKEN', 'f#jPk9$0');
  * *******************服务目录配置 start*******************
  */
 // 当前系统服务器目录
-defined('DIR_SERVER') or define('DIR_SERVER', dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR);
+defined('DIR_SERVER') or define('DIR_SERVER', dirname(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR);
 // --------------------系统配置Over-----------------------------------/
 // 框架基础类所在文件位置
 defined('DIR_FRAMEWORK') or define('DIR_FRAMEWORK', DIR_SERVER . 'vendor/framework' . DIRECTORY_SEPARATOR);
@@ -63,70 +56,36 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AppBase.php';
  */
 class ABaseApplication extends AppBase
 {
+    // 异常错误
+    const EXCEPTION_HANDLER = "handleException";    //设置异常处理类中的异常对应方法
+    const ERROR_HANDLER = "handleError";            //设置异常处理类中的错误对应方法
+    const SHUTDOWN_HANDLER = "handleShutdown";      //设置异常处理类中的结束对应方法
 
     public static $app;//本类实例对象
-
     private static $_config;//系统配置
     private static $_basePath = null;
 
-    public $urlManager;//URL对象管理
-    public $session;
+    private static $defaultClassMap = array(
+        'session' => 'framework\bin\session\ASession',
+        'urlManager' => 'framework\bin\urlrewrite\AUrlManager',
+    );
 
-    public $parameters;//配置参数
+    //URL路径拼接分割符
+    public static $delimiterModuleAction = '_';
 //    public static $enableIncludePath = true;
 
     //命名空间与目录的对应关系
     public static $nameSpacePathMap = array(
         '@framework' => DIR_FRAMEWORK,//框架与命名空间对应关系
     );
-    // private static $_basePath;
-    //public static $classMap = array();
 
 
-    //URL路径拼接分割符
-    public static $delimiterModuleAction = '_';
+    public $urlManager;//URL对象管理
 
-    //默认引入的文件
-    //    private static $_aliases = array(
-    //        'system' => DIR_FRAMEWORK); // alias
-    //private $clientResultData;
+    public $session; //用户登录信息管理
 
+    public $parameters;//配置参数
 
-    // 异常错误
-    const EXCEPTION_HANDLER = "handleException";    //设置异常处理类中的异常对应方法
-    const ERROR_HANDLER = "handleError";            //设置异常处理类中的错误对应方法
-    const SHUTDOWN_HANDLER = "handleShutdown";      //设置异常处理类中的结束对应方法
-
-
-    private function _initUrlManager()
-    {
-        if (empty(self::$_config['urlManager']['class'])) {
-            $this->urlManager = new AUrlManager();
-
-        } else {
-            $className = self::$_config['urlManager']['class'];
-            unset(self::$_config['urlManager']['class']);
-            $this->urlManager = new $className();
-        }
-        $this->urlManager->setParams((array)self::$_config['urlManager']);
-    }
-
-    /**
-     *
-     * @return void
-     */
-    private function _initSession()
-    {
-        //加载Session信息
-        if (empty(self::$_config['session']['class'])) {
-            $this->session = new ASession();
-        } else {
-            $className = self::$_config['session']['class'];
-            unset(self::$_config['session']['class']);
-            $this->session = new $className();
-        }
-        $this->session->setParams((array)self::$_config['session']);
-    }
 
     /**
      * 构造函数
@@ -134,13 +93,28 @@ class ABaseApplication extends AppBase
      */
     private function __construct()
     {
-        //开启session
-        $this->_initSession();
 
-        //初始化URL管理
-        $this->_initUrlManager();
+    }
 
-        $this->_initParameters();
+    /**
+     * 初始化本类的一些属性
+     * @return void
+     */
+    protected function _init()
+    {
+        //获得类的私的属性
+        $reflectionClass = new ReflectionClass(__CLASS__);
+        $properties = $reflectionClass->getProperties();
+        $staticProperties = array_keys($reflectionClass->getStaticProperties());
+        foreach ($properties as $k => $property) {
+            $propertyName = $property->getName();
+            if (in_array($propertyName, $staticProperties)) {
+                continue;
+            }
+
+            $this->_initObject($propertyName);
+        }
+        return $this;
     }
 
     /**
@@ -156,16 +130,6 @@ class ABaseApplication extends AppBase
         return self::$_config['database'];
     }
 
-
-    private function _initParameters()
-    {
-        if (!empty(self::$_config['parameters'])) {
-            $this->parameters = new stdClass();
-            foreach (self::$_config['parameters'] as $key => $value) {
-                $this->parameters->$key = $value;
-            }
-        }
-    }
 
     /**
      * 实例对象
@@ -211,10 +175,11 @@ class ABaseApplication extends AppBase
         }
         self::$_config = include_once $configFile;
 
+
         //初始化基础配置合并命名空间
         self::mergeNameSpacePathMap();
+        return self::getInstance()->_init();
 
-        return self::getInstance();
     }
 
 
@@ -288,7 +253,7 @@ class ABaseApplication extends AppBase
      * * @param $moduleString
      * @return string * * @throws Exception
      */
-    private function getControllerNameSpace($moduleString)
+    protected function getControllerNameSpace($moduleString)
     {
 
         if (empty(self::$_config['controllerNameSpace'])) {
@@ -333,8 +298,7 @@ class ABaseApplication extends AppBase
      * 设置应用程序根目录 @param string $path 应用程序根目录
      */
 
-    public
-    static function setBasePath($path)
+    public static function setBasePath($path)
     {
         if ((self::$_basePath = realpath($path)) === false || !is_dir(self::$_basePath)) {
             throw new RuntimeException("{$path} is not a directory! the Error is at line:" .
@@ -378,20 +342,11 @@ class ABaseApplication extends AppBase
 
 
     /**
-     * 销毁Session
-     */
-    public static function sessionDestroy()
-    {
-        session_destroy();
-    }
-
-    /**
      * HTTP错误 @param $message 错误内容 @param $code 错误代码
      */
     public static function error($message, $code = 404)
     {
 
-        require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'AHttpException.php';
         throw new AHttpException($code, $message);
     }
 
@@ -438,22 +393,10 @@ class ABaseApplication extends AppBase
         return (empty($module) && empty($action)) ? '' : "{$module}/{$action}";
     }
 
-
     /**
-     * 根据KEY 获得缓存内容
-     *
-     * @param String $key
-     * @return Ambigous <string, mixed>|string
+     * @param string $path
+     * @return mixed
      */
-    public static function cacheGet($key)
-    {
-        if (file_exists($key)) {
-            $result = unserialize(file_get_contents($key));
-            return isset($result ['content']) ? $result ['content'] : '';
-        }
-        return '';
-    }
-
     public static function getBasePathMap($path = '')
     {
         if (!empty($path)) {
@@ -474,6 +417,7 @@ class ABaseApplication extends AppBase
      */
     public static function setNameSpacePathMap($path)
     {
+
         return self::$nameSpacePathMap["@{$path}"] = DIR_SERVER . $path . DIRECTORY_SEPARATOR;
     }
 
@@ -539,7 +483,13 @@ class ABaseApplication extends AppBase
         $includeFile = self::$nameSpacePathMap['@' . $nameSpaceBasePath] . implode(DIRECTORY_SEPARATOR, $namespaceDividString) . DIRECTORY_SEPARATOR . "{$classNameBase}.php";
 
         if (!file_exists($includeFile)) {
-            throw new AHttpException(404, "[ ERROR ] the file：{$includeFile}  is not exists ." . PHP_EOL . "[ MESSAGE ] throw Exception at line:" . __LINE__ . ",in file:" . __FILE__ . "!");
+
+            include_once dirname(__FILE__) . '/../exception/AHttpException.php';
+            throw new AHttpException(404,
+                "[ ERROR ] The file：{$includeFile}  is not exists ."
+                . PHP_EOL . "[ MESSAGE ] Throw Exception at line:"
+                . __LINE__ . ",in file:" . __FILE__
+            );
         }
         if (file_exists($includeFile) && !$flagClassExists) {
             require_once $includeFile;
@@ -590,25 +540,6 @@ class ABaseApplication extends AppBase
         return $resultData;
     }
 
-//    /**
-//     * 简单缓存操作
-//     * @author karl.zhao<zhaocj2009@hotmail.com>
-//     * @Date: ${DATE}
-//     * @Time: ${TIME}
-//     * @return ABaseObject *
-//     */
-//    public static function base()
-//    {
-//        $instance = self:: getInstance();
-//        $controller = new AController ();
-//        $_config = $instance::$_config;
-//        $obj = new ABaseObject($_config);
-//        $obj->controller = $controller;
-//        $obj->request = new ARequest ();
-//        $obj->response = new AResponse ();
-//        unset($_config);
-//        return $obj;
-//    }
 
     /**
      * 或得本机的IP地址
@@ -636,8 +567,33 @@ class ABaseApplication extends AppBase
      */
     public static function getMachineRoom()
     {
-        return 'default';
+        return isset(self::$app->paramerters->generatorRoom) ? self::$app->paramerters->generatorRoom : 'default';
     }
 
+    /**
+     * 实例化本类的非static属性
+     * @param $objectKey
+     */
+    protected function _initObject($objectKey)
+    {
 
+        //加载Session信息
+
+        if (empty(self::$_config[$objectKey]['class']) && !empty(self::$defaultClassMap[$objectKey])) {
+            self::$_config[$objectKey]['class'] = self::$defaultClassMap[$objectKey];
+        }
+
+        $className = self::$_config[$objectKey]['class'];
+
+        if (empty($className)) {
+            throw  new RuntimeException("[ERROR] The class '{$className}' is Error! the OBJECT KEY is '{$objectKey}' " . PHP_EOL . '[MESSAGE] The throw is at line:'
+                . __LINE__ . ',in file:' . __FILE__);
+        }
+        unset(self::$_config[$objectKey]['class']);
+
+        $this->$objectKey = new $className();
+
+        //给类注入参数
+        $this->$objectKey->setParams((array)self::$_config[$objectKey]);
+    }
 }

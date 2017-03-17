@@ -8,12 +8,14 @@
 
 namespace communal\models\admin;
 
+use framework\bin\database\AModel;
+
 /**
  * Description of ModelSwitch
  * @date 2016-12-30
  * @author changjiang
  */
-class ModelSwitch extends \framework\bin\AModel
+class ModelSwitch extends AModel
 {
 
     protected $linkName = 'admin';

@@ -7,6 +7,8 @@ use client\common\ClientResultData;
 use client\common\ErrorCode;
 use communal\models\user\UserMainModel;
 
+use framework\App;
+
 /**
  * Description of PassportController
  *
@@ -39,7 +41,7 @@ class ControllerPassport extends ControllerClient
      */
     public function actionLogout()
     {
-        App::sessionDestroy();
+        App::$app->session->sessionDestroy();
         $this->clientResultData->setResult(ErrorCode::$SUCCESS);
         $this->outPut($this->clientResultData);
     }
@@ -49,7 +51,7 @@ class ControllerPassport extends ControllerClient
      * @author Karl.zhao<zhaocj2009@126.com>
      * @since 2016/09/20
      */
-    public function actionIframeRegister()
+    public function actionFrameRegister()
     {
 
     }
