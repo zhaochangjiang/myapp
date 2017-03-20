@@ -9,6 +9,7 @@
 namespace framework\bin\http;
 
 use RuntimeException;
+use framework\App;
 
 class ACurlManager
 {
@@ -24,17 +25,21 @@ class ACurlManager
      */
     public function httpConnectionByUrl($connectUrl, $gets, $posts = array())
     {
+
         if (empty($connectUrl)) {
-            throw new Exception("the param what you give \$connectUrl is null!");
+            throw new RuntimeException("The param what you give \$connectUrl is null! the error is at line:"
+                . __LINE__ . ',in file' . __FILE__, FRAME_THROW_EXCEPTION);
         }
+
         $data = $this->_grabimport($connectUrl, $gets, $posts);
 
-        if (isset($data ['code']) && $data ['code'] == '100') {
-            App::setSession('accessToken', $data['data']);
+        if (100 == intval($data ['code'])) {
+
+            App::$app->session->setSession('accessToken', $data['data']);
             $data = $this->_grabimport($connectUrl, $gets, $posts);
             return $data;
         }
-        if ($data ['code'] == '200') {
+        if (200 == intval($data ['code'])) {
             return $data;
         }
 
@@ -42,17 +47,15 @@ class ACurlManager
             'URL:' . $connectUrl . PHP_EOL . PHP_EOL .
             (empty($posts) ? '' : '$_POST:' . var_export($posts, true) . PHP_EOL . PHP_EOL) .
             (empty($gets) ? '' : '$_GET:' . var_export($gets, true) . PHP_EOL . PHP_EOL) .
-            'return data:' . var_export($data, true), FRAME_THROW_EXCEPTION);
+            'return data:' . PHP_EOL . var_export($data, true), FRAME_THROW_EXCEPTION);
     }
 
     /**
      * 抓取和提交数据,如果就加密验证失败，则再请求一次
-     * @param
-     *            target    调用的m和a参数
-     * @param
-     *            gets    url中的其他get参数
-     * @param
-     *            posts url中的post参数
+     * @param string target    调用的m和a参数
+     * @param array gets    url中的其他get参数
+     * @param array posts url中的post参数
+     * @return  object
      */
     protected function httpConnection($target, $gets, $posts = array())
     {
@@ -65,7 +68,7 @@ class ACurlManager
         $data = $this->_grabimport($connectUrl, $gets, $posts);
 
         if ($data ['error'] == '2001') {
-            ABaseApplication::setSession('session_code', $data ['session_id']);
+            App::$app->session->setSession('session_code', $data ['session_id']);
             return $this->_grabimport($connectUrl, $gets, $posts);
         }
         return $data;
@@ -89,7 +92,7 @@ class ACurlManager
             $target_url .= "&$k=$v";
         }
 
-        $posts['accessToken'] = App::getSession('accessToken');
+        $posts['accessToken'] = App::$app->session->getSession('accessToken');
         // 加入加密code
         // debug($target_url.'<br />');
         $ch = curl_init();

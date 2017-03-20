@@ -58,7 +58,7 @@ class ControllerFrontend extends AController
      */
     protected function getDefaultLoginGoto()
     {
-        return App::base()->params['domain']['userProfile'];
+        return App::$app->parameters->domain['userProfile'];
     }
 
     public $version = '1.0';

@@ -26,7 +26,7 @@ class ControllerPassport extends ControllerFrontend
         $result = $this->httpConnectionByBase(array('Passport', 'logout'), null, $this->params);
         //  stop($result);
         header("Location:" . App::$app->parameters->domain['web']);
-        App::sessionDestroy();
+        App::$app->session->sessionDestroy();
     }
 
     /**
@@ -34,6 +34,7 @@ class ControllerPassport extends ControllerFrontend
      */
     public function actionLogin()
     {
+
         $this->data['goto'] = $this->getInput('goto');
         $this->render();
     }
@@ -70,13 +71,13 @@ class ControllerPassport extends ControllerFrontend
 
         $this->data['goto'] = base64_decode($this->getInput('goto'));
 
-        $result = (array)$this->httpConnectionByBase(array('Passport', 'iframeLogin')
-            , null, $this->params);
+        $result = (array)$this->httpConnectionByBase(['Passport', 'iframeLogin']
+            , [], $this->params);
         $jsString = '';
         if (200 != $result['code']) {
             $jsString .= 'parent.showerror("' . $result['message'] . '");';
         }
-        App::setSessionArray($result['data']);
+        App::$app->session->setSessionArray($result['data']);
 
         $resultData = FrontendResultContent::getInstanceAnother();
         //默认登录成功跳转

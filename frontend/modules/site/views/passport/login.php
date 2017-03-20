@@ -25,13 +25,11 @@ use communal\common\UtilsFormFormat;
     </div>
     <div class="panel-body">
         <?php
-        $urlParamArray = array();
+        $urlParamArray = [];
         if (!empty($this->data['goto'])) {
-            $urlParamArray = array(
-                'goto' => $this->data['goto']);
+            $urlParamArray = ['goto' => $this->data['goto']];
         }
-
-        UtilsFormFormat::open($this->createUrl(array($this->controllerString, 'iframe' . ucfirst($this->action), $this->moduleString), $urlParamArray));
+        UtilsFormFormat::open($this->createUrl([$this->controllerString, 'iframe' . ucfirst($this->action), $this->moduleString], $urlParamArray));
         ?>
         <div class="form-group mb-lg">
             <div class="alert alert-danger" style="display: none;">
@@ -51,7 +49,7 @@ use communal\common\UtilsFormFormat;
             <div class="clearfix">
                 <label class="pull-left">密码</label>
                 <a href="<?php
-                echo $this->createUrl(array($this->controllerString, 'forget'));
+                echo $this->createUrl([$this->controllerString, 'forget']);
                 ?>" class="pull-right">忘记密码?</a>
             </div>
             <div class="input-group input-group-icon">

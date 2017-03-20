@@ -16,14 +16,15 @@ use framework\bin\base\AController;
 class AUrlManager extends AppBase
 {
     protected $rewriteMod = false;//是否重写
-    protected $extendFile = '.html';
-    protected $domain = '';
+    protected $extendFile = '.html';//扩展名
+    protected $domain = ''; //域名前缀,默认当前模块域名
     protected $moduleAction = '';
-    protected $params = array();
+    protected $otherParams = array();
     protected $noReWrite = false;
     protected $routeRule;//路由规则
     protected $actionParamsSeparator = '/';//r和 实际参数之间分隔符;
     protected $delimiterModuleAction = '_';
+    protected $delimiter = '_'; //详细参数间的分割符
 
     public static function getInstance()
     {
@@ -47,6 +48,13 @@ class AUrlManager extends AppBase
     }
 
 
+    /**
+     * 获得模块的路由
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     */
     public function _initModuleAction()
     {
         // 获得当前请求动作是什么
@@ -55,15 +63,24 @@ class AUrlManager extends AppBase
         //如果是URL重写的请求
         if ($this->rewriteMod) {
             $dirScriptName = dirname($_SERVER['SCRIPT_NAME']);
+
             $baseName = ltrim(substr($_SERVER['REQUEST_URI'], strlen($dirScriptName)), '/');
+
             if (stripos($baseName, '?') !== false) {
                 $baseName = substr($baseName, 0, stripos($baseName, '?'));
             }
+
             $moduleActionLength = strlen($baseName);
-            if (!empty($this->extendFile)) {
+            $actionParamsSeparatorLocate = stripos($baseName, $this->actionParamsSeparator);
+
+            //判断 basename ="passport_login/t_123123";的情况处理
+            if (false !== $actionParamsSeparatorLocate) {
                 $this->moduleAction =
-                    substr($baseName, 0, $moduleActionLength - strlen($this->extendFile));
+                    substr($baseName, 0, $actionParamsSeparatorLocate);//$moduleActionLength - strlen($this->extendFile));
+            } else {
+                $this->moduleAction = substr($baseName, 0, stripos($baseName, $this->extendFile));
             }
+
             if ($this->moduleAction === $baseName) {//如果是php的请求
                 $this->moduleAction = $controller->getInput('r');
             }
@@ -80,8 +97,14 @@ class AUrlManager extends AppBase
     public function setCreateUrlParams($moduleAction, $params, $domain)
     {
         $this->setDomain($domain);
-        $this->setParams($params);
+        $this->setOtherParams($params);
         $this->setModuleAction($moduleAction);
+
+    }
+
+    public function setOtherParams($otherParams)
+    {
+        $this->otherParams = $otherParams;
     }
 
     /**
@@ -127,51 +150,54 @@ class AUrlManager extends AppBase
     {
         //xmp($domain);
         // 如果开启了rewrite模式
-        $delimiter = $this->delimiter;
         $ruleStr = $this->moduleAction;
 
         $urlStr = empty($moduleAction) ? $this->domain : "{$this->domain}/" . $moduleAction; // 取消urlencode
 
         // apache下打不开
-        if (!is_array($this->params)) {
+        if (!is_array($this->otherParams)) {
             return $urlStr;
         }
 
-        $urlStr .= '/';
+        $urlStr .= '/' . $this->moduleAction . $this->actionParamsSeparator;
         $ruleStr .= '/';
-        foreach ($this->params as $k => $v) {
+
+        foreach ($this->otherParams as $k => $v) {
             if ($v === '') {
                 continue;
             }
 
             // 处理特殊字符
-            if (is_array($v) && $v ['url']) {
-                empty($v ['doType']) ? $v ['doType'] = 'base64_encode' : '';
-                $urlStr .= $k . $delimiter . urlencode($v ['doType']($v ['url'])) . $delimiter;
-                //xmp($urlStr);
-                $ruleStr .= $k . $delimiter . urlencode($v ['doType']($v ['url'])) . $delimiter;
-                continue;
-            }
             if (!is_array($v)) {
-                $urlStr .= $k . $delimiter . urlencode($v) . $delimiter;
-                $ruleStr .= $k . $delimiter . urlencode($v) . $delimiter;
+                $urlStr .= $k . $this->delimiter . urlencode($v) . $this->delimiter;
+                $ruleStr .= $k . $this->delimiter . urlencode($v) . $this->delimiter;
+                continue;
+            } elseif ($v ['url']) {
+                empty($v ['doType']) ? $v ['doType'] = 'base64_encode' : '';
+                $urlStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiter;
+                $ruleStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiter;
                 continue;
             }
+
             foreach ($v as $v1) {
-                $urlStr .= $k . '[]' . $delimiter . $v1 . $delimiter;
-                $ruleStr .= $k . '[]' . $delimiter . $v1 . $delimiter;
+                $urlStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiter;
+                $ruleStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiter;
             }
         }
-
         $urlStr = substr($urlStr, 0, -1);
         $ruleStr = substr($ruleStr, 0, -1);
+
         foreach ((array)$this->routeRule as $key => $value) {
             if ($this->parseUrlRuleRewrite($key, $value, $ruleStr)) {
                 break;
             }
         }
+        //如果需要写$this->extendFile参数
         if ($this->rewriteUrl !== $this->moduleAction) {
-            $urlStr = $this->domain . $this->delimiterModuleAction . $this->rewriteUrl . $this->actionParamsSeparator . $this->moduleAction . (empty($this->moduleAction) ? '' : $this->extendFile);
+            $urlStr .=
+                (empty($this->moduleAction) ?
+                    '' :
+                    $this->extendFile);
         }
 
         return $urlStr;
@@ -186,7 +212,7 @@ class AUrlManager extends AppBase
         $urlStr = empty($this->moduleAction) ? $this->domain
             : "{$this->domain}/index.php?r=" . urlencode($this->moduleAction);
 
-        if (!is_array($this->params)) {
+        if (!is_array($this->otherParams)) {
             return $urlStr;
         }
         foreach ($this->params as $k => $v) {
@@ -464,26 +490,10 @@ class AUrlManager extends AppBase
     /**
      * @return array
      */
-    public function getParams()
+    public function getOtherParams()
     {
-        return $this->params;
+        return $this->otherParams;
     }
 
-    /**
-     * 开始方法
-     * @return mixed
-     */
-    public function before()
-    {
-        // TODO: Implement before() method.
-    }
 
-    /**
-     * 结束方法
-     * @return mixed
-     */
-    public function after()
-    {
-        // TODO: Implement after() method.
-    }
 }

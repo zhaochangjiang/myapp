@@ -18,23 +18,6 @@ function stop($obj = null)
     exit;
 }
 
-function getEnvironment()
-{
-    $enviorment = 'RUN';
-    if ($enviorment) {
-        $enviormentIni = get_cfg_var('enviorment');
-        if ($enviormentIni) {
-            $enviorment = $enviormentIni;
-        }
-    }
-    return $enviorment;
-}
-
-define('DEFINE_ENVIORMENT', getEnvironment());
-//$statTime = microtime(true);
-////判断是否是加载的合法的程序
-//defined('IS_SYSTEM') or define('IS_SYSTEM',
-//                               true);
 //是否显示底部调试输出
 define('SHOW_DEBUG_TRACE', false);
 
@@ -49,17 +32,22 @@ define('IS_MERAGE', TRUE);
 
 defined('IS_CLIENT') or define('IS_CLIENT', TRUE);
 
+require_once(dirname(DIR_APP_LOCATION) . "/vendor/framework/App.php");
+
+defined('DEFINE_ENVIORMENT') or define('DEFINE_ENVIORMENT', App::getEnvironment());
 //启动应用
 // * 系统默认访问类，Site
 // * 默认访问方法          indexAction
 
-
 try {
-    require_once(dirname(DIR_APP_LOCATION) . "/vendor/framework/App.php");
     $config = dirname(dirname(__FILE__)) . '/config/' . DEFINE_ENVIORMENT . '/config.php';
     $app = App::createApplication($config)->run();
 } catch (Exception $ex) {
-    //  throw $ex;
+    switch (DEFINE_ENVIORMENT) {//如果是开发环境，则抛除异常
+        case 'DEV':
+            throw  $ex;
+            break;
+    }
 }
 
 

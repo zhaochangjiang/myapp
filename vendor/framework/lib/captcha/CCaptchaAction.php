@@ -1,6 +1,7 @@
 <?php
 namespace framework\lib\captcha;
 
+use framework\App;
 use framework\bin\ABaseApplication;
 
 /**
@@ -381,15 +382,13 @@ class CCaptchaAction
             return $this->fixedVerifyCode;
         }
         $key = $this->getSessionKey();
-        $sessionCaptcha = ABaseApplication::getSession($key);
-        if (empty($sessionCaptcha) || $regenerate) {
-            //生成验证码字符串
-            $sessionCaptcha = $this->generateVerifyCode();
-            ABaseApplication::setSessionArray(array(
-                $key => $sessionCaptcha,
-                "{$key}count" => 1,
-            ));
-        }
+        //生成验证码字符串
+        $sessionCaptcha = $this->generateVerifyCode();
+        App::$app->session->setSessionArray(array(
+            $key => App::$app->session->getSession($key),
+            "{$key}count" => 1,
+        ));
+
 
         return $sessionCaptcha;
     }

@@ -21,7 +21,6 @@ return array(
     ),
     'urlManager' => array(
         'rewriteMod' => true,
-
         'extendFile' => '.html'
     ),
     'database' => array(

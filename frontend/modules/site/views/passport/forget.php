@@ -44,7 +44,7 @@ use communal\common\UtilsFormFormat;
                 echo $this->createUrl(array(
                     $this->controllerString,
                     'authcode'))
-                ?>' + '/?t=' + new Date().getTime())" src="<?php
+                ?>' + '?t=' + new Date().getTime())" src="<?php
                 echo $this->createUrl(array(
                     $this->controllerString,
                     'authcode'), array(

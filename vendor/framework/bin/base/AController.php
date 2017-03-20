@@ -307,6 +307,7 @@ class AController extends ABaseController
     {
         $aCurlManager = new ACurlManager();
         $url = $this->createUrl($moduleAction, $gets, App::$app->parameters->domain['client']);
+
         return $aCurlManager->httpConnectionByUrl($url, $posts);
     }
 
@@ -872,15 +873,16 @@ class AController extends ABaseController
      */
     public function createUrl($moduleActionArray, $params = array(), $domain = '')
     {
+
         // $moduleActionArray = explode('.', $moduleAction);
         if (empty($moduleActionArray[2])) {
             unset($moduleActionArray[2]);
         }
-        if (empty($domain)) {
-            $domain = AUtils::baseUrl();
-        }
         if (empty($moduleActionArray[0]) && empty($moduleActionArray[1])) {
             unset($moduleActionArray[0], $moduleActionArray[1]);
+        }
+        if (empty($domain)) {
+            $domain = AUtils::baseUrl();
         }
         $moduleAction = '';
         $count = count($moduleActionArray);
@@ -921,7 +923,7 @@ class AController extends ABaseController
     private function createURLPath($moduleAction, $params = array(), $domain = '')
     {
         //self::$urlManager不是 ，类AUrlManager的实例对象，或者AUrlManager的子类对象
-        if (!is_a(App::$app->urlManager, 'framework\\bin\\urlrewrite\\AUrlManager')) {
+        if (IS_DEBUG && !is_a(App::$app->urlManager, 'framework\\bin\\urlrewrite\\AUrlManager')) {
             throw new RuntimeException(
                 "The flow class is not the  framework\\bin\\AUrlManager or it's sub class."
                 . PHP_EOL . var_export(App::$app->urlManager, true)
@@ -929,9 +931,9 @@ class AController extends ABaseController
                 . ',in file:' . __FILE__
                 , FRAME_THROW_EXCEPTION);
         }
-        App::$app->urlManager->setCreateUrlParams($moduleAction, $params, $domain);
-
-        return App::$app->urlManager->createURLPath();
+        $urlManager = App::$app->urlManager;
+        $urlManager->setCreateUrlParams($moduleAction, $params, $domain);
+        return $urlManager->createURLPath();
     }
 
     /**
@@ -955,8 +957,7 @@ class AController extends ABaseController
      * @param $domain
      * @return String -URL格式
      */
-    public
-    function getLoginUrl($domain = '')
+    public function getLoginUrl($domain = '')
     {
         return $this->createUrl(App:: base()->loginUrl, null, $domain);
     }

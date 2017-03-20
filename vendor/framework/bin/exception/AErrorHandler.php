@@ -288,8 +288,13 @@ class AErrorHandler
             $view = 'error' . $data['code'];
             $data['version'] = '';
         }
-        if (file_exists(App::getPathOfAlias('template.error') . DIRECTORY_SEPARATOR . $view . '.php')) {
-            App::base()->controller->loadViewCell('error/' . $view);
+
+        //如果目标文件存在
+        $templateFile = App::getBasePath()
+            . DIRECTORY_SEPARATOR . $view . '.php';
+
+        if (file_exists($templateFile)) {
+            App::$app->controller->loadViewCell('error/' . $view);
         } else {
             $path = $this->getSystemViewPath() . DIRECTORY_SEPARATOR . $view . '.php';
             $data['admin'] = '';

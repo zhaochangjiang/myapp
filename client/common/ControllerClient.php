@@ -4,6 +4,7 @@ namespace client\common;
 
 use framework\bin\base\AController;
 use client\common\ClientResultData;
+use framework\bin\utils\ADesEncrypt;
 
 /*
    * To change this license header, choose License Headers in Project Properties.
@@ -25,11 +26,31 @@ class ControllerClient extends AController
     public function __construct($module = null, $action = null)
     {
         parent::__construct($module, $action);
+        $this->init();
     }
 
     public function init()
     {
+
         parent::init();
+        $clientResultData = new ClientResultData();
+        $sessionId = $clientResultData->getSessionid();
+        $token = $this->accessToken($sessionId);
+        if (empty($this->params['accessToken'])) {
+            $clientResultData->setCode(100);
+            $clientResultData->setData($token);
+            $this->output($clientResultData);
+        } elseif ($token !== $this->params['accessToken']) {
+            $clientResultData->setCode(101);
+            $clientResultData->setData('token is error!');
+            $this->output($clientResultData);
+        }
+    }
+
+
+    protected function accessToken($sessionId)
+    {
+        ADesEncrypt::encrypt($sessionId);
     }
 
     /**

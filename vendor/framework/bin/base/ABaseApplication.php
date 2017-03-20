@@ -5,10 +5,10 @@ namespace framework\bin\base;
 use framework\bin\exception\AHttpException;
 
 use framework\bin\exception\AErrorHandler;
-use framework\bin\base\AHelper;
+//use framework\bin\base\AHelper;
 
 use RuntimeException;
-use stdClass;
+
 use ReflectionClass;
 
 ini_set('date.timezone', 'Asia/Shanghai');
@@ -75,7 +75,6 @@ class ABaseApplication extends AppBase
 
     //URL路径拼接分割符
     public static $delimiterModuleAction = '_';
-//    public static $enableIncludePath = true;
 
     //命名空间与目录的对应关系
     public static $nameSpacePathMap = array(
@@ -100,11 +99,29 @@ class ABaseApplication extends AppBase
     }
 
     /**
+     * 获得系统当前的运行环境
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * @return string *
+     */
+    public static function getEnvironment()
+    {
+        $envString = 'DEV';
+        $envIni = get_cfg_var('enviorment');
+        if ($envIni) {
+            $envString = $envIni;
+        }
+        return $envString;
+    }
+
+    /**
      * 初始化本类的一些属性
-     * @return void
+     * @return object
      */
     protected function _init()
     {
+
         //获得类的私的属性
         $reflectionClass = new ReflectionClass(__CLASS__);
         $properties = $reflectionClass->getProperties();
@@ -119,6 +136,7 @@ class ABaseApplication extends AppBase
 
             $this->_initObject($propertyName);
         }
+        $this->setBasePath();
         return $this;
     }
 
@@ -138,7 +156,7 @@ class ABaseApplication extends AppBase
 
     /**
      * 实例对象
-     * @return type
+     * @return object
      */
     public static function getInstance()
     {
@@ -182,7 +200,7 @@ class ABaseApplication extends AppBase
     /**
      * 创建应用
      *
-     * @param $config -String
+     * @param string $configFile
      * @return AApplication
      */
     public static function createApplication($configFile)
@@ -204,10 +222,13 @@ class ABaseApplication extends AppBase
 
     protected function _initConfig($configFile)
     {
+
         if (!file_exists($configFile)) {
-            throw new RuntimeException("The config file:\"{$configFile}\" can't null! at line:" . __LINE__
+
+            throw new RuntimeException("[ ERROR ] The config file:\"{$configFile}\" is not exists!".PHP_EOL."[ MESSAGE ] The error is at line:" . __LINE__
                 . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
+
         self::$_config = include_once $configFile;
         return;
     }
@@ -217,21 +238,23 @@ class ABaseApplication extends AppBase
      * @author karl.zhao<zhaocj2009@hotmail.com>
      * @Date: ${DATE}
      * @Time: ${TIME}
-     * * @param null $controllerString
+     * @param null $controllerString
      * @param null $action
      * @param null $moduleString
-     * * @throws Exception
+     * @throws Exception
      */
     public function run($controllerString = null, $action = null, $moduleString = null)
     {
         // $moduleString     = $controllerString = $action           = '';
-        //如果不是 Afunction 中函数C控制的方法
+        //如果不是 AFunction 中函数C控制的方法
         if ($moduleString === null && $controllerString === null && $action === null) {
+
             $this->urlManager->_initModuleAction();
             $moduleAction = $this->urlManager->getModuleAction();
 
             //生成路由地址
             list ($moduleString, $controllerString, $action) = $this->urlManager->getRoute(empty($moduleAction) ? $this->getDefaultModuleAction() : $moduleAction);
+
         }
 
         if (empty($controllerString) || empty($action)) {
@@ -245,9 +268,7 @@ class ABaseApplication extends AppBase
         // 判断Method是否存在
         $moduleDeal = new $className($controllerString, $action, $moduleString);
 
-        //var_dump($moduleDeal);
         $moduleDeal->init();
-
 
         //加载插件
         self::loadAWidget($moduleDeal);

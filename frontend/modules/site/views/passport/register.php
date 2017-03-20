@@ -100,8 +100,8 @@ use communal\common\UtilsFormFormat;
             </div>
             <div class="col-xs-7 text-left">
                 <img border="0"
-                     onclick="$(this).attr('src', '<?php echo $this->createUrl([$this->controllerString, 'authcode'], ['t' => 'js' . microtime(true)]) ?>"
-                     src="<?php echo $this->createUrl([$this->controllerString, 'authcode'], ['t' => microtime(true)]); ?>"/>
+                     onclick="$(this).attr('src', '<?php echo $this->createUrl([$this->controllerString, 'authcode']) ?>?t='+new Date().getTime());return;"
+                     src="<?php echo $this->createUrl([$this->controllerString, 'authcode'], ['t' => microtime(true)]); ?>" alt="验证码"/>
             </div>
         </div>
         <div class="row">

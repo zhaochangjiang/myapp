@@ -64,7 +64,7 @@ class ControllerPassport extends ControllerClient
      */
     public function actionIframeLogin()
     {
-
+       
         if (empty($this->params['username'])) {
             $this->clientResultData->setResult(ErrorCode::$USERNAMENOTNULL);
         }
@@ -80,6 +80,7 @@ class ControllerPassport extends ControllerClient
         $userMainModel = new UserMainModel();
 
         $this->clientResultData = $userMainModel->login($this->params);
+
         $this->outPut($this->clientResultData);
     }
 
