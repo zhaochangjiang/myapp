@@ -64,9 +64,12 @@ class ABaseApplication extends AppBase
     public static $app;//本类实例对象
     private static $_config;//系统配置
     private static $_basePath = null;
+    protected static $defaultClassMap = array(
 
-    private static $defaultClassMap = array(
+        //默认实例化的Session对象
         'session' => 'framework\bin\session\ASession',
+
+        //默认实例化的URL重写对象
         'urlManager' => 'framework\bin\urlrewrite\AUrlManager',
     );
 
@@ -106,6 +109,8 @@ class ABaseApplication extends AppBase
         $reflectionClass = new ReflectionClass(__CLASS__);
         $properties = $reflectionClass->getProperties();
         $staticProperties = array_keys($reflectionClass->getStaticProperties());
+
+        //只是实例化非Static属性
         foreach ($properties as $k => $property) {
             $propertyName = $property->getName();
             if (in_array($propertyName, $staticProperties)) {
@@ -143,6 +148,10 @@ class ABaseApplication extends AppBase
         return self::$app;
     }
 
+    /**
+     * 将配置文件中的命名空间和目录对应关系合并到一起
+     * @return void
+     */
     private static function mergeNameSpacePathMap()
     {
         if (is_array(self::$_config['nameSpacePathMap'])) {
@@ -153,6 +162,24 @@ class ABaseApplication extends AppBase
     }
 
     /**
+     * 捕获异常
+     */
+    protected static function handlerException()
+    {
+        // 注册__autoload()函数
+        spl_autoload_register(array(__CLASS__, 'autoload'));
+
+        // 错误控制,将系统中的错误、异常信息监听下来。为报错系统提供详细定位
+        $errorHandler = new AErrorHandler ();
+        set_error_handler(array($errorHandler, self::ERROR_HANDLER));
+        set_exception_handler(array($errorHandler, self::EXCEPTION_HANDLER));
+        register_shutdown_function(array($errorHandler, self::SHUTDOWN_HANDLER));
+
+
+        return;
+    }
+
+    /**
      * 创建应用
      *
      * @param $config -String
@@ -160,28 +187,30 @@ class ABaseApplication extends AppBase
      */
     public static function createApplication($configFile)
     {
-        // 注册__autoload()函数
-        spl_autoload_register(array(__CLASS__, 'autoload'));
+        //捕获异常，设置探针.
+        self::handlerException();
 
-        // 错误控制
-        $errorHandler = new AErrorHandler ();
-        set_error_handler(array($errorHandler, self::ERROR_HANDLER));
-        set_exception_handler(array($errorHandler, self::EXCEPTION_HANDLER));
-        register_shutdown_function(array($errorHandler, self::SHUTDOWN_HANDLER));
+        if (self::$app === null) {
+            self::$app = new self ();
+        }
+        self::$app->_initConfig($configFile);
 
+        //初始化基础配置合并命名空间
+        self::mergeNameSpacePathMap();
+
+        return self::$app->_init();
+
+    }
+
+    protected function _initConfig($configFile)
+    {
         if (!file_exists($configFile)) {
             throw new RuntimeException("The config file:\"{$configFile}\" can't null! at line:" . __LINE__
                 . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
         self::$_config = include_once $configFile;
-
-
-        //初始化基础配置合并命名空间
-        self::mergeNameSpacePathMap();
-        return self::getInstance()->_init();
-
+        return;
     }
-
 
     /**
      * 框架启动运行方法
@@ -195,8 +224,6 @@ class ABaseApplication extends AppBase
      */
     public function run($controllerString = null, $action = null, $moduleString = null)
     {
-
-
         // $moduleString     = $controllerString = $action           = '';
         //如果不是 Afunction 中函数C控制的方法
         if ($moduleString === null && $controllerString === null && $action === null) {
@@ -204,7 +231,7 @@ class ABaseApplication extends AppBase
             $moduleAction = $this->urlManager->getModuleAction();
 
             //生成路由地址
-            list ($moduleString, $controllerString, $action) = self:: getRoute(empty($moduleAction) ? self::getDefaultModuleAction() : $moduleAction);
+            list ($moduleString, $controllerString, $action) = $this->urlManager->getRoute(empty($moduleAction) ? $this->getDefaultModuleAction() : $moduleAction);
         }
 
         if (empty($controllerString) || empty($action)) {
@@ -226,7 +253,7 @@ class ABaseApplication extends AppBase
         self::loadAWidget($moduleDeal);
 
         //获得方法名称
-        $methodName = self:: getMethodName($action);
+        $methodName = $this->getMethodName($action);
         // 如果方法不存在，新增动态action
         if (!method_exists($moduleDeal, $methodName)) {//&& !isset($moduleDeal->actionMaps [$methodName])
             throw new AHttpException(404, "The Method \"$methodName\" doesn't exist! in {$className}!");
@@ -269,11 +296,11 @@ class ABaseApplication extends AppBase
      *
      * @return string
      */
-    private static function getDefaultModuleAction()
+    private function getDefaultModuleAction()
     {
-        $defaultModuleAction = self::$_config ['defaultModuleAction'];
-        if ($defaultModuleAction == '') {
-            $defaultModuleAction = 'Site' . self::$delimiterModuleAction . 'index';
+        $defaultModuleAction = $this->parameters->defaultModuleAction;
+        if (empty($defaultModuleAction)) {
+            $defaultModuleAction = $this->urlManager->getDefaultModuleAction();
         }
         return $defaultModuleAction;
     }
@@ -308,40 +335,6 @@ class ABaseApplication extends AppBase
 
 
     /**
-     * 获取路由路径
-     *
-     * @return Ambigous <string, multitype:>
-     */
-    public static function getRoute($moduleAction)
-    {
-        $default = $defaultModuleAction = self::getDefaultModuleAction();
-        if (!empty($moduleAction)) {
-            $default = $moduleAction;
-        }
-        $temp = explode(self::$delimiterModuleAction, $default);
-
-        $count = count($temp);
-        $result = array();
-        switch ($count) {
-            case 0:
-                throw new RuntimeException("the program is error on creating Path!  the Error is at line:" .
-                    __LINE__ . ', in file:' . __FILE__, FRAME_THROW_EXCEPTION);
-            case 1:
-                list($result [1], $result [2]) = explode(self::$delimiterModuleAction, $defaultModuleAction);
-                $result[0] = array_pop($temp);
-                break;
-
-            default:
-                $result [2] = array_pop($temp);
-                $result [1] = array_pop($temp);
-                $result [0] = implode('\\', $temp);
-                break;
-        }
-        return $result;
-    }
-
-
-    /**
      * HTTP错误 @param $message 错误内容 @param $code 错误代码
      */
     public static function error($message, $code = 404)
@@ -350,48 +343,6 @@ class ABaseApplication extends AppBase
         throw new AHttpException($code, $message);
     }
 
-    /**
-     * 将一个对象转换成一个数组
-     *
-     * @param Object $object
-     * @return multitype:
-     */
-    public static function objectToArray($object)
-    {
-        $result = array();
-        $_array = is_object($object) ? get_object_vars($object) : $object;
-        if (is_array($_array)) {
-            foreach ($_array as $key => $value) {
-                $result [$key] = (is_array($value) || is_object($value)) ? std_class_object_to_array($value) : $value;
-            }
-        }
-        return $result;
-    }
-
-
-    /**
-     * 获取路由路径
-     *
-     * @return Ambigous <string, multitype:>
-     */
-    public static function getRouteNotNeedDefault($moduleAction)
-    {
-        if (!empty($moduleAction)) {
-            self::$moduleAction = $moduleAction;
-        }
-        $temp = explode('/', self::$moduleAction);
-        return $temp;
-    }
-
-    /**
-     *
-     * @param String $module
-     * @param String $action
-     */
-    public static function getRouteModuleAction($module, $action = 'index')
-    {
-        return (empty($module) && empty($action)) ? '' : "{$module}/{$action}";
-    }
 
     /**
      * @param string $path
@@ -417,27 +368,24 @@ class ABaseApplication extends AppBase
      */
     public static function setNameSpacePathMap($path)
     {
-
         return self::$nameSpacePathMap["@{$path}"] = DIR_SERVER . $path . DIRECTORY_SEPARATOR;
     }
 
     /**
      * 把别名转换成真实路径 @param string $alias 别名
      * @author karl.zhao<zhaocj2009@hotmail.com>
-     * @Date: ${DATE}
-     * @Time: ${TIME}
      * @param $alias
-     * @return string *
+     * @return string
      */
-    public static function getPathOfAlias($alias)
+    public function getDirectoryByNamespace($alias)
     {
-        $namespaceDividString = explode('/', str_replace('\\', '/', ltrim($alias, '@')));
-        $nameSpacePath = array_shift($namespaceDividString);
+        $namespaceString = explode('/', str_replace('\\', '/', ltrim($alias, '@')));
+        $nameSpacePath = array_shift($namespaceString);
 
         if (!isset(self::$nameSpacePathMap['@' . $nameSpacePath])) {
             self::setNameSpacePathMap($nameSpacePath);
         }
-        return self::$nameSpacePathMap['@' . $nameSpacePath] . implode('/', $namespaceDividString);
+        return self::$nameSpacePathMap['@' . $nameSpacePath] . implode(DIRECTORY_SEPARATOR, $namespaceString);
 
     }
 
@@ -463,6 +411,7 @@ class ABaseApplication extends AppBase
         if (count($namespaceDividString) < 1) {
             return $flag;
         }
+
         $nameSpaceBasePath = array_shift($namespaceDividString);
         if (!isset(self::$nameSpacePathMap['@' . $nameSpaceBasePath])) {
             self::setNameSpacePathMap($nameSpaceBasePath);
@@ -503,41 +452,9 @@ class ABaseApplication extends AppBase
      * @param String $method
      * @return String
      */
-    public static function getMethodName($method)
+    protected function getMethodName($method)
     {
         return 'action' . ucfirst($method);
-    }
-
-    /**
-     * 简单缓存操作
-     * @author karl.zhao<zhaocj2009@hotmail.com>
-     * @Date: ${DATE}
-     * @Time: ${TIME}
-     * @param $_config
-     * @return array *
-     */
-    public static function cache($_config)
-    {
-        //   $instance    =
-        self:: getInstance();
-        $cache_array = $_config ['cache'];
-        $resultData = array();
-        foreach ($cache_array as $key => $val) {
-            $class = ucfirst($val ['class']);
-            switch ($class) {
-                case 'Redis' : // redis
-                    $resultData [$key] = new RedisClass($val ['host'], $val ['port']);
-                    break;
-                case 'FileCache' : // 文件缓存
-                    $fileCache = new FileCacheClass ();
-                    $val ['file_name_prefix'] != '' && $fileCache->setCacheDir($val ['file_name_prefix']);
-                    $val ['mode'] != '' && $fileCache->setCacheMode($val ['mode']);
-                    $resultData [$key] = $fileCache;
-                    break;
-            }
-        }
-        unset($_config);
-        return $resultData;
     }
 
 
@@ -565,7 +482,7 @@ class ABaseApplication extends AppBase
      * 当前代码部署的服务器机房,保留方法
      * @return string
      */
-    public static function getMachineRoom()
+    protected function getMachineRoom()
     {
         return isset(self::$app->paramerters->generatorRoom) ? self::$app->paramerters->generatorRoom : 'default';
     }
@@ -573,27 +490,31 @@ class ABaseApplication extends AppBase
     /**
      * 实例化本类的非static属性
      * @param $objectKey
+     * @return  void
      */
     protected function _initObject($objectKey)
     {
 
-        //加载Session信息
-
+        //加载类名，如果类不存在，则用默认的类指定，
         if (empty(self::$_config[$objectKey]['class']) && !empty(self::$defaultClassMap[$objectKey])) {
             self::$_config[$objectKey]['class'] = self::$defaultClassMap[$objectKey];
         }
-
         $className = self::$_config[$objectKey]['class'];
 
-        if (empty($className)) {
-            throw  new RuntimeException("[ERROR] The class '{$className}' is Error! the OBJECT KEY is '{$objectKey}' " . PHP_EOL . '[MESSAGE] The throw is at line:'
-                . __LINE__ . ',in file:' . __FILE__);
+        if (!empty($className)) {//如果是一个类对象,
+            unset(self::$_config[$objectKey]['class']);
+
+            $this->$objectKey = new $className();
+
+            //给类注入参数
+            $this->$objectKey->setParams((array)self::$_config[$objectKey]);
+            return;
         }
-        unset(self::$_config[$objectKey]['class']);
 
-        $this->$objectKey = new $className();
+        //实例化不是对象，只是参数的数据
+        foreach (self::$_config[$objectKey] as $key => $value) {
+            $this->$objectKey->$key = $value;
+        }
 
-        //给类注入参数
-        $this->$objectKey->setParams((array)self::$_config[$objectKey]);
     }
 }

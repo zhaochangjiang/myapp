@@ -29,8 +29,6 @@ abstract class AAbstractCache implements ACache
     }
 
 
-
-
     /**
      * @param $key
      * @param $value
@@ -65,4 +63,38 @@ abstract class AAbstractCache implements ACache
     {
         $this->dataFormat = $dataFormat;
     }
+
+
+    /**
+     * 简单缓存操作
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     * @param $_config
+     * @return array *
+     */
+    public static function cache($_config)
+    {
+        //   $instance    =
+        self:: getInstance();
+        $cache_array = $_config ['cache'];
+        $resultData = array();
+        foreach ($cache_array as $key => $val) {
+            $class = ucfirst($val ['class']);
+            switch ($class) {
+                case 'Redis' : // redis
+                    $resultData [$key] = new RedisClass($val ['host'], $val ['port']);
+                    break;
+                case 'FileCache' : // 文件缓存
+                    $fileCache = new FileCacheClass ();
+                    $val ['file_name_prefix'] != '' && $fileCache->setCacheDir($val ['file_name_prefix']);
+                    $val ['mode'] != '' && $fileCache->setCacheMode($val ['mode']);
+                    $resultData [$key] = $fileCache;
+                    break;
+            }
+        }
+        unset($_config);
+        return $resultData;
+    }
+
 }

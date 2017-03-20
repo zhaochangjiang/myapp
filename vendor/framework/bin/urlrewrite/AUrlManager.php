@@ -10,6 +10,7 @@ namespace framework\bin\urlrewrite;
 
 use framework\bin\base\AppBase;
 use framework\bin\base\AController;
+
 //use framework\bin\utils\AUtils;
 
 class AUrlManager extends AppBase
@@ -22,7 +23,7 @@ class AUrlManager extends AppBase
     protected $noReWrite = false;
     protected $routeRule;//路由规则
     protected $actionParamsSeparator = '/';//r和 实际参数之间分隔符;
-
+    protected $delimiterModuleAction = '_';
 
     public static function getInstance()
     {
@@ -192,6 +193,87 @@ class AUrlManager extends AppBase
             $urlStr .= "&{$k}=" . urlencode($v);
         }
         return $urlStr;
+    }
+
+
+    /**
+     * 获取路由路径
+     *
+     * @return Ambigous <string, multitype:>
+     */
+    public function getRoute($moduleAction)
+    {
+        $default = $defaultModuleAction = self::getDefaultModuleAction();
+        if (!empty($moduleAction)) {
+            $default = $moduleAction;
+        }
+        $temp = explode($this->delimiterModuleAction, $default);
+
+        $count = count($temp);
+        $result = array();
+        switch ($count) {
+            case 0:
+                throw new RuntimeException("the program is error on creating Path!  the Error is at line:" .
+                    __LINE__ . ', in file:' . __FILE__, FRAME_THROW_EXCEPTION);
+            case 1:
+                list($result [1], $result [2]) = explode($this->delimiterModuleAction, $defaultModuleAction);
+                $result[0] = array_pop($temp);
+                break;
+
+            default:
+                $result [2] = array_pop($temp);
+                $result [1] = array_pop($temp);
+                $result [0] = implode('\\', $temp);
+                break;
+        }
+        return $result;
+    }
+
+    /**
+     *
+     * @param  string $controller
+     * @param string $method
+     * @param string $module
+     * @return string
+     */
+    public function createUrlModuleAction($controller, $method, $module = '')
+    {
+        $moduleAction = '';
+        if (!empty($module)) {
+            $moduleAction .= "{$module}_";
+        }
+        $moduleAction .= "{$controller}_{$method}";
+        return $moduleAction;
+    }
+
+    public function getDefaultModuleAction()
+    {
+        return $this->createUrlModuleAction('Site', 'index');
+    }
+
+    /**
+     *
+     * @param String $module
+     * @param String $action
+     * @return string
+     */
+    public static function getRouteModuleAction($module, $action = 'index')
+    {
+        return (empty($module) && empty($action)) ? '' : "{$module}/{$action}";
+    }
+
+    /**
+     * 获取路由路径
+     *
+     * @return Ambigous <string, multitype:>
+     */
+    public static function getRouteNotNeedDefault($moduleAction)
+    {
+        if (!empty($moduleAction)) {
+            self::$moduleAction = $moduleAction;
+        }
+        $temp = explode('/', self::$moduleAction);
+        return $temp;
     }
 
     /**

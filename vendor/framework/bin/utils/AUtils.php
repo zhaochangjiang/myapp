@@ -101,6 +101,24 @@ class AUtils
     }
 
     /**
+     * 将一个对象转换成一个数组
+     *
+     * @param Object $object
+     * @return multitype:
+     */
+    public static function objectToArray($object)
+    {
+        $result = array();
+        $_array = is_object($object) ? get_object_vars($object) : $object;
+        if (is_array($_array)) {
+            foreach ($_array as $key => $value) {
+                $result [$key] = (is_array($value) || is_object($value)) ? std_class_object_to_array($value) : $value;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * 获得网站的URL地址
      *
      * @return string
