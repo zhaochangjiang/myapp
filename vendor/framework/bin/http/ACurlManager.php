@@ -32,7 +32,6 @@ class ACurlManager
         }
 
         $data = $this->_grabImport($connectUrl, $gets, $posts);
-        stop($data);
         if (100 == intval($data ['code'])) {
 
             App::$app->session->setSession('accessToken', $data['data']);

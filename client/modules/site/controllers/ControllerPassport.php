@@ -59,7 +59,6 @@ class ControllerPassport extends ControllerClient
         if (201 == (int)$this->result->getCode()) {
             $this->outPut($this->result);
         }
-        stop($this->params);
         $userMainModel = new UserMainModel();
         $this->outPut($userMainModel->login($this->params));
     }

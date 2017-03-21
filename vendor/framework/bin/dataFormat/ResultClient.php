@@ -17,25 +17,7 @@ class ResultClient
     protected $data = null;
     protected $sessionId = '';
 
-    /**
-     * 通过数组设置本类的属性值
-     * @param array $result
-     * @return  void
-     * @throws  \RuntimeException
-     */
-    public function setResult($result)
-    {
-        foreach ($result as $key => $value) {
-            $function = 'set' . ucfirst($key);
-            if (method_exists($this, $function)) {
-                $this->$function($value);
-            } else {
-                throw new RuntimeException("the Params is error is at line:" . __LINE__
-                    . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
-            }
 
-        }
-    }
 
     public static function getInstance()
     {

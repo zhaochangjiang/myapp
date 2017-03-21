@@ -11,7 +11,7 @@ return array(
 
     'parameters' => array(
         'version' => '1.0',
-        'sitename' => '掘囤网',
+        'siteName' => '掘囤网',
         'domain' => array(
             'userProfile' => DOMAIN . '/frontend/web',
             'dashboard' => DOMAIN . '/backend/web',
@@ -30,7 +30,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'user_',
-            'dbname' => 'juetun_user',
+            'dbName' => 'juetun_user',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
         'admin' => array(
@@ -39,7 +39,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'admin_',
-            'dbname' => 'juetun_admin',
+            'dbName' => 'juetun_admin',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
         'data' => array(
@@ -48,7 +48,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'data_',
-            'dbname' => 'juetun_data',
+            'dbName' => 'juetun_data',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
     )

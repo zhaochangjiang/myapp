@@ -5,7 +5,8 @@
  * @Date: 2017/3/15
  * @Time: 23:24
  */
-namespace framework\bin\base;
+namespace framework\bin\dataFormat;
+
 
 class AReturn
 {
@@ -20,6 +21,28 @@ class AReturn
     public function getCode()
     {
         return $this->code;
+    }
+
+
+    /**
+     * 通过数组设置本类的属性值
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @param array $result
+     * @return  void
+     * @throws  RuntimeException
+     */
+    public function setResult($result)
+    {
+        foreach ($result as $key => $value) {
+            $function = 'set' . ucfirst($key);
+            if (method_exists($this, $function)) {
+                $this->$function($value);
+            } else {
+                throw new RuntimeException("the Params is error is at line:" . __LINE__
+                    . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
+            }
+        }
+        return;
     }
 
     /**

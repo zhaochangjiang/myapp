@@ -13,7 +13,7 @@ class ARequestParameter
     private $post;
     private $get;
     private $request;
-    private static $content;
+    private static $_self;
 
     private function __construct()
     {
@@ -23,9 +23,9 @@ class ARequestParameter
     public static function getSingleton()
     {
         if (null === self::$_self) {
-            self::$content = new self;
+            self::$_self = new ARequestParameter();
         }
-        return self::$content;
+        return self::$_self;
     }
 
     /**

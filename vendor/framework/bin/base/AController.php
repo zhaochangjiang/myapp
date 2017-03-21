@@ -9,6 +9,7 @@
 namespace framework\bin\base;
 
 use framework\App;
+use framework\bin\dataFormat\AReturn;
 use RuntimeException;
 use framework\bin\utils\AUtils;
 use framework\bin\http\ACurlManager;
@@ -846,21 +847,7 @@ class AController extends ABaseController
         return $data;
     }
 
-    /**
-     * iframe内部页面内容展示,完事后 退出(exit)程序
-     *
-     * @param ResultContent $message - Arrray(
-     *            'notexit'=>false,
-     *            'message'=>'输入的内容',
-     *            );
-     */
-    protected function outPutIframeMessage(ResultContent $message)
-    {
-        echo '<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>' . $message->message . $message->javascriptContent . '</body></html>';
-        if (empty($message->notexit)) {
-            exit();
-        }
-    }
+
 
     /**
      * 创建URL

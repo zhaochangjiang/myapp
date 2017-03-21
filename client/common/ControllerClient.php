@@ -5,6 +5,7 @@ namespace client\common;
 use framework\bin\base\AController;
 use framework\bin\dataFormat\ResultClient;
 use framework\bin\utils\ADesEncrypt;
+use framework\bin\dataFormat\ErrorCode;
 
 /*
    * To change this license header, choose License Headers in Project Properties.
@@ -62,6 +63,7 @@ class ControllerClient extends AController
             return;
         }
         if ($token !== $this->params['accessToken']) {
+
             $this->result->setResult(ErrorCode::$ERRORACCESSTOKENERROR);
             $this->output($this->result);
             return;

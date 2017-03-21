@@ -7,6 +7,8 @@ use framework\bin\exception\AHttpException;
 use framework\bin\exception\AErrorHandler;
 //use framework\bin\base\AHelper;
 
+use framework\bin\session\ASession;
+use framework\bin\urlRewrite\AUrlManager;
 use RuntimeException;
 
 use ReflectionClass;
@@ -61,6 +63,9 @@ class ABaseApplication extends AppBase
     const ERROR_HANDLER = "handleError";            //设置异常处理类中的错误对应方法
     const SHUTDOWN_HANDLER = "handleShutdown";      //设置异常处理类中的结束对应方法
 
+    /**
+     * @var ABaseApplication
+     */
     public static $app;//本类实例对象
     private static $_config;//系统配置
     private static $_basePath = null;
@@ -70,22 +75,27 @@ class ABaseApplication extends AppBase
         'session' => 'framework\bin\session\ASession',
 
         //默认实例化的URL重写对象
-        'urlManager' => 'framework\bin\urlrewrite\AUrlManager',
+        'urlManager' => 'framework\bin\urlRewrite\AUrlManager',
     );
-
-    //URL路径拼接分割符
-    public static $delimiterModuleAction = '_';
 
     //命名空间与目录的对应关系
     public static $nameSpacePathMap = array(
         '@framework' => DIR_FRAMEWORK,//框架与命名空间对应关系
     );
 
-
+    /**
+     * @var AUrlManager
+     */
     public $urlManager;//URL对象管理
 
+    /**
+     * @var ASession
+     */
     public $session; //用户登录信息管理
 
+    /**
+     * @var array
+     */
     public $parameters;//配置参数
 
 

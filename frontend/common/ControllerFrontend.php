@@ -38,6 +38,22 @@ class ControllerFrontend extends AController
     }
 
     /**
+     * iframe内部页面内容展示,完事后 退出(exit)程序
+     *
+     * @param ResultContent $message - Arrray(
+     *            'notexit'=>false,
+     *            'message'=>'输入的内容',
+     *            );
+     */
+    protected function outPutIframeMessage(FrontendResultContent $message)
+    {
+        echo '<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>' . $message->getMessage() . $message->getJavascriptContent() . '</body></html>';
+        if (empty($message->notexit)) {
+            exit();
+        }
+    }
+
+    /**
      * 调用系统接口的工具连接
      * @author karl.zhao<zhaocj2009@126.com>
      * @param String $moduleAction

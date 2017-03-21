@@ -1,5 +1,4 @@
 <?php
-define('DOMAIN', 'http://' . $_SERVER['HTTP_HOST'] . '/juetun');
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -9,12 +8,12 @@ define('DOMAIN', 'http://' . $_SERVER['HTTP_HOST'] . '/juetun');
 return array(
     'version' => '1.0',
     'parameters' => array(
-        'sitename' => '掘囤网',
+        'siteName' => '掘囤网',
         'domain' => array(
-            'userProfile' => DOMAIN . '/frontend/web',
-            'dashboard' => DOMAIN . '/backend/web',
-            'web' => DOMAIN . '/frontend/web',
-            'client' => DOMAIN . '/client/web'
+            'userProfile' => 'http://user.fanghuiju.com',
+            'dashboard' => 'http://dashboard.fanghuiju.com',
+            'web' => 'http://www.fanghuiju.com',
+            'client' => 'http://client.fanghuiju.com'
         )
     ),
     'database' => array(
@@ -24,7 +23,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'user_',
-            'dbname' => 'juetun_user',
+            'dbName' => 'juetun_user',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
         'admin' => array(
@@ -33,7 +32,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'admin_',
-            'dbname' => 'juetun_admin',
+            'dbName' => 'juetun_admin',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
         'data' => array(
@@ -42,7 +41,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'data_',
-            'dbname' => 'juetun_data',
+            'dbName' => 'juetun_data',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
     )

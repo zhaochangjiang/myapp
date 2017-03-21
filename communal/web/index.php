@@ -18,19 +18,9 @@ function stop($obj = null)
     exit;
 }
 
-function getEnvironment()
-{
-    $enviorment = 'RUN';
-    if ($enviorment) {
-        $enviormentIni = get_cfg_var('enviorment');
-        if ($enviormentIni) {
-            $enviorment = $enviormentIni;
-        }
-    }
-    return $enviorment;
-}
+require_once(dirname(DIR_APP_LOCATION) . "/vendor/framework/App.php");
 
-define('DEFINE_ENVIORMENT', getEnvironment());
+define('DEFINE_ENVIORMENT', App::getEnvironment());
 //$statTime = microtime(true);
 ////判断是否是加载的合法的程序
 //defined('IS_SYSTEM') or define('IS_SYSTEM',
@@ -52,7 +42,6 @@ define('IS_MERAGE', TRUE);
 //启动应用
 // * 系统默认访问类，Site
 // * 默认访问方法          indexAction
-require_once(dirname(DIR_APP_LOCATION) . "/vendor/framework/App.php");
 $config = dirname(dirname(__FILE__)) . '/config/' . DEFINE_ENVIORMENT . '/config.php';
 $app = App::createApplication($config)->run();
 

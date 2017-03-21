@@ -6,7 +6,7 @@
  * Time: 16:45
  */
 
-namespace framework\bin\urlrewrite;
+namespace framework\bin\urlRewrite;
 
 use framework\bin\base\AppBase;
 use framework\bin\base\AController;
@@ -15,16 +15,54 @@ use framework\bin\base\AController;
 
 class AUrlManager extends AppBase
 {
-    protected $rewriteMod = false;//是否重写
-    protected $extendFile = '.html';//扩展名
-    protected $domain = ''; //域名前缀,默认当前模块域名
+    /**
+     * 是否重写
+     * @var bool
+     */
+    protected $rewriteMod = false;
+
+    /**
+     * 扩展名
+     * @var string
+     */
+    protected $extendFile = '.html';
+
+    /**
+     * 域名前缀,默认当前模块域名
+     * @var string
+     */
+    protected $domain = '';
+
+    /**
+     * @var string
+     */
     protected $moduleAction = '';
+
+    /**
+     * @var array
+     */
     protected $otherParams = array();
+
+    /**
+     * @var bool
+     */
     protected $noReWrite = false;
+
+    /**
+     * @var
+     */
     protected $routeRule;//路由规则
-    protected $actionParamsSeparator = '/';//r和 实际参数之间分隔符;
+
+    /**
+     * r和 实际参数之间分隔符;
+     * @var string
+     */
+    protected $delimiterActionParams = '/';
+
     protected $delimiterModuleAction = '_';
-    protected $delimiter = '_'; //详细参数间的分割符
+
+    protected $delimiter = '_'; //详细参数键值分割符
+    protected $delimiterParams = '/'; //详细参数间的分割符
 
     public static function getInstance()
     {
@@ -70,8 +108,7 @@ class AUrlManager extends AppBase
                 $baseName = substr($baseName, 0, stripos($baseName, '?'));
             }
 
-            $moduleActionLength = strlen($baseName);
-            $actionParamsSeparatorLocate = stripos($baseName, $this->actionParamsSeparator);
+            $actionParamsSeparatorLocate = stripos($baseName, $this->delimiterActionParams);
 
             //判断 basename ="passport_login/t_123123";的情况处理
             if (false !== $actionParamsSeparatorLocate) {
@@ -154,15 +191,13 @@ class AUrlManager extends AppBase
 
         $urlStr = empty($this->moduleAction) ? $this->domain : "{$this->domain}/" . $this->moduleAction; // 取消urlencode
 
-        // apache下打不开
-        if (!is_array($this->otherParams)) {
-
+        // 没有其他参数下打不开
+        if (empty($this->otherParams)) {
             return $this->getWholeUrl($urlStr);
         }
 
-        $urlStr .= '/' . $this->moduleAction . $this->actionParamsSeparator;
         $ruleStr .= '/';
-
+        $urlStr .= $this->delimiterActionParams;
         foreach ($this->otherParams as $k => $v) {
             if ($v === '') {
                 continue;
@@ -170,21 +205,22 @@ class AUrlManager extends AppBase
 
             // 处理特殊字符
             if (!is_array($v)) {
-                $urlStr .= $k . $this->delimiter . urlencode($v) . $this->delimiter;
-                $ruleStr .= $k . $this->delimiter . urlencode($v) . $this->delimiter;
+                $urlStr .= $k . $this->delimiter . urlencode($v) . $this->delimiterParams;
+                $ruleStr .= $k . $this->delimiter . urlencode($v) . $this->delimiterParams;
                 continue;
             } elseif ($v ['url']) {
                 empty($v ['doType']) ? $v ['doType'] = 'base64_encode' : '';
-                $urlStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiter;
-                $ruleStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiter;
+                $urlStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiterParams;
+                $ruleStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiterParams;
                 continue;
             }
 
             foreach ($v as $v1) {
-                $urlStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiter;
-                $ruleStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiter;
+                $urlStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiterParams;
+                $ruleStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiterParams;
             }
         }
+
         $urlStr = substr($urlStr, 0, -1);
         $ruleStr = substr($ruleStr, 0, -1);
 
@@ -206,10 +242,12 @@ class AUrlManager extends AppBase
 
     protected function getWholeUrl($urlStr)
     {
+
         $urlStr .=
             (empty($this->moduleAction) ?
                 '' :
                 $this->extendFile);
+
         return $urlStr;
     }
 

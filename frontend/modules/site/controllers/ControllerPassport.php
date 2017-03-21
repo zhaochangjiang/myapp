@@ -35,7 +35,6 @@ class ControllerPassport extends ControllerFrontend
      */
     public function actionLogin()
     {
-
         $this->data['goto'] = $this->getInput('goto');
         $this->render();
     }
@@ -46,15 +45,14 @@ class ControllerPassport extends ControllerFrontend
     public function actionIFrameRegister()
     {
 
-        $this->data['goto'] = base64_decode($this->params('goto'));
-        $result = (array)parent::httpConnectionByBase(
+        $this->data['goto'] = base64_decode($this->params['goto']);
+        $result = parent::httpConnectionByBase(
             array('Passport', 'iFrameRegister'), array(), $this->params);
         $resultData = FrontendResultContent::getInstanceAnother();
 
-
         $jsString = '';
 
-        if ($result->code != 200) {
+        if (200 != intval($result['code'])) {
             $jsString .= 'parent.showError("' . $result->message . '");';
         }
         App::$app->session->setSessionArray($result['data']);
@@ -86,7 +84,7 @@ class ControllerPassport extends ControllerFrontend
 
             $jsString .= 'parent.showError("' . $result['message'] . '");';
             $resultData->setJavascriptContent($jsString);
-            stop($result);
+
             //IFrame表单输出信息
             $this->outPutIframeMessage($resultData);
         }

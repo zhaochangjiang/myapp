@@ -2,10 +2,9 @@
 namespace framework\bin\session;
 
 use client\common\ClientResultData;
-use framework\App;
-use framework\bin\base\AReturn;
+use framework\bin\dataFormat\AReturn;
 use framework\bin\base\AppBase;
-
+use framework\bin\dataFormat\ErrorCode;
 use framework\bin\http\ARequestParameter;
 
 
@@ -243,7 +242,7 @@ class ASession extends AppBase
         if (empty($accessToken)) {
 
             $return = new AReturn();
-            $return->setCode(ErrorCode::$ERRORACCESSTOKEN);
+            $return->setResult(ErrorCode::$ERRORACCESSTOKEN);
             $return->setData($this->getAccessToken());
             die(json_encode($return));
         }
