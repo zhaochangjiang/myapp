@@ -2,34 +2,54 @@
 
 namespace client\common;
 
-use ArrayObject;
+use RuntimeException;
 
 /**
  * Description of ClientResultData
  *
  * @author zhaocj
  */
-class ClientResultData
+class ResultClient
 {
 
     public $code = 200;
     public $message = '';
     public $data = null;
-    public $sessionid = '';
+    public $sessionId = '';
+
+    /**
+     * 通过数组设置本类的属性值
+     * @param array $result
+     * @return  void
+     * @throws  \RuntimeException
+     */
+    public function setResult($result)
+    {
+        foreach ($result as $key => $value) {
+            $function = 'set' . ucfirst($key);
+            if (method_exists($this, $function)) {
+                $this->$function($value);
+            } else {
+                throw new RuntimeException("the Params is error is at line:" . __LINE__
+                    . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
+            }
+
+        }
+    }
 
     public static function getInstance()
     {
         return new ClientResultData();
     }
 
-    function getSessionid()
+    function getSessionId()
     {
-        return $this->sessionid;
+        return $this->sessionId;
     }
 
-    function setSessionid($sessionid)
+    function setSessionId($sessionId)
     {
-        $this->sessionid = $sessionid;
+        $this->sessionId = $sessionId;
     }
 
     function getCode()
@@ -63,18 +83,6 @@ class ClientResultData
         $this->data = $data;
     }
 
-    /**
-     *
-     * @param type $result
-     */
-    public function setResult($result)
-    {
-        foreach ($result as $key => $value) {
-            //    xmp($key);
-            $function = 'set' . ucfirst($key);
-            $this->$function($value);
-        }
-    }
 
 }
   

@@ -14,7 +14,7 @@ use communal\common\UtilsFormFormat;
         <?php
         echo UtilsFormFormat::open($this->createUrl(array(
                 $this->controllerString,
-                'iframe' . ucfirst($this->action)) . ucfirst($this->action)));
+                'iFrame' . ucfirst($this->action)) . ucfirst($this->action)));
         ?>
         <div class="form-group mb-lg">
             <label>邮箱/手机</label>

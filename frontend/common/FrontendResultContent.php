@@ -2,12 +2,12 @@
 
 namespace frontend\common;
 
-use client\common\ClientResultData;
+use client\common\ResultClient;
 
 /**
  * IFRAME页面输出结果格式
  */
-class FrontendResultContent extends ClientResultData
+class FrontendResultContent extends ResultClient
 {
 
     var $javascriptContent = '';

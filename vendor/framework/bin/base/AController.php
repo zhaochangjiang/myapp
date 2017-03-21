@@ -854,8 +854,7 @@ class AController extends ABaseController
      *            'message'=>'输入的内容',
      *            );
      */
-    protected
-    function outPutIframeMessage(ResultContent $message)
+    protected function outPutIframeMessage(ResultContent $message)
     {
         echo '<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>' . $message->message . $message->javascriptContent . '</body></html>';
         if (empty($message->notexit)) {
@@ -933,6 +932,7 @@ class AController extends ABaseController
         }
         $urlManager = App::$app->urlManager;
         $urlManager->setCreateUrlParams($moduleAction, $params, $domain);
+
         return $urlManager->createURLPath();
     }
 

@@ -4,18 +4,18 @@ use communal\common\UtilsFormFormat;
 
 ?>
 <script type="text/javascript">
-    function hideorshowSubmitButton(o1) {
+    function hideOrShowSubmitButton(o1) {
 
         if (typeof (o1) == 'undefined') {
             $(".alert-danger").hide();
-            $("#submitiframes").addClass('disabled');
+            $("#submitIFrames").addClass('disabled');
         } else {
-            $("#submitiframes").removeClass('disabled');
+            $("#submitIFrames").removeClass('disabled');
         }
     }
-    function showerror(m) {
+    function showError(m) {
         $(".alert-danger").show().find('p').html(m);
-        hideorshowSubmitButton(true);
+        hideOrShowSubmitButton(true);
     }
 
 </script>
@@ -29,7 +29,7 @@ use communal\common\UtilsFormFormat;
         if (!empty($this->data['goto'])) {
             $urlParamArray = ['goto' => $this->data['goto']];
         }
-        UtilsFormFormat::open($this->createUrl([$this->controllerString, 'iframe' . ucfirst($this->action), $this->moduleString], $urlParamArray));
+        UtilsFormFormat::open($this->createUrl([$this->controllerString, 'iFrame' . ucfirst($this->action), $this->moduleString], $urlParamArray));
         ?>
         <div class="form-group mb-lg">
             <div class="alert alert-danger" style="display: none;">
@@ -69,7 +69,7 @@ use communal\common\UtilsFormFormat;
                 </div>
             </div>
             <div class="col-sm-4 text-right">
-                <button type="submit" class="btn btn-primary" id="submitiframes" onclick="hideorshowSubmitButton();
+                <button type="submit" class="btn btn-primary" id="submitIFrames" onclick="hideOrShowSubmitButton();
                         return;">登录
                 </button>
             </div>

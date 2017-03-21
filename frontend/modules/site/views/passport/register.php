@@ -9,10 +9,10 @@ use communal\common\UtilsFormFormat;
     </div>
     <div class="panel-body">
         <?php
-        echo UtilsFormFormat::open($this->createUrl(
+          UtilsFormFormat::open($this->createUrl(
             [
                 $this->controllerString,
-                'iframe' . ucfirst($this->action)
+                'iFrame' . ucfirst($this->action)
             ], ['goto' => $this->data['goto']]
         ))
         ?>

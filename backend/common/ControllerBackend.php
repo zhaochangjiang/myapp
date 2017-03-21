@@ -17,11 +17,11 @@ use communal\models\admin\permit\ModelPermitGroup;
 class ControllerBackend extends AController
 {
     protected $permitAllModule;
-    public $permitList;
+    public $permitList;//权限列表
     public $applicationDIr;
-    public $pageSmallTitle;
-    public $version = '1.12';
-    public $cssFile = array(
+    public $pageSmallTitle;//获得短标题
+    public $version = '1.12';//当前的版本
+    public $cssFile = array(//CSS文件列表
         'bootstrap.min.css',
         'font-awesome.min.css',
         'ionicons.min.css',
@@ -63,8 +63,10 @@ class ControllerBackend extends AController
         //验证是否登录
         $this->validateLogin();
 
+        //初始化当前目录
         $this->initApplicationDIr();
 
+        //获得用户头像
         $this->data['avater'] = $this->getAvater($this->data['session']);
 
         //权限验证
@@ -108,6 +110,7 @@ class ControllerBackend extends AController
     {
         if (empty($this->data['session'])) {
             $gotoUrl = $this->createUrl(['passport', 'login'], null, App::$app->parameters->domain['web']);
+
             $this->redirect($gotoUrl);
         }
     }
@@ -143,6 +146,7 @@ class ControllerBackend extends AController
         return $moduleActionArray;
     }
 
+    //是否为超级管理员
     public function isSuperAdmin()
     {
         return false;

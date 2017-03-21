@@ -2,8 +2,8 @@
 
 namespace communal\models\user;
 
-use framework\bin\AModel;
-use client\common\ClientResultData;
+use framework\bin\database\AModel;
+use client\common\ResultClient;
 use client\common\ErrorCode;
 use framework\App;
 
@@ -16,6 +16,7 @@ class UserMainModel extends AModel
 {
 
     protected $linkName = 'user';
+    private $result;
 
     public function tableName()
     {
@@ -25,24 +26,34 @@ class UserMainModel extends AModel
     public function login($params)
     {
 
-        $clientResultData = ClientResultData::getInstance();
+        $this->result = ResultClient::getInstance();
 
         $params['password'] = $this->addPassword($params['password']);
 
         $userData = $this->find($params);
 
-        if (empty($userData)) {//如果用户存在
-            $clientResultData->setResult(ErrorCode::$USERNOTEXISTS);
-            return $clientResultData;
+
+        //如果用户不存在
+        if (empty($userData)) {
+            $this->result->setResult(ErrorCode::$USERNOTEXISTS);
+            return $this->result;
         }
+
         unset($userData['password'], $userData['flag_del']);
-        $clientResultData->setResult(ErrorCode::$LOGINSUCCESS);
-        $clientResultData->setData($userData);
-        App::setSessionArray($userData);
-        return $clientResultData;
+
+        $this->result->setResult(ErrorCode::$LOGINSUCCESS);
+        $this->result->setData($userData);
+
+        App::$app->session->setSessionArray($userData);
+        return $this->result;
     }
 
-    public function addPassword($password)
+    /**
+     * 加密密码
+     * @param $password
+     * @return string
+     */
+    private function addPassword($password)
     {
         return sha1($password);
     }

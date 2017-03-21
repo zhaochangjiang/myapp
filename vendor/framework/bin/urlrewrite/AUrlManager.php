@@ -152,11 +152,12 @@ class AUrlManager extends AppBase
         // 如果开启了rewrite模式
         $ruleStr = $this->moduleAction;
 
-        $urlStr = empty($moduleAction) ? $this->domain : "{$this->domain}/" . $moduleAction; // 取消urlencode
+        $urlStr = empty($this->moduleAction) ? $this->domain : "{$this->domain}/" . $this->moduleAction; // 取消urlencode
 
         // apache下打不开
         if (!is_array($this->otherParams)) {
-            return $urlStr;
+
+            return $this->getWholeUrl($urlStr);
         }
 
         $urlStr .= '/' . $this->moduleAction . $this->actionParamsSeparator;
@@ -194,12 +195,21 @@ class AUrlManager extends AppBase
         }
         //如果需要写$this->extendFile参数
         if ($this->rewriteUrl !== $this->moduleAction) {
-            $urlStr .=
-                (empty($this->moduleAction) ?
-                    '' :
-                    $this->extendFile);
+
+            //获得完整的URL
+            $urlStr = $this->getWholeUrl($urlStr);
+
         }
 
+        return $urlStr;
+    }
+
+    protected function getWholeUrl($urlStr)
+    {
+        $urlStr .=
+            (empty($this->moduleAction) ?
+                '' :
+                $this->extendFile);
         return $urlStr;
     }
 

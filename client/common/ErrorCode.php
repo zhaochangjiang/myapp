@@ -43,6 +43,11 @@ class ErrorCode
         'message' => 'access_token is null',
         'data' => ' access_token is null',
     );
+    public static $ERRORACCESSTOKENERROR = array(
+        'code' => '101',
+        'message' => 'access_token is error',
+        'data' => ' access_token is error',
+    );
 
 }
   

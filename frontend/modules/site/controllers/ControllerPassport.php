@@ -24,7 +24,8 @@ class ControllerPassport extends ControllerFrontend
     {
 
         $result = $this->httpConnectionByBase(array('Passport', 'logout'), null, $this->params);
-        //  stop($result);
+
+
         header("Location:" . App::$app->parameters->domain['web']);
         App::$app->session->sessionDestroy();
     }
@@ -42,19 +43,22 @@ class ControllerPassport extends ControllerFrontend
     /**
      * 注册表单提交
      */
-    public function actionIframeRegister()
+    public function actionIFrameRegister()
     {
 
         $this->data['goto'] = base64_decode($this->params('goto'));
         $result = (array)parent::httpConnectionByBase(
-            array('Passport', 'iframeRegister'), array(), $this->params);
+            array('Passport', 'iFrameRegister'), array(), $this->params);
         $resultData = FrontendResultContent::getInstanceAnother();
 
+
         $jsString = '';
+
         if ($result->code != 200) {
-            $jsString .= 'parent.showerror("' . $result->message . '");';
+            $jsString .= 'parent.showError("' . $result->message . '");';
         }
-        App::setSessionArray($result['data']);
+        App::$app->session->setSessionArray($result['data']);
+
         //默认注册成功跳转
         $resultData->setJavascriptContent($jsString, empty($this->data['goto']) ? $this->getDefaultLoginGoto() : $this->data['goto']);
         $this->outPutIframeMessage($resultData);
@@ -66,29 +70,42 @@ class ControllerPassport extends ControllerFrontend
      * @since 2016/09/19
      *
      */
-    public function actionIframeLogin()
+    public function actionIFrameLogin()
     {
 
-        $this->data['goto'] = base64_decode($this->getInput('goto'));
+        $this->data['goto'] = base64_decode($this->params('goto'));
 
-        $result = (array)$this->httpConnectionByBase(['Passport', 'iframeLogin']
-            , [], $this->params);
-        $jsString = '';
-        if (200 != $result['code']) {
-            $jsString .= 'parent.showerror("' . $result['message'] . '");';
-        }
-        App::$app->session->setSessionArray($result['data']);
 
         $resultData = FrontendResultContent::getInstanceAnother();
+
+        $result = (array)$this->httpConnectionByBase(['Passport', 'iFrameLogin'], [], $this->params);
+
+        $jsString = '';
+
+        if (200 != intval($result['code'])) {
+
+            $jsString .= 'parent.showError("' . $result['message'] . '");';
+            $resultData->setJavascriptContent($jsString);
+            stop($result);
+            //IFrame表单输出信息
+            $this->outPutIframeMessage($resultData);
+        }
+
+
+        App::$app->session->setSessionArray($result['data']);
+
         //默认登录成功跳转
-        $resultData->setJavascriptContent($jsString, empty($this->data['goto']) ? $this->getDefaultLoginGoto() : $this->data['goto']);
+        $resultData->setJavascriptContent($jsString,
+            empty($this->data['goto']) ? $this->getDefaultLoginGoto() : $this->data['goto']);
+
+        //IFrame表单输出信息
         $this->outPutIframeMessage($resultData);
     }
 
     /**
      * 验证码请求
      */
-    public function actionAuthcode()
+    public function actionAuthCode()
     {
         $cCaptchaAction = new CCaptchaAction ();
         $cCaptchaAction->run(true);

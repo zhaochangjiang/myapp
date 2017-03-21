@@ -3,7 +3,7 @@
 namespace client\common;
 
 use framework\bin\base\AController;
-use client\common\ClientResultData;
+use client\common\ResultClient;
 use framework\bin\utils\ADesEncrypt;
 
 /*
@@ -21,6 +21,7 @@ class ControllerClient extends AController
 {
 
     //  private $clientResultData = null;
+    protected $result;
     public $outputCategory = 'json'; //'json','obj'
 
     public function __construct($module = null, $action = null)
@@ -33,38 +34,57 @@ class ControllerClient extends AController
     {
 
         parent::init();
-        $clientResultData = new ClientResultData();
-        $sessionId = $clientResultData->getSessionid();
+        $this->result = new ResultClient();
+
+        //校验令牌
+        $this->authAccessToken();
+
+
+    }
+
+    /**
+     * 令牌校验
+     * return void
+     */
+    protected function authAccessToken()
+    {
+        $sessionId = $this->result->getSessionid();
         $token = $this->accessToken($sessionId);
         if (empty($this->params['accessToken'])) {
-            $clientResultData->setCode(100);
-            $clientResultData->setData($token);
-            $this->output($clientResultData);
-        } elseif ($token !== $this->params['accessToken']) {
-            $clientResultData->setCode(101);
-            $clientResultData->setData('token is error!');
-            $this->output($clientResultData);
+            ErrorCode::$ERRORACCESSTOKEN['message'] = $token;
+            $this->result->setResult(ErrorCode::$ERRORACCESSTOKEN);
+            $this->output($this->result);
+            return;
+        }
+        if ($token !== $this->params['accessToken']) {
+            $this->result->setResult(ErrorCode::$ERRORACCESSTOKENERROR);
+            $this->output($this->result);
+            return;
         }
     }
 
-
+    /**
+     * @param string $sessionId
+     * @return string
+     */
     protected function accessToken($sessionId)
     {
-        ADesEncrypt::encrypt($sessionId);
+        return ADesEncrypt::encrypt($sessionId);
     }
 
     /**
      * 显示数据
-     * @param type $result
+     * @param ClientResultData $result
+     * @return void
      */
     public function output(ClientResultData $result)
     {
         switch ($this->outputCategory) {
             case 'json':
-                die(json_encode($result));
+                echo json_encode($result);
                 break;
             default:
-                die(var_export($result, true));
+                echo var_export($result, true);
                 break;
         }
     }
