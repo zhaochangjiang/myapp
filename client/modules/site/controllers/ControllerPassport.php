@@ -3,10 +3,10 @@
 namespace client\modules\site\controllers;
 
 use client\common\ControllerClient;
-use client\common\ErrorCode;
 use communal\models\user\UserMainModel;
 
 use framework\App;
+use framework\bin\dataFormat\ErrorCode;
 
 /**
  * Description of PassportController

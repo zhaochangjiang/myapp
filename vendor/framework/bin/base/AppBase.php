@@ -17,19 +17,11 @@ abstract class AppBase
     {
     }
 
-    /**
-     * 开始方法
-     * @return mixed
-     */
-    public function before()
-    {
-    }
 
     /**
-     * 结束方法
-     * @return mixed
+     *
      */
-    public function after()
+    public function run()
     {
     }
 

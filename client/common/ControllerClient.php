@@ -3,7 +3,7 @@
 namespace client\common;
 
 use framework\bin\base\AController;
-use client\common\ResultClient;
+use framework\bin\dataFormat\ResultClient;
 use framework\bin\utils\ADesEncrypt;
 
 /*
@@ -21,7 +21,9 @@ class ControllerClient extends AController
 {
 
     //  private $clientResultData = null;
-    protected $result;
+    protected $result;//返回的数据
+
+    //输出数据的格式
     public $outputCategory = 'json'; //'json','obj'
 
     public function __construct($module = null, $action = null)
@@ -48,11 +50,14 @@ class ControllerClient extends AController
      */
     protected function authAccessToken()
     {
-        $sessionId = $this->result->getSessionid();
+        $sessionId = session_id();
         $token = $this->accessToken($sessionId);
+
         if (empty($this->params['accessToken'])) {
             ErrorCode::$ERRORACCESSTOKEN['message'] = $token;
+
             $this->result->setResult(ErrorCode::$ERRORACCESSTOKEN);
+
             $this->output($this->result);
             return;
         }
@@ -81,12 +86,13 @@ class ControllerClient extends AController
     {
         switch ($this->outputCategory) {
             case 'json':
-                echo json_encode($result);
+                json_encode($result);
                 break;
             default:
                 echo var_export($result, true);
                 break;
         }
+        exit;
     }
 
 }

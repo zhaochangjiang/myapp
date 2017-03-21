@@ -22,12 +22,16 @@ class ASession extends AppBase
     var $model;
     var $memcachePrufix = 'SE_';
 
+
+    private static $session;
+
     /**
      * session打开
-     *
-     * @return void
+     * @param  string $savePath
+     * @param  string $sessionName
+     * @return bool
      */
-    function session_open($save_path, $session_name)
+    function session_open($savePath, $sessionName)
     {
 
 //        $session_model = D($this->configSession['dblink']);
@@ -112,6 +116,7 @@ class ASession extends AppBase
         return $dataSession ['data'];
     }
 
+
     /**
      * 写入session
      *
@@ -148,49 +153,55 @@ class ASession extends AppBase
         return true;
     }
 
+    public function run()
+    {
+        $this->_init();
+    }
+
     /**
      * 垃圾回收，销毁过期的session
      * crontab例程销毁session
+     * @param  $maxLifetime
+     * @return  bool
      */
-    function session_gc($maxlifetime)
+    function session_gc($maxLifetime)
     {
         $this->model->deleteBatch(array(
             'expire' => array(
                 'doType' => '<',
-                'value' => TIMESTAMP - $maxlifetime)
+                'value' => TIMESTAMP - $maxLifetime)
         ));
         return true;
     }
 
-    public function __construct()
-    {
-
-    }
 
     protected function _init()
     {
+
         $accessToken = $this->requestReturnData();
 
         // 如果有设置Session数据库缓存,否则开启Session
-        if (self::$_config ['session'] == null) {
+        if (empty($this->configSession ['session'])) {
             if (IS_CLIENT !== FALSE) {
                 session_id($accessToken);
             }
             session_start();
+
             return;
         }
         /**
          * [S]开始session*
          */
-        $this->configSession = $session;
-        $this->model = M($session ['model']);
-        $this->model->setConfigSession($session);
+        $this->model = M($this->configSession ['model']);
+        $this->model->setConfigSession($this->configSession);
+
+
         //设置色session id的名字
         ini_set('session.name', $this->configSession ['sessionName']);
         //不使用 GET/POST 变量方式
         //  ini_set('session.use_trans_sid',0);
         //设置垃圾回收最大生存时间
-        ini_set('session.gc_maxlifetime', 86400 * 3);
+        ini_set('session.gc_maxlifetime', 2592000);//86400 * 3
         //使用 COOKIE 保存 SESSION ID 的方式
         ini_set('session.use_cookies', 1);
         ini_set('session.cookie_path', '/');
@@ -200,19 +211,14 @@ class ASession extends AppBase
         //将 session.save_handler 设置为 user，而不是默认的 files
         session_module_name('user');
         //$session = $this;
-        session_set_save_handler(array(
-            self,
-            'session_open'), array(
-            self,
-            'session_close'), array(
-            self,
-            'session_read'), array(
-            self,
-            'session_write'), array(
-            self,
-            'session_destroy'), array(
-            self,
-            'session_gc'));
+        session_set_save_handler(
+            [self, 'session_open'],
+            [self, 'session_close'],
+            [self, 'session_read'],
+            [self, 'session_write'],
+            [self, 'session_destroy'],
+            [self, 'session_gc']
+        );
         session_start();
     }
 
@@ -226,12 +232,12 @@ class ASession extends AppBase
     }
 
     /**
-     *
+     * @return mixed|string
      */
     public function requestReturnData()
     {
         if (IS_CLIENT === false) {
-            return;
+            return '';
         }
         $accessToken = ARequestParameter::getSingleton()->getGet('accessToken');;
         if (empty($accessToken)) {
@@ -239,17 +245,20 @@ class ASession extends AppBase
             $return = new AReturn();
             $return->setCode(ErrorCode::$ERRORACCESSTOKEN);
             $return->setData($this->getAccessToken());
-            die(json_encode($this->$return));
+            die(json_encode($return));
         }
         return $accessToken;
     }
 
+    /**
+     * @return ASession
+     */
     public static function getInstance()
     {
-
-        $session = new self();
-        $session->_init();
-        return $session;
+        if (empty(self::$session)) {
+            self::$session = new ASession();
+        }
+        return self::$session;
     }
 
 }

@@ -31,12 +31,12 @@ class ACurlManager
                 . __LINE__ . ',in file' . __FILE__, FRAME_THROW_EXCEPTION);
         }
 
-        $data = $this->_grabimport($connectUrl, $gets, $posts);
-
+        $data = $this->_grabImport($connectUrl, $gets, $posts);
+        stop($data);
         if (100 == intval($data ['code'])) {
 
             App::$app->session->setSession('accessToken', $data['data']);
-            $data = $this->_grabimport($connectUrl, $gets, $posts);
+            $data = $this->_grabImport($connectUrl, $gets, $posts);
             return $data;
         }
         if (200 == intval($data ['code'])) {
@@ -44,10 +44,10 @@ class ACurlManager
         }
 
         throw new RuntimeException("Error Description:the client return is wrong!" . PHP_EOL . PHP_EOL . PHP_EOL .
-            'URL:' . $connectUrl . PHP_EOL . PHP_EOL .
-            (empty($posts) ? '' : '$_POST:' . var_export($posts, true) . PHP_EOL . PHP_EOL) .
-            (empty($gets) ? '' : '$_GET:' . var_export($gets, true) . PHP_EOL . PHP_EOL) .
-            'return data:' . PHP_EOL . var_export($data, true), FRAME_THROW_EXCEPTION);
+            '[URL]:' . $connectUrl . PHP_EOL . PHP_EOL .
+            (empty($posts) ? '' : '[$_POST]:' . var_export($posts, true) . PHP_EOL . PHP_EOL) .
+            (empty($gets) ? '' : '[$_GET]:' . var_export($gets, true) . PHP_EOL . PHP_EOL) .
+            '[return]:' . PHP_EOL . var_export($data, true), FRAME_THROW_EXCEPTION);
     }
 
     /**
@@ -59,17 +59,17 @@ class ACurlManager
      */
     protected function httpConnection($target, $gets, $posts = array())
     {
-        $connectUrl = App:: base()->importApi [$target];
+        $connectUrl = App:: $app->importApi [$target];
 
         if (empty($connectUrl)) {
-            exit("你请求的URL地址：{$target}错误!");
+            throw new RuntimeException("你请求的URL地址：{$target}错误!", FRAME_THROW_EXCEPTION);
         }
 
-        $data = $this->_grabimport($connectUrl, $gets, $posts);
+        $data = $this->_grabImport($connectUrl, $gets, $posts);
 
         if ($data ['error'] == '2001') {
             App::$app->session->setSession('session_code', $data ['session_id']);
-            return $this->_grabimport($connectUrl, $gets, $posts);
+            return $this->_grabImport($connectUrl, $gets, $posts);
         }
         return $data;
     }
@@ -83,7 +83,7 @@ class ACurlManager
      * @param Array $posts
      * @return mixed
      */
-    private function _grabimport($target_url, $gets, $posts = array(), $headers = array())
+    private function _grabImport($target_url, $gets, $posts = array(), $headers = array())
     {
 
 

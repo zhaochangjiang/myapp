@@ -2,12 +2,13 @@
 
 namespace backend\common;
 
-use framework\helpers\ABasePager;
+use framework\bin\helpers\ABasePager;
 
 /**
  * 改进分页类
  *
- * @author heypigg
+ * @author karl.zhao<zhaocj2009@126.com>
+ *
  */
 class Pager extends ABasePager
 {
@@ -29,7 +30,7 @@ class Pager extends ABasePager
      *
      * @return array *
      */
-    private function getTagList()
+    protected function getTagList()
     {
         return array(
             array(

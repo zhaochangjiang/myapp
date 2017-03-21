@@ -1,5 +1,9 @@
 <?php
 
+namespace framework\bin\helpers;
+
+use framework\bin\helpers\Pager;
+
 /*
  * ajax分页
  */
@@ -16,7 +20,7 @@ class AjaxPager extends AWidget
 
     protected function getPager()
     {
-        $pager = new Pager($this->total);
+        $pager = new  Pager($this->total);
         $pager->params = array('localRefresh' => $this->ajaxJsMethod);
         $pager->pageSize = $this->pageSize;
         $pager->ajaxTarget = $this->ajaxTarget;
@@ -26,15 +30,13 @@ class AjaxPager extends AWidget
 
     protected function ajaxRun($obj)
     {
-
-
-        $this->context->setJsStr(" function ajaxPage(url,obj,target)
-    {
-        target.html('<div style=\"text-align:center;margin:150px 0;font-size:18px;font-weight:bold;\">{$this->tips}<div>');
-        $.get(url, function(html) {
-           target.html(html);
-        });
-    }"); //通用分页js方法
+        $this->context->setJsStr("
+        function ajaxPage(url,obj,target){
+                target.html('<div style=\"text-align:center;margin:150px 0;font-size:18px;font-weight:bold;\">{$this->tips}<div>');
+                $.get(url, function(html) {
+                   target.html(html);
+                });
+        }"); //通用分页js方法
         $ajaxPage = $this->getInput('ajaxPage');
         if ($ajaxPage == 1) {
             exit($obj->run());

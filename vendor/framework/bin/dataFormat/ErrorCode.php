@@ -1,6 +1,6 @@
 <?php
 
-namespace client\common;
+namespace framework\bin\dataFormat;
 
 /**
  * Description of ErrorCode

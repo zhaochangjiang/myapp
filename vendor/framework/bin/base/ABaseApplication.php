@@ -225,7 +225,7 @@ class ABaseApplication extends AppBase
 
         if (!file_exists($configFile)) {
 
-            throw new RuntimeException("[ ERROR ] The config file:\"{$configFile}\" is not exists!".PHP_EOL."[ MESSAGE ] The error is at line:" . __LINE__
+            throw new RuntimeException("[ ERROR ] The config file:\"{$configFile}\" is not exists!" . PHP_EOL . "[ MESSAGE ] The error is at line:" . __LINE__
                 . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
 
@@ -455,11 +455,11 @@ class ABaseApplication extends AppBase
         if (!file_exists($includeFile)) {
 
             include_once dirname(__FILE__) . '/../exception/AHttpException.php';
-            throw new AHttpException(404,
+            throw new RuntimeException(
                 "[ ERROR ] The file：{$includeFile}  is not exists ."
                 . PHP_EOL . "[ MESSAGE ] Throw Exception at line:"
                 . __LINE__ . ",in file:" . __FILE__
-            );
+                , FRAME_THROW_EXCEPTION);
         }
         if (file_exists($includeFile) && !$flagClassExists) {
             require_once $includeFile;
@@ -529,6 +529,7 @@ class ABaseApplication extends AppBase
 
             //给类注入参数
             $this->$objectKey->setParams((array)self::$_config[$objectKey]);
+            $this->$objectKey->run();
             return;
         }
 

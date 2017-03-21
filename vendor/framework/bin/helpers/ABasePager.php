@@ -3,6 +3,7 @@
 namespace framework\bin\helpers;
 
 use framework\bin\base\AHelper;
+use framework\bin\exception\AHttpException;
 
 /**
  * 分页类主类,继承自Awidget
@@ -40,23 +41,34 @@ abstract class ABasePager extends AHelper
         $this->init();
     }
 
+    /**
+     *
+     */
     public function init()
     {
-
-
         $this->currentPage = $this->getIntPagenow($this->pagePrefix);
     }
 
+    /**
+     * @return array
+     */
     public function getParams()
     {
         return $this->params;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPageSize()
     {
         return $this->pageSize;
     }
 
+    /**
+     * @param $requestParam
+     * @return array
+     */
     protected function getModuleControllerActionArray($requestParam)
     {
 
@@ -68,7 +80,12 @@ abstract class ABasePager extends AHelper
         return self::$moduleControllerAction;
     }
 
-    //put your code here
+    /**
+     * @param $pageIndex
+     * @param $requestParam
+     * @param $localRefresh
+     * @return string
+     */
     protected function getPageUrl($pageIndex, $requestParam, $localRefresh)
     {
 
@@ -91,13 +108,15 @@ abstract class ABasePager extends AHelper
         return $localRefresh === FALSE ? ' href="' . $str_url . '"' : " onclick='{$clickEvent}' href='javascript:void(0)' ";
     }
 
+    /**
+     * @param $pageSize
+     */
     public function setPageSize($pageSize)
     {
         $this->pageSize = $pageSize;
     }
 
     /**
-     *
      * @return string
      */
     public function getLimit()
@@ -107,7 +126,7 @@ abstract class ABasePager extends AHelper
             $pageMax = 1;
         }
         if ($this->extend404 && $this->currentPage > $pageMax) {
-            App::error('没有此分页');
+            throw new AHttpException(404, '没有此分页');
         }
         return ($this->currentPage - 1) * $this->pageSize . ",{$this->pageSize}";
     }

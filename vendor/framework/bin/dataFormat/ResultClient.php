@@ -1,6 +1,6 @@
 <?php
 
-namespace client\common;
+namespace framework\bin\dataFormat;
 
 use RuntimeException;
 
@@ -12,10 +12,10 @@ use RuntimeException;
 class ResultClient
 {
 
-    public $code = 200;
-    public $message = '';
-    public $data = null;
-    public $sessionId = '';
+    protected $code = 200;
+    protected $message = '';
+    protected $data = null;
+    protected $sessionId = '';
 
     /**
      * 通过数组设置本类的属性值
@@ -42,17 +42,17 @@ class ResultClient
         return new ClientResultData();
     }
 
-    function getSessionId()
+    public function getSessionId()
     {
         return $this->sessionId;
     }
 
-    function setSessionId($sessionId)
+    public function setSessionId($sessionId)
     {
         $this->sessionId = $sessionId;
     }
 
-    function getCode()
+    public function getCode()
     {
 
         return $this->code;
@@ -63,22 +63,22 @@ class ResultClient
         return $this->message;
     }
 
-    function getData()
+    public function getData()
     {
         return $this->data;
     }
 
-    function setCode($code)
+    public function setCode($code)
     {
         $this->code = $code;
     }
 
-    function setMessage($message)
+    public function setMessage($message)
     {
         $this->message = $message;
     }
 
-    function setData($data)
+    public function setData($data)
     {
         $this->data = $data;
     }

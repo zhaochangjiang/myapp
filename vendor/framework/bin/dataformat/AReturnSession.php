@@ -2,7 +2,7 @@
 
 namespace framework\bin\dataFormat;
 
-use framework\bin\AReturn;
+use framework\bin\base\AReturn;
 
 /**
  * Created by PhpStorm.

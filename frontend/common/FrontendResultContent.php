@@ -2,7 +2,7 @@
 
 namespace frontend\common;
 
-use client\common\ResultClient;
+use framework\bin\dataFormat\ResultClient;
 
 /**
  * IFRAME页面输出结果格式
@@ -12,7 +12,6 @@ class FrontendResultContent extends ResultClient
 
     var $javascriptContent = '';
     var $notexit = false;
-    var $message = '';
     private static $_instance;
 
     private function __construct()
@@ -43,14 +42,6 @@ class FrontendResultContent extends ResultClient
         return $this->status;
     }
 
-    /**
-     *
-     * @return the $message
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
 
     /**
      *
@@ -79,14 +70,6 @@ class FrontendResultContent extends ResultClient
         $this->status = $status;
     }
 
-    /**
-     *
-     * @param multitype : $message
-     */
-    public function setMessage($message)
-    {
-        $this->message .= $message;
-    }
 
     /**
      *
