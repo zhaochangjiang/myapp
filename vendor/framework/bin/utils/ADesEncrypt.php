@@ -11,6 +11,18 @@ namespace framework\bin\utils;
 
 class ADesEncrypt
 {
+
+
+
+
+
+
+
+
+
+
+
+
     private static $token = TOKEN;
 
     /**
@@ -23,6 +35,30 @@ class ADesEncrypt
      */
     static function encrypt($str)
     {
+
+        $str = str_replace("\n", "", $str);
+
+        $str = str_replace("\t", "", $str);
+
+        $str = str_replace("\r", "", $str);
+
+        $key= substr(md5(self::$token), 0, 24);
+
+        $td = mcrypt_module_open('tripledes', '', 'ecb', '');
+
+        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+
+        mcrypt_generic_init($td, self::$token, $iv);
+
+        $encrypted_data = mcrypt_generic($td, $str);
+
+        mcrypt_generic_deinit($td);
+
+        mcrypt_module_close($td);
+
+        return trim(chop(base64_encode($encrypted_data)));
+
+
         $block = mcrypt_get_block_size('des', 'ecb');
         $pad = $block - (strlen($str) % $block);
         $str .= str_repeat(chr($pad), $pad);

@@ -8,6 +8,7 @@
  */
 namespace framework\bin\http;
 
+use framework\bin\utils\ADesEncrypt;
 use RuntimeException;
 use framework\App;
 
@@ -32,9 +33,17 @@ class ACurlManager
         }
 
         $data = $this->_grabImport($connectUrl, $gets, $posts);
+
         if (100 == intval($data ['code'])) {
 
-            App::$app->session->setSession('accessToken', $data['data']);
+            $clientSessionId = $data['data'];
+
+            //生成token
+            $accessToken = ADesEncrypt::encrypt($clientSessionId);
+            stop($accessToken);
+            App::$app->session->setSession('accessToken', $accessToken);
+
+            $posts['accessToken'] = $accessToken;
             $data = $this->_grabImport($connectUrl, $gets, $posts);
             return $data;
         }

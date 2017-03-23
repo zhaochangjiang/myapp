@@ -173,30 +173,31 @@ class ASession extends AppBase
         return true;
     }
 
+    private function _initSessionId()
+    {
+        $accessToken = $this->requestReturnData();
+        if (IS_CLIENT !== FALSE) {
+            session_id($accessToken);
+        }
+    }
 
+
+    /**
+     *
+     */
     protected function _init()
     {
 
-        $accessToken = $this->requestReturnData();
 
-        // 如果有设置Session数据库缓存,否则开启Session
-        if (empty($this->configSession ['session'])) {
-            if (IS_CLIENT !== FALSE) {
-                session_id($accessToken);
-            }
-            session_start();
-
-            return;
-        }
         /**
          * [S]开始session*
          */
-        $this->model = M($this->configSession ['model']);
-        $this->model->setConfigSession($this->configSession);
-
-
+        //$this->model = M($this->configSession ['model']);
+        //$this->model->setConfigSession($this->configSession);
+        
         //设置色session id的名字
         ini_set('session.name', $this->configSession ['sessionName']);
+
         //不使用 GET/POST 变量方式
         //  ini_set('session.use_trans_sid',0);
         //设置垃圾回收最大生存时间
@@ -207,6 +208,20 @@ class ASession extends AppBase
         //多主机共享保存 SESSION ID 的 COOKIE,注意此处域名为一级域名
         ini_set('session.cookie_domain', $this->configSession['domain']);
         ini_set('session.cookie_lifetime', $this->configSession['lifetime']);
+
+
+        //初始化Session Id
+        if (IS_CLIENT !== FALSE) {
+            $this->_initSessionId();
+        }
+
+        // 如果有设置Session数据库缓存,否则开启Session
+        if (empty($this->configSession ['session'])) {
+
+            session_start();
+            return;
+        }
+
         //将 session.save_handler 设置为 user，而不是默认的 files
         session_module_name('user');
         //$session = $this;

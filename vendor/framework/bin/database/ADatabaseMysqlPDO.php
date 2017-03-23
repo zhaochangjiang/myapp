@@ -124,7 +124,7 @@ class ADatabaseMysqlPDO implements ADatabase
         }
         try {
 
-            $dsn = 'mysql:host=' . self::$config['host'] . (empty(self::$config['port']) ? '' : ':' . self::$config['port']) . ';dbname=' . self::$config['dbname'];
+            $dsn = 'mysql:host=' . self::$config['host'] . (empty(self::$config['port']) ? '' : ':' . self::$config['port']) . ';dbname=' . self::$config['dbName'];
             self::$link = new PDO($dsn, self::$config['user'], self::$config['password'], self::$config['params']);
         } catch (PDOException $e) {
             throw new Exception('PDO CONNECT ERROR:' . $e->getMessage());

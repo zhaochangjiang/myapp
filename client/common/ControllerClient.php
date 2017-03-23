@@ -7,12 +7,6 @@ use framework\bin\dataFormat\ResultClient;
 use framework\bin\utils\ADesEncrypt;
 use framework\bin\dataFormat\ErrorCode;
 
-/*
-   * To change this license header, choose License Headers in Project Properties.
-   * To change this template file, choose Tools | Templates
-   * and open the template in the editor.
-   */
-
 /**
  * Description of ClientController
  *
@@ -55,13 +49,14 @@ class ControllerClient extends AController
         $token = $this->accessToken($sessionId);
 
         if (empty($this->params['accessToken'])) {
-            ErrorCode::$ERRORACCESSTOKEN['message'] = $token;
 
-            $this->result->setResult(ErrorCode::$ERRORACCESSTOKEN);
-
+            $returnData = ErrorCode::$ERRORACCESSTOKEN;
+            $returnData['code'] = $sessionId;
+            $this->result->setResult($returnData);
             $this->output($this->result);
             return;
         }
+
         if ($token !== $this->params['accessToken']) {
 
             $this->result->setResult(ErrorCode::$ERRORACCESSTOKENERROR);
