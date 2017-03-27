@@ -8,18 +8,57 @@
 
 namespace framework\bin\http;
 
+use framework\bin\dataFormat\ErrorCode;
+
 class ARequestParameter
 {
-    private $post;
-    private $get;
-    private $request;
+    private static $post;
+    private static $get;
+    private static $request;
+    private static $session;
     private static $_self;
+    private static $server;
 
     private function __construct()
     {
+        $this->setGet($_GET);
 
+        $this->setPost($_POST);
+        $this->setRequest($_REQUEST);
+        $this->setServer($_SERVER);
+
+        //清空系统函数
+        $_GET = null;
+        $_POST = null;
+        $_REQUEST = null;
+        $_SERVER = null;
     }
 
+    /**
+     * @return mixed
+     */
+    public static function getServer()
+    {
+        return self::$server;
+    }
+
+    /**
+     * @param mixed $server
+     */
+    public static function setServer($server)
+    {
+        self::$server = $server;
+    }
+
+
+    /**
+     * 单次请求的参数单例模式
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     * @return ARequestParameter *
+     */
     public static function getSingleton()
     {
         if (null === self::$_self) {
@@ -33,7 +72,7 @@ class ARequestParameter
      */
     public function getPost()
     {
-        return $this->post;
+        return self::$post;
     }
 
     /**
@@ -41,7 +80,7 @@ class ARequestParameter
      */
     public function setPost($post)
     {
-        $this->post = $post;
+        self::$post = $post;
     }
 
     /**
@@ -51,9 +90,9 @@ class ARequestParameter
     public function getGet($key = '')
     {
         if (!empty($key)) {
-            return isset($this->get[$key]) ? $this->get[$key] : '';
+            return isset(self::$get[$key]) ? self::$get[$key] : '';
         }
-        return $this->get;
+        return self::$get;
     }
 
     /**
@@ -61,7 +100,24 @@ class ARequestParameter
      */
     public function setGet($get)
     {
-        $this->get = $get;
+        self::$get = $get;
+    }
+
+    public function getRequestByKey($key)
+    {
+        if (!isset(self::$request[$key])) {
+            throw new RuntimeException('The $_REQUEST is not exists by key "' . $key . '"', ErrorCode::$PARAMETER_ERROR['message']);
+        }
+        return self::$request[$key];
+    }
+
+
+    public function getServerByKey($key)
+    {
+        if (!isset(self::$server[$key])) {
+            throw new RuntimeException('The $_SERVER is not exists by key "' . $key . '"', ErrorCode::$PARAMETER_ERROR['message']);
+        }
+        return self::$server[$key];
     }
 
     /**
@@ -69,7 +125,8 @@ class ARequestParameter
      */
     public function getRequest()
     {
-        return $this->request;
+
+        return self::$request;
     }
 
     /**
@@ -77,7 +134,7 @@ class ARequestParameter
      */
     public function setRequest($request)
     {
-        $this->request = $request;
+        self::$request = $request;
     }
 
 

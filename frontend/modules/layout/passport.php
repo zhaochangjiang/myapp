@@ -25,10 +25,7 @@ use framework\App;
 <body>
 <section class="body-sign">
     <div class="center-sign">
-        <a href="/" class="logo pull-left">
-            <img title="去首页" src="<?php echo DataManager::getLogoUrl(); ?>" height="54"
-                 alt="<?php App::$app->params['sitename'] ?>"/>
-        </a>
+
         <?php $this->getTemplateContent(); ?>
         <p class="text-center text-muted mt-md mb-md"><?php echo DataManager::getCopyRight(); ?></p>
     </div>

@@ -46,8 +46,7 @@ class ControllerPassport extends ControllerFrontend
     {
 
         $this->data['goto'] = base64_decode($this->params['goto']);
-        $result = parent::httpConnectionByBase(
-            array('Passport', 'iFrameRegister'), array(), $this->params);
+        $result = parent::httpConnectionByBase(['Passport', 'iFrameRegister'], [], $this->params);
         $resultData = FrontendResultContent::getInstanceAnother();
 
         $jsString = '';

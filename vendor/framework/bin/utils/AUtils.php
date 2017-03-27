@@ -1,6 +1,7 @@
 <?php
 
 namespace framework\bin\utils;
+use framework\bin\http\ARequestParameter;
 
 /**
  * Description of AUtils
@@ -15,47 +16,6 @@ class AUtils
      * @var type
      */
     static $nowUrl;
-
-//    /**
-//     * 切割字符串函数，主要用于页面显示列表
-//     * @author karl.zhao<zhaocj2009@hotmail.com>
-//     * @Date: ${DATE}
-//     * @Time: ${TIME}
-//     * * @param $str
-//     * @param $len
-//     * @param string $dot
-//     * @return string *
-//     */
-//    public static function zhcut($str, $len, $dot = "")
-//    {
-//        if ($len == 0) {
-//            return $str;
-//        }
-//        $olen = strlen($str);
-//        if ($olen == 0) {
-//            return "";
-//        }
-//        $len *= 2;
-//        $count = 0;
-//        for ($i = 0; $i < $olen; $i++) {
-//            $value = ord($str [$i]);
-//            if ($value > 127) {
-//                if ($value >= 192 && $value <= 223) {
-//                    $i++;
-//                }
-//                if ($value >= 224 && $value <= 239) {
-//                    $i += 2;
-//                }
-//                $count++;
-//            }
-//            $count++;
-//            if ($count >= $len) {
-//                break;
-//            }
-//        }
-//        $bk = substr($str, 0, $i + 1);
-//        return $bk == $str ? $bk : $bk . $dot;
-//    }
 
     /**
      * 切割字符串函数，主要用于页面显示列表
@@ -118,6 +78,11 @@ class AUtils
         return $result;
     }
 
+    public static function getARequestParameter()
+    {
+        return ARequestParameter::getSingleton();
+    }
+
     /**
      * 获得网站的URL地址
      *
@@ -125,7 +90,8 @@ class AUtils
      */
     public static function baseUrl()
     {
-        return self::getDomain() . substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
+        $server = self::getARequestParameter()->getServer();
+        return self::getDomain() . substr($server['PHP_SELF'], 0, strrpos($server['PHP_SELF'], '/'));
     }
 
     /**
@@ -169,12 +135,12 @@ class AUtils
      */
     public static function currentUrl()
     {
-        // global $baseurl;
+        $server = self::getARequestParameter()->getServer();
         if (empty($baseurl)) {
-            $php_self = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
-            $path_info = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
-            $relate_url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
-            $baseurl = (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://') . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '') . $relate_url;
+            $php_self = $server['PHP_SELF'] ? $server['PHP_SELF'] : $server['SCRIPT_NAME'];
+            $path_info = isset($server['PATH_INFO']) ? $server['PATH_INFO'] : '';
+            $relate_url = isset($server['REQUEST_URI']) ? $server['REQUEST_URI'] : $php_self . (isset($server['QUERY_STRING']) ? '?' . $server['QUERY_STRING'] : $path_info);
+            $baseurl = (isset($server['SERVER_PORT']) && $server['SERVER_PORT'] == '443' ? 'https://' : 'http://') . (isset($server['HTTP_HOST']) ? $server['HTTP_HOST'] : '') . $relate_url;
         }
         return $baseurl;
     }
@@ -281,12 +247,14 @@ class AUtils
      */
     public static function getRealIp()
     {
+        $server = self::getARequestParameter()->getServer();
+
         $ip = false;
-        if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
-            $ip = $_SERVER["HTTP_CLIENT_IP"];
+        if (!empty($server["HTTP_CLIENT_IP"])) {
+            $ip = $server["HTTP_CLIENT_IP"];
         }
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ips = explode(", ", $_SERVER['HTTP_X_FORWARDED_FOR']);
+        if (!empty($server['HTTP_X_FORWARDED_FOR'])) {
+            $ips = explode(", ", $server['HTTP_X_FORWARDED_FOR']);
             if ($ip) {
                 array_unshift($ips, $ip);
                 $ip = FALSE;
@@ -308,18 +276,19 @@ class AUtils
      */
     public static function getDomain()
     {
+        $server = ARequestParameter::getSingleton()->getServer();
         /* 协议 */
-        $protocol = (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+        $protocol = (isset($server['HTTPS']) && (strtolower($server['HTTPS']) != 'off')) ? 'https://' : 'http://';
 
         /* 域名或IP地址 */
-        if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-            $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
-        } elseif (isset($_SERVER['HTTP_HOST'])) {
-            $host = $_SERVER['HTTP_HOST'];
+        if (isset($server['HTTP_X_FORWARDED_HOST'])) {
+            $host = $server['HTTP_X_FORWARDED_HOST'];
+        } elseif (isset($server['HTTP_HOST'])) {
+            $host = $server['HTTP_HOST'];
         } else {
             /* 端口 */
-            if (isset($_SERVER['SERVER_PORT'])) {
-                $port = ':' . $_SERVER['SERVER_PORT'];
+            if (isset($server['SERVER_PORT'])) {
+                $port = ':' . $server['SERVER_PORT'];
 
                 if ((':80' == $port && 'http://' == $protocol) || (':443' == $port && 'https://' == $protocol)) {
                     $port = '';
@@ -328,10 +297,10 @@ class AUtils
                 $port = '';
             }
 
-            if (isset($_SERVER['SERVER_NAME'])) {
-                $host = $_SERVER['SERVER_NAME'] . $port;
-            } elseif (isset($_SERVER['SERVER_ADDR'])) {
-                $host = $_SERVER['SERVER_ADDR'] . $port;
+            if (isset($server['SERVER_NAME'])) {
+                $host = $server['SERVER_NAME'] . $port;
+            } elseif (isset($server['SERVER_ADDR'])) {
+                $host = $server['SERVER_ADDR'] . $port;
             }
         }
 

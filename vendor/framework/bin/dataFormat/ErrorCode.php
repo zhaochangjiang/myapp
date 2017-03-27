@@ -13,6 +13,11 @@ class ErrorCode
     public $code = 0;
     public $message = '';
     public $data = null;
+    public static $PARAMETER_ERROR = array(
+        'code' => '201',
+        'message' => '参数错误！',
+        'data' => ' parameter is permit null!',
+    );
     public static $USERNAMENOTNULL = array(
         'code' => '201',
         'message' => '请输入用户名！',
@@ -38,12 +43,12 @@ class ErrorCode
         'message' => '操作成功！',
         'data' => ' operate success',
     );
-    public static $ERRORACCESSTOKEN = array(
+    public static $ACCESS_TOKEN_NULL = array(
         'code' => '100',
         'message' => 'access_token is null',
         'data' => ' access_token is null',
     );
-    public static $ERRORACCESSTOKENERROR = array(
+    public static $ACCESS_TOKEN_ERROR = array(
         'code' => '101',
         'message' => 'access_token is error',
         'data' => ' access_token is error',

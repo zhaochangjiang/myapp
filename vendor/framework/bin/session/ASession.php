@@ -6,6 +6,7 @@ use framework\bin\dataFormat\AReturn;
 use framework\bin\base\AppBase;
 use framework\bin\dataFormat\ErrorCode;
 use framework\bin\http\ARequestParameter;
+use framework\bin\utils\ADesEncrypt;
 
 
 /**
@@ -173,14 +174,6 @@ class ASession extends AppBase
         return true;
     }
 
-    private function _initSessionId()
-    {
-        $accessToken = $this->requestReturnData();
-        if (IS_CLIENT !== FALSE) {
-            session_id($accessToken);
-        }
-    }
-
 
     /**
      *
@@ -188,15 +181,14 @@ class ASession extends AppBase
     protected function _init()
     {
 
-
         /**
          * [S]开始session*
          */
         //$this->model = M($this->configSession ['model']);
         //$this->model->setConfigSession($this->configSession);
-        
+
         //设置色session id的名字
-        ini_set('session.name', $this->configSession ['sessionName']);
+        ini_set('session.name', empty($this->configSession ['sessionName']) ? 'sid' : $this->configSession ['sessionName']);
 
         //不使用 GET/POST 变量方式
         //  ini_set('session.use_trans_sid',0);
@@ -205,20 +197,16 @@ class ASession extends AppBase
         //使用 COOKIE 保存 SESSION ID 的方式
         ini_set('session.use_cookies', 1);
         ini_set('session.cookie_path', '/');
+
         //多主机共享保存 SESSION ID 的 COOKIE,注意此处域名为一级域名
-        ini_set('session.cookie_domain', $this->configSession['domain']);
-        ini_set('session.cookie_lifetime', $this->configSession['lifetime']);
+        ini_set('session.cookie_domain', empty($this->configSession['domain']) ? ARequestParameter::getSingleton()->getServerByKey('HTTP_HOST') : $this->configSession['domain']);
+        ini_set('session.cookie_lifetime', empty($this->configSession['lifetime']) ? 1800 : $this->configSession['lifetime']);
 
-
-        //初始化Session Id
-        if (IS_CLIENT !== FALSE) {
-            $this->_initSessionId();
-        }
 
         // 如果有设置Session数据库缓存,否则开启Session
         if (empty($this->configSession ['session'])) {
-
-            session_start();
+            //开始会话
+            $this->sessionStart();
             return;
         }
 
@@ -233,35 +221,74 @@ class ASession extends AppBase
             [self, 'session_destroy'],
             [self, 'session_gc']
         );
+
+        //开始会话
+        $this->sessionStart();
+
+    }
+
+    private function sessionStart()
+    {
         session_start();
+
+        //初始化Session Id
+        if (IS_CLIENT !== FALSE) {
+
+            $this->requestReturnData();
+        }
     }
 
     /**
      *
      * @return string
      */
-    public function getAccessToken()
-    {
-        return md5(TOKEN . session_id());
-    }
+//    public function getAccessToken()
+//    {
+//        return md5(TOKEN . session_id());
+//    }
 
     /**
      * @return mixed|string
      */
     public function requestReturnData()
     {
+        //如果不是接口调试
         if (IS_CLIENT === false) {
             return '';
         }
-        $accessToken = ARequestParameter::getSingleton()->getGet('accessToken');;
+
+
+        $request = ARequestParameter::getSingleton();
+
+        $accessToken = $request->getRequestByKey('accessToken');;
         if (empty($accessToken)) {
 
             $return = new AReturn();
-            $return->setResult(ErrorCode::$ERRORACCESSTOKEN);
-            $return->setData($this->getAccessToken());
+            $return->setResult(ErrorCode::$ACCESS_TOKEN_NULL);
+            $return->setMessage("this error is at line:" . __LINE__ . ", in file:" . __FILE__ . ',the $_Request content is  :'
+                . PHP_EOL . '--------------------------' . PHP_EOL . var_export($request->getRequest(), true)
+                . PHP_EOL . '--------------------------' . PHP
+            );
             die(json_encode($return));
         }
-        return $accessToken;
+
+        $sid = session_id();
+        //检测令牌是否错误
+        $token = ADesEncrypt::encrypt($sid);
+        if ($accessToken !== $token) {
+            $return = new AReturn();
+            $return->setResult(ErrorCode::$ACCESS_TOKEN_ERROR);
+            $return->setMessage("[MESSAGE]this error is at line:" . __LINE__ . ", in file:" . __FILE__ . ',the $_Request content is  :'
+                . PHP_EOL . '--------------------------' . PHP_EOL . var_export($request->getRequest(), true)
+                . PHP_EOL . '--------------------------'
+                . PHP_EOL . '[ACCESS_TOKEN]:' . var_export($accessToken, true)
+                . PHP_EOL . '[ENCRYPT_TOKEN]:' . $token
+                . PHP_EOL . '[SESSION_ID]:' . $sid
+
+            );
+            die(json_encode($return));
+        }
+        return '';
     }
 
     /**

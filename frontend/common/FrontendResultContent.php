@@ -2,12 +2,12 @@
 
 namespace frontend\common;
 
-use framework\bin\dataFormat\ResultClient;
+use framework\bin\dataFormat\AReturn;
 
 /**
  * IFRAME页面输出结果格式
  */
-class FrontendResultContent extends ResultClient
+class FrontendResultContent extends AReturn
 {
 
     var $javascriptContent = '';

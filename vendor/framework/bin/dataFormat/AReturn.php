@@ -12,9 +12,8 @@ class AReturn
 {
 
     public $code = 200;//返回的状态码 (建议:尽量不要用0表示，因为PHP对于0 空字符串 null区分的问题)
-    public $message = '';//中文描述
     public $data = null;//返回的数据
-
+    public $message = '';//中文描述
     /**
      * @return int
      */

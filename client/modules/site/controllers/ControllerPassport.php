@@ -40,6 +40,27 @@ class ControllerPassport extends ControllerClient
     }
 
     /**
+     * 登录功能参数过滤
+     * @author karl.zhao<zhaocj2009@hotmail.com>
+     * @Date: ${DATE}
+     * @Time: ${TIME}
+     *
+     */
+    private function _filterIFrameLogin()
+    {
+        if (empty($this->params['username'])) {
+            $this->result->setResult(ErrorCode::$USERNAMENOTNULL);
+        }
+
+        if (empty($this->params['password'])) {
+            $this->result->setResult(ErrorCode::$PASSWORDNOTNULL);
+        }
+        if (201 == (int)$this->result->getCode()) {
+            $this->outPut($this->result);
+        }
+    }
+
+    /**
      * 登录表单提交页面
      * @author Karl.zhao<zhaocj2009@126.com>
      * @since 2016/09/20
@@ -48,17 +69,9 @@ class ControllerPassport extends ControllerClient
     public function actionIFrameLogin()
     {
 
-        if (empty($this->params['username'])) {
-            $this->result->setResult(ErrorCode::$USERNAMENOTNULL);
-        }
+        //参数条件过滤
+        $this->_filterIFrameLogin();
 
-        if (empty($this->params['password'])) {
-            $this->result->setResult(ErrorCode::$PASSWORDNOTNULL);
-        }
-
-        if (201 == (int)$this->result->getCode()) {
-            $this->outPut($this->result);
-        }
         $userMainModel = new UserMainModel();
         $this->outPut($userMainModel->login($this->params));
     }

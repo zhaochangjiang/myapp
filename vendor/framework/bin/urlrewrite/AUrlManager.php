@@ -10,6 +10,7 @@ namespace framework\bin\urlRewrite;
 
 use framework\bin\base\AppBase;
 use framework\bin\base\AController;
+use framework\bin\http\ARequestParameter;
 
 //use framework\bin\utils\AUtils;
 
@@ -66,7 +67,8 @@ class AUrlManager extends AppBase
 
     public static function getInstance()
     {
-        return new self();
+        $aUrlManager = new self();
+        return $aUrlManager;
     }
 
     /**
@@ -97,12 +99,13 @@ class AUrlManager extends AppBase
     {
         // 获得当前请求动作是什么
         $controller = new AController();
+        $server = ARequestParameter::getSingleton()->getServer();
 
         //如果是URL重写的请求
         if ($this->rewriteMod) {
-            $dirScriptName = dirname($_SERVER['SCRIPT_NAME']);
+            $dirScriptName = dirname($server['SCRIPT_NAME']);
 
-            $baseName = ltrim(substr($_SERVER['REQUEST_URI'], strlen($dirScriptName)), '/');
+            $baseName = ltrim(substr($server['REQUEST_URI'], strlen($dirScriptName)), '/');
 
             if (stripos($baseName, '?') !== false) {
                 $baseName = substr($baseName, 0, stripos($baseName, '?'));
@@ -124,6 +127,7 @@ class AUrlManager extends AppBase
         } else {
             $this->moduleAction = $controller->getInput('r');
         }
+
     }
 
     /**

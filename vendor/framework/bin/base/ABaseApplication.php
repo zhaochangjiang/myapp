@@ -489,25 +489,7 @@ class ABaseApplication extends AppBase
     }
 
 
-    /**
-     * 或得本机的IP地址
-     */
-    public static function getServerIp()
-    {
-        $ip = $_SERVER['SERVER_ADDR'];
-        if (isset($_SERVER['SERVER_ADDR'])) {//如果有针对本机的私有配置
-            if (in_array($_SERVER['SERVER_ADDR'], array(
-                '::1',
-                '127.0.0.1',
-                'localhost'))) {//如果是测试环境
-                $ip = '127.0.0.1';
-            }
-        } else {//指定本机的IP地址，以便于能够运行命令行下的 PHP脚本
-            $temp = require_once DIR_SERVER . 'ip_address.php';
-            $ip = $temp['private'];
-        }
-        return $ip;
-    }
+
 
     /**
      * 当前代码部署的服务器机房,保留方法

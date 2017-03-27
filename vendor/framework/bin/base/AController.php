@@ -239,7 +239,7 @@ class AController extends ABaseController
         }
     }
 
-// __get()方法用来获取私有属性
+    // __get()方法用来获取私有属性
     public function __get($property)
     {
         if (isset($this->$property))
@@ -309,7 +309,7 @@ class AController extends ABaseController
         $aCurlManager = new ACurlManager();
         $url = $this->createUrl($moduleAction, $gets, App::$app->parameters->domain['client']);
 
-        return $aCurlManager->httpConnectionByUrl($url, $posts);
+        return $aCurlManager->httpConnection($url, $posts);
     }
 
     /**
@@ -609,7 +609,9 @@ class AController extends ABaseController
     protected function file_merger($arrFile, $outName, $cache = false)
     {
         $url = AUtils::baseUrl() . '/source/'; //静态资源url地址，根据自己的情况修改
+
         $static = App::getBasePath() . '/source/'; //静态资源在服务器上的存储路径，根据自己的情况修改
+
         if (substr($arrFile[0], -2) == 'js') {
             $type = 'js';
         } elseif (substr($arrFile[0], -3) == 'css') {
@@ -618,7 +620,9 @@ class AController extends ABaseController
 
         $dir = "{$static}{$type}/"; //合成文件在服务器上的存储路径，根据自己的情况修改
         $return = "{$url}{$type}/{$outName}";
-        $out = "{$dir}{$outName}"; //
+        $out = "{$dir}{$outName}";
+
+        //
         //$time   = $_SERVER['REQUEST_TIME'];
         //当文件不存在,或者调试模式,就执行下边的程序
         //调试模式,按常规加载js,css
@@ -647,6 +651,7 @@ class AController extends ABaseController
                     break;
             }
         } else {
+
             switch ($type) {
                 case 'js':
                     return "<script type=\"text/javascript\" src=\"{$return}?v=" . App::$app->parameters->version . "\"></script>\n";
@@ -846,7 +851,6 @@ class AController extends ABaseController
         }
         return $data;
     }
-
 
 
     /**

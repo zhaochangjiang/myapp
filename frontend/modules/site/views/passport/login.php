@@ -2,6 +2,7 @@
 
 use communal\common\UtilsFormFormat;
 
+use framework\App;
 ?>
 <script type="text/javascript">
     function hideOrShowSubmitButton(o1) {
@@ -83,11 +84,15 @@ use communal\common\UtilsFormFormat;
             <a class="btn btn-twitter mb-md ml-xs mr-xs">Connect with <i class="fa fa-twitter"></i></a>
         </div>
         -->
-        <p class="text-center">还没有账号? <a href="<?php
+        <p class="text-center">
+            <a href="<?php echo $this->createUrl([], [], App::$app->parameters->domain['web']); ?>">首页</a>
+
+            还没有账号? <a href="<?php
             echo $this->createUrl(array($this->controllerString, 'register', $this->moduleString)
                 , array(
                     'goto' => $this->data['goto']));
-            ?>">注册</a></p>
+            ?>">注册</a>
+        </p>
         <?php echo UtilsFormFormat::close(); ?>
     </div>
 </div>

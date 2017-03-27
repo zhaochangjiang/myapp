@@ -3,7 +3,7 @@
 namespace client\common;
 
 use framework\bin\base\AController;
-use framework\bin\dataFormat\ResultClient;
+use framework\bin\dataFormat\AReturn;
 use framework\bin\utils\ADesEncrypt;
 use framework\bin\dataFormat\ErrorCode;
 
@@ -31,7 +31,7 @@ class ControllerClient extends AController
     {
 
         parent::init();
-        $this->result = new ResultClient();
+        $this->result = new AReturn();
 
         //校验令牌
         $this->authAccessToken();
