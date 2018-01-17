@@ -6,7 +6,7 @@ use framework\bin\http\ARequest;
 use framework\bin\http\AResponse;
 use framework\App;
 use framework\bin\database\ADBException;
-use Exception;
+use \Exception;
 
 /**
  * 错误异常处理
@@ -36,7 +36,7 @@ class AErrorHandler
 
     public function __construct()
     {
-        $this->request = new ARequest();
+        $this->request  = new ARequest();
         $this->response = new AResponse();
     }
 
@@ -45,13 +45,13 @@ class AErrorHandler
      * @param Exception $exception 捕获异常
      */
 
-    public function handleException(Exception $exception)
+    public function handleException($exception)
     {
 
         $trace = array_slice($exception->getTrace(), 0, 5);
 
         //$trace = $this->getExactTrace($exception);
-        $fileName = $exception->getFile();
+        $fileName  = $exception->getFile();
         $errorLine = $exception->getLine();
 
         foreach ((array)$trace as $i => $t) {
@@ -68,14 +68,14 @@ class AErrorHandler
         }
 
         $data = array(
-            'code' => ($exception instanceof AHttpException) ? $exception->getStatusCode() : 500,
-            'type' => get_class($exception),
+            'code'      => ($exception instanceof AHttpException) ? $exception->getStatusCode() : 500,
+            'type'      => get_class($exception),
             'errorCode' => $exception->getCode(),
-            'message' => $exception->getMessage(),
-            'file' => $fileName,
-            'line' => $errorLine,
-            'trace' => $exception->getTraceAsString(),
-            'traces' => $trace,
+            'message'   => $exception->getMessage(),
+            'file'      => $fileName,
+            'line'      => $errorLine,
+            'trace'     => $exception->getTraceAsString(),
+            'traces'    => $trace,
         );
 
         if (!headers_sent()) {
@@ -155,14 +155,14 @@ class AErrorHandler
                     }
 
                     $data = array(
-                        'code' => 500,
-                        'type' => $type,
+                        'code'    => 500,
+                        'type'    => $type,
                         'message' => $message,
-                        'file' => $file,
-                        'line' => $line,
-                        'trace' => $traceString,
-                        'traces' => $trace,
-                        'time' => time()
+                        'file'    => $file,
+                        'line'    => $line,
+                        'trace'   => $traceString,
+                        'traces'  => $trace,
+                        'time'    => time()
                     );
 
                     if (!headers_sent())
@@ -283,9 +283,9 @@ class AErrorHandler
 
         // additional information to be passed to view
         $data['version'] = $this->getVersionInfo();
-        $data['time'] = time();
+        $data['time']    = time();
         if ($view == 'error') {
-            $view = 'error' . $data['code'];
+            $view            = 'error' . $data['code'];
             $data['version'] = '';
         }
 
@@ -296,7 +296,7 @@ class AErrorHandler
         if (file_exists($templateFile)) {
             App::$app->controller->loadViewCell('error/' . $view);
         } else {
-            $path = $this->getSystemViewPath() . DIRECTORY_SEPARATOR . $view . '.php';
+            $path          = $this->getSystemViewPath() . DIRECTORY_SEPARATOR . $view . '.php';
             $data['admin'] = '';
             include_once($path);
         }
@@ -434,15 +434,15 @@ class AErrorHandler
         if ($errorLine < 0 || ($lines = @file($file)) === false || ($lineCount = count($lines)) <= $errorLine)
             return '';
 
-        $halfLines = (int)($maxLines / 2);
-        $beginLine = $errorLine - $halfLines > 0 ? $errorLine - $halfLines : 0;
-        $endLine = $errorLine + $halfLines < $lineCount ? $errorLine + $halfLines : $lineCount - 1;
+        $halfLines       = (int)($maxLines / 2);
+        $beginLine       = $errorLine - $halfLines > 0 ? $errorLine - $halfLines : 0;
+        $endLine         = $errorLine + $halfLines < $lineCount ? $errorLine + $halfLines : $lineCount - 1;
         $lineNumberWidth = strlen($endLine + 1);
 
         $output = '';
         for ($i = $beginLine; $i <= $endLine; ++$i) {
             $isErrorLine = $i === $errorLine;
-            $code = sprintf("<span class=\"ln" . ($isErrorLine ? ' error-ln' : '') . "\">%0{$lineNumberWidth}d</span> %s", $i + 1, str_replace("\t", '    ', $lines[$i]));
+            $code        = sprintf("<span class=\"ln" . ($isErrorLine ? ' error-ln' : '') . "\">%0{$lineNumberWidth}d</span> %s", $i + 1, str_replace("\t", '    ', $lines[$i]));
             if (!$isErrorLine)
                 $output .= $code;
             else

@@ -1,19 +1,22 @@
 <?php
 
+define('DOMAIN', 'http://' . $_SERVER['HTTP_HOST']);
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 return array(
-    'version' => '1.0',
+
     'parameters' => array(
+        'version'  => '1.0',
         'siteName' => '掘囤网',
-        'domain' => array(
-            'userProfile' => 'http://user.fanghuiju.com',
-            'dashboard' => 'http://dashboard.fanghuiju.com',
-            'web' => 'http://www.fanghuiju.com',
-            'client' => 'http://client.fanghuiju.com'
+        'domain'   => array(
+            'userProfile' => DOMAIN . '/frontend/web',
+            'dashboard'   => DOMAIN . '/backend/web',
+            'web'         => DOMAIN . '/frontend/web',
+            'client'      => DOMAIN . '/client/web'
         )
     ),
     'database' => array(
@@ -23,7 +26,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'user_',
-            'dbName' => 'juetun_user',
+            'dbName' => 'baopou_user',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
         'admin' => array(
@@ -32,7 +35,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'admin_',
-            'dbName' => 'juetun_admin',
+            'dbName' => 'baopou_admin',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
         'data' => array(
@@ -41,7 +44,7 @@ return array(
             'user' => 'root',
             'password' => '123456',
             'prefix' => 'data_',
-            'dbName' => 'juetun_data',
+            'dbName' => 'baopou_data',
             'DATABASE_TYPE' => 'MysqlPDO'
         ),
     )

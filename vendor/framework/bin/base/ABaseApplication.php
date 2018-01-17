@@ -72,7 +72,7 @@ class ABaseApplication extends AppBase
     protected static $defaultClassMap = array(
 
         //默认实例化的Session对象
-        'session' => 'framework\bin\session\ASession',
+        'session'    => 'framework\bin\session\ASession',
 
         //默认实例化的URL重写对象
         'urlManager' => 'framework\bin\urlRewrite\AUrlManager',
@@ -118,7 +118,7 @@ class ABaseApplication extends AppBase
     public static function getEnvironment()
     {
         $envString = 'DEV';
-        $envIni = get_cfg_var('enviorment');
+        $envIni    = get_cfg_var('enviorment');
         if ($envIni) {
             $envString = $envIni;
         }
@@ -133,8 +133,8 @@ class ABaseApplication extends AppBase
     {
 
         //获得类的私的属性
-        $reflectionClass = new ReflectionClass(__CLASS__);
-        $properties = $reflectionClass->getProperties();
+        $reflectionClass  = new ReflectionClass(__CLASS__);
+        $properties       = $reflectionClass->getProperties();
         $staticProperties = array_keys($reflectionClass->getStaticProperties());
 
         //只是实例化非Static属性
@@ -146,7 +146,7 @@ class ABaseApplication extends AppBase
 
             $this->_initObject($propertyName);
         }
-        $this->setBasePath();
+        $this->setBasePath(DIR_SERVER);
         return $this;
     }
 
@@ -362,6 +362,7 @@ class ABaseApplication extends AppBase
             throw new RuntimeException("{$path} is not a directory! the Error is at line:" .
                 __LINE__ . ', in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
+        self::$_basePath = $path;
     }
 
 
@@ -411,7 +412,7 @@ class ABaseApplication extends AppBase
     public function getDirectoryByNamespace($alias)
     {
         $namespaceString = explode('/', str_replace('\\', '/', ltrim($alias, '@')));
-        $nameSpacePath = array_shift($namespaceString);
+        $nameSpacePath   = array_shift($namespaceString);
 
         if (!isset(self::$nameSpacePathMap['@' . $nameSpacePath])) {
             self::setNameSpacePathMap($nameSpacePath);
@@ -437,7 +438,7 @@ class ABaseApplication extends AppBase
         }
 
         $namespaceDividString = explode('/', str_replace('\\', '/', $className));
-        $classNameBase = array_pop($namespaceDividString);
+        $classNameBase        = array_pop($namespaceDividString);
 
         if (count($namespaceDividString) < 1) {
             return $flag;
@@ -487,8 +488,6 @@ class ABaseApplication extends AppBase
     {
         return 'action' . ucfirst($method);
     }
-
-
 
 
     /**
