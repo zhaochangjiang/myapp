@@ -1,7 +1,7 @@
 <?php
 
 use backend\common\Pager;
-
+use framework\bin\utils\AUtils;
 //权限验证准备  
 $permitDelete = $this->havePermit(array(
     $this->controllerString,
@@ -70,7 +70,7 @@ $permitHaveopertate = $permitEdit;
                                     $this->moduleString)
                                 , array(
                                 'id' => $value['id']
-                            )) . '\',\'' . currentUrl() . '\');return;" href="javascript:;">删除</a></td>';
+                            )) . '\',\'' . AUtils::currentUrl() . '\');return;" href="javascript:;">删除</a></td>';
                     }
                     echo '<td  class="text-center" >' . $this->outputHtml($value['name'], '-') . '</td>';
 
@@ -127,7 +127,7 @@ $permitHaveopertate = $permitEdit;
             $this->moduleString), array(
             'type' => 'add',
             'uppid' => $this->params['id'],
-            'goto' => base64_encode(currentUrl())
+            'goto' => base64_encode(AUtils::currentUrl())
         ));
         ?>">添加</a>
     <?php endif; ?>

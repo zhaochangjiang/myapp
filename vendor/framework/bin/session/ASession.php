@@ -1,4 +1,5 @@
 <?php
+
 namespace framework\bin\session;
 
 use client\common\ClientResultData;
@@ -86,7 +87,7 @@ class ASession extends AppBase
      */
     public static function setSession($key, $value)
     {
-        $session = self::getSession();
+        $session       = self::getSession();
         $session[$key] = $value;
         self::setSessionArray($session);
 
@@ -129,10 +130,10 @@ class ASession extends AppBase
     function session_write($key, $value)
     {
         $feild = array(
-            'sid' => $key,
+            'sid'    => $key,
             'expire' => TIMESTAMP,
-            'ip' => getRealIp(),
-            'data' => $value
+            'ip'     => getRealIp(),
+            'data'   => $value
         );
         $this->model->replaceSession($feild);
         return $value;
@@ -155,6 +156,7 @@ class ASession extends AppBase
 
     public function run()
     {
+
         $this->_init();
     }
 
@@ -169,7 +171,7 @@ class ASession extends AppBase
         $this->model->deleteBatch(array(
             'expire' => array(
                 'doType' => '<',
-                'value' => TIMESTAMP - $maxLifetime)
+                'value'  => TIMESTAMP - $maxLifetime)
         ));
         return true;
     }
@@ -188,7 +190,7 @@ class ASession extends AppBase
         //$this->model->setConfigSession($this->configSession);
 
         //设置色session id的名字
-        ini_set('session.name', empty($this->configSession ['sessionName']) ? 'sid' : $this->configSession ['sessionName']);
+        ini_set('session.name', empty($this->configSession['sessionName']) ? 'sid' : $this->configSession ['sessionName']);
 
         //不使用 GET/POST 变量方式
         //  ini_set('session.use_trans_sid',0);
@@ -197,11 +199,9 @@ class ASession extends AppBase
         //使用 COOKIE 保存 SESSION ID 的方式
         ini_set('session.use_cookies', 1);
         ini_set('session.cookie_path', '/');
-
         //多主机共享保存 SESSION ID 的 COOKIE,注意此处域名为一级域名
         ini_set('session.cookie_domain', empty($this->configSession['domain']) ? ARequestParameter::getSingleton()->getServerByKey('HTTP_HOST') : $this->configSession['domain']);
         ini_set('session.cookie_lifetime', empty($this->configSession['lifetime']) ? 1800 : $this->configSession['lifetime']);
-
 
         // 如果有设置Session数据库缓存,否则开启Session
         if (empty($this->configSession ['session'])) {
@@ -256,20 +256,15 @@ class ASession extends AppBase
         if (IS_CLIENT === false) {
             return '';
         }
-
-
-        $request = ARequestParameter::getSingleton();
-
+        $request     = ARequestParameter::getSingleton();
         $accessToken = $request->getRequestByKey('accessToken');;
         if (empty($accessToken)) {
-
             $return = new AReturn();
             $return->setResult(ErrorCode::$ACCESS_TOKEN_NULL);
-            $return->setMessage("this error is at line:" . __LINE__ . ", in file:" . __FILE__ . ',the $_Request content is  :'
-                . PHP_EOL . '--------------------------' . PHP_EOL . var_export($request->getRequest(), true)
-                . PHP_EOL . '--------------------------' . PHP
-            );
+            $return->setData(session_id());
             die(json_encode($return));
+            file_put_contents('a.txt', var_export($request->getRequest(), true));
+            exit;
         }
 
         $sid = session_id();

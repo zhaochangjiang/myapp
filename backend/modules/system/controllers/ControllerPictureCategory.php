@@ -5,6 +5,7 @@ namespace backend\modules\system\controllers;
 use backend\common\ControllerBackend;
 use backend\common\Pager;
 use communal\models\data\picture\ModelPictureCategory;
+use framework\bin\utils\AUtils;
 use frontend\common\FrontendResultContent;
 
 /**
@@ -30,7 +31,7 @@ class ControllerPictureCategory extends ControllerBackend
         $this->pageSmallTitle = '配置列表';
         $this->setBreadCrumbs(array(
             'name' => $this->pageSmallTitle,
-            'href' => currentUrl()
+            'href' => AUtils::currentUrl()
         ));
         $this->render();
     }
@@ -111,6 +112,8 @@ class ControllerPictureCategory extends ControllerBackend
 
     public function actionEdit()
     {
+
+
         $params = $this->getRequestParams();
         $this->data['goto'] = $params['goto'];
 
@@ -133,7 +136,7 @@ class ControllerPictureCategory extends ControllerBackend
             ),
             array(
                 'name' => $this->pageSmallTitle,
-                'href' => currentUrl()
+                'href' => AUtils::currentUrl()
             )
         ), true);
 

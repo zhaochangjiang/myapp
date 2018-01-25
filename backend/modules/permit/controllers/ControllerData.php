@@ -7,8 +7,10 @@ use framework\App;
 use communal\models\admin\permit\ModelPermitGroup;
 use communal\models\admin\permit\ModelPermit;
 use backend\common\Pager;
+use framework\bin\http\ARequestParameter;
 use frontend\common\FrontendResultContent;
 use Exception;
+use framework\bin\utils\AUtils;
 
 /**
  * Class ControllerData
@@ -37,9 +39,9 @@ class ControllerData extends ControllerBackend
      */
     public function actionGetchildpermit()
     {
-        $this->params = $this->getRequestParams();
+        $this->params     = $this->getRequestParams();
         $modelPermitGroup = new ModelPermitGroup();
-        $data = $modelPermitGroup->getChildList($this->params['id']);
+        $data             = $modelPermitGroup->getChildList($this->params['id']);
         echo $resultData = json_encode($data);
     }
 
@@ -51,20 +53,19 @@ class ControllerData extends ControllerBackend
      */
     public function actionList()
     {
-        $this->params = $this->getRequestParams();
+        $param       = [];
+        $param['id'] = $this->params['id'];
 
-        $permitModel = new ModelPermit();
-        $this->data['data'] = $permitModel->getList($this->params);
-        $this->data['listPermit'] = $permitModel->getListPermitDataByNowPermitId($this->params);
-
-        $this->data['pageObject'] = new Pager($this->data['data']['count']);
+        $permitModel                        = new ModelPermit();
+        $this->data['data']                 = $permitModel->getList($param);
+        $this->data['listPermit']           = $permitModel->getListPermitDataByNowPermitId($this->params);
+        $this->data['pageObject']           = new Pager($this->data['data']['count']);
         $this->data['pageObject']->pageSize = $this->data['data']['pageSize'];
-
 
         $this->pageTitle = '权限配置';
         $this->setBreadCrumbs(array(
             'name' => $this->pageTitle,
-            'href' => currentUrl()
+            'href' => AUtils::currentUrl()
         ));
         $this->render();
     }
@@ -92,23 +93,23 @@ class ControllerData extends ControllerBackend
     public function actionIframeEdit()
     {
 
-        $this->params = $this->getRequestParams();
+        $this->params          = $this->getRequestParams();
         $this->params['uppid'] = $this->dealUpPermitId($this->params['uppid']);
 
         $this->data['goto'] = base64_decode($this->params['goto']);
-        $jsString = $result = '';
+        $jsString           = $result = '';
 
-        $resultData = FrontendResultContent::getInstanceAnother();
+        $resultData  = FrontendResultContent::getInstanceAnother();
         $permitModel = new ModelPermit();
 
         $data = array(
             'uppermit_id' => (int)$this->params['uppid'],
-            'action' => $this->params['action'],
-            'controller' => $this->params['controller'],
-            'module' => $this->params['module'],
-            'csscode' => $this->params['csscode'],
-            'name' => $this->params['name'],
-            'obyid' => (int)$this->params['obyid']
+            'action'      => $this->params['action'],
+            'controller'  => $this->params['controller'],
+            'module'      => $this->params['module'],
+            'csscode'     => $this->params['csscode'],
+            'name'        => $this->params['name'],
+            'obyid'       => (int)$this->params['obyid']
         );
 
         switch ($this->params['dotype']) {
@@ -174,12 +175,12 @@ class ControllerData extends ControllerBackend
         $this->data['data'] = $permitModel->fetchOne($params);
 
         //xmp( $this->data['data'] );
-        $this->data['goto'] = $params['goto'];
-        $this->data['doType'] = $params['type'];
+        $this->data['goto']          = $params['goto'];
+        $this->data['doType']        = $params['type'];
         $this->data['data']['uppid'] = $params['uppid'];
 
 
-        $this->pageTitle = '权限配置';
+        $this->pageTitle      = '权限配置';
         $this->pageSmallTitle = '权限编辑';
         $this->setBreadCrumbs(array(
             array(
@@ -191,7 +192,7 @@ class ControllerData extends ControllerBackend
             ),
             array(
                 'name' => $this->pageSmallTitle,
-                'href' => currentUrl()
+                'href' => AUtils::currentUrl()
             )
         ), true);
         $this->render();

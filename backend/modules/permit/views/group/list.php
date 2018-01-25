@@ -2,7 +2,7 @@
 
 use backend\common\Pager;
 use backend\common\BackenBaseData;
-
+use framework\bin\utils\AUtils;
 //权限验证准备
 $permitEdit = $this->havePermit(array(
     $this->controllerString,
@@ -99,7 +99,7 @@ $permitHaveopertate = $permitEdit | $permitsSetPermit;
                                 'groupuser',
                                 $this->moduleString), array(
                                 'gid' => $value['id'],
-                                'goto' => base64_encode(currentUrl())
+                                'goto' => base64_encode(AUtils::currentUrl())
                             )) . "\">{$value['adminUserCount']}</a>" :
                             $value['adminUserCount'])) . '</td>';
                 if ($permitHaveopertate) {
@@ -142,7 +142,7 @@ $permitHaveopertate = $permitEdit | $permitsSetPermit;
                 'edit',
                 $this->moduleString), array(
                 'type' => 'add',
-                'goto' => base64_encode(currentUrl())));
+                'goto' => base64_encode(AUtils::currentUrl())));
             ?>">添加</a>
         <?php }
 

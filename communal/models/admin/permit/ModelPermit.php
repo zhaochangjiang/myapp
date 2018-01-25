@@ -50,8 +50,8 @@ class ModelPermit extends AModel
             $permit = $this->find(array(
                 'id' => $permitId));
 
-            $temp['nowId'] = $permitId;
-            $permitId = $permit['uppermit_id'];
+            $temp['nowId']      = $permitId;
+            $permitId           = $permit['uppermit_id'];
             $temp['permitList'] = $this->findAll(array(
                 'uppermit_id' => $permitId));
             array_unshift($data, $temp);
@@ -86,7 +86,7 @@ class ModelPermit extends AModel
         return $this->findAll(array(
             'id' => array(
                 'doType' => 'in',
-                'value' => $ids)));
+                'value'  => $ids)));
     }
 
     /**
@@ -103,11 +103,10 @@ class ModelPermit extends AModel
 
     public function getList($params)
     {
-
         $params['page'] = (int)$params['page'] < 1 ? 1 : (int)$params['page'];
 
         $result['pageSize'] = 15;
-        $condition = array(
+        $condition          = array(
             'uppermit_id' => 0
         );
 
@@ -116,15 +115,14 @@ class ModelPermit extends AModel
             $condition['uppermit_id'] = $params['id'];
         }
 
-        $orderBy = '';
-        $limitString = (($params['page'] - 1) * $result['pageSize']) . ',' . $result['pageSize'];
-        $groupBy = '';
-        $feild = '';
-        $temp = $this->find($condition, 'count(*) as count', $orderBy, $groupBy);
 
+        $orderBy         = '';
+        $limitString     = (($params['page'] - 1) * $result['pageSize']) . ',' . $result['pageSize'];
+        $groupBy         = '';
+        $feild           = '';
+        $temp            = $this->find($condition, 'count(*) as count', $orderBy, $groupBy);
         $result['count'] = $temp['count'];
-
-        $result['list'] = $this->leftUpandChildPermit($this->findAll($condition, $feild, $orderBy, $limitString, $groupBy));
+        $result['list']  = $this->leftUpandChildPermit($this->findAll($condition, $feild, $orderBy, $limitString, $groupBy));
         return $result;
     }
 
@@ -143,7 +141,7 @@ class ModelPermit extends AModel
 
         $permitIdArray[] = array(
             'uppermit_id' => $permit['uppermit_id'],
-            'id' => $permit['id']
+            'id'          => $permit['id']
         );
         while (true) {
             //如果上级ID为空
@@ -162,7 +160,7 @@ class ModelPermit extends AModel
             ));
 
             array_unshift($permitIdArray, array(
-                'id' => $permit['id'],
+                'id'          => $permit['id'],
                 'uppermit_id' => $permit['uppermit_id']
             ));
         }
@@ -175,16 +173,16 @@ class ModelPermit extends AModel
             );
 
             $permitIdArray[] = array(
-                'id' => $permit['id'],
+                'id'          => $permit['id'],
                 'uppermit_id' => $permit['uppermit_id']
             );
-            $permitData[] = $pData;
+            $permitData[]    = $pData;
         }
 
 
         //   stop($permitData);
         return array(
-            'permitData' => $permitData,
+            'permitData'    => $permitData,
             'permitIdArray' => $permitIdArray);
         //   stop($permitData);
     }
@@ -203,10 +201,10 @@ class ModelPermit extends AModel
                 $ids[] = $value['id'];
             }
         }
-        $permitUp = $this->findAll(array(
+        $permitUp         = $this->findAll(array(
             'id' => array(
                 'doType' => 'in',
-                'value' => $upids)));
+                'value'  => $upids)));
         $permitUpKeyValue = $permitChildKeyValue = array();
         foreach ($permitUp as $value) {
             $permitUpKeyValue[$value['id']] = $value;
@@ -215,7 +213,7 @@ class ModelPermit extends AModel
         $permitChild = $this->findAll(array(
             'uppermit_id' => array(
                 'doType' => 'in',
-                'value' => $ids)));
+                'value'  => $ids)));
 
         foreach ($permitChild as $value) {
             $permitChildKeyValue[$value['uppermit_id']][] = $value;
@@ -239,9 +237,9 @@ class ModelPermit extends AModel
         }
 
         $condition = array(
-            'module' => $module,
+            'module'     => $module,
             'controller' => $controllerString,
-            'action' => $action
+            'action'     => $action
         );
         if (empty($module)) {
             $condition['module'] = '';
@@ -249,14 +247,14 @@ class ModelPermit extends AModel
         if ($controllerString === 'Site') {
             $condition['controller'] = array(
                 'doType' => 'in',
-                'value' => array(
+                'value'  => array(
                     '',
                     'Site'));
         }
         if ($action === 'index') {
             $condition['action'] = array(
                 'doType' => 'in',
-                'value' => array(
+                'value'  => array(
                     '',
                     'index'));
         }
@@ -272,7 +270,7 @@ class ModelPermit extends AModel
     {
 
         $permitIdArray[] = array(
-            'id' => $permit['id'],
+            'id'          => $permit['id'],
             'uppermit_id' => $permit['uppermit_id']
         );
 
@@ -284,7 +282,7 @@ class ModelPermit extends AModel
             $permit = $this->find(array(
                 'id' => $permit['uppermit_id']));
             array_unshift($permitIdArray, array(
-                'id' => $permit['id'],
+                'id'          => $permit['id'],
                 'uppermit_id' => $permit['uppermit_id']
             ));
         }
@@ -298,14 +296,14 @@ class ModelPermit extends AModel
      */
     public function getAllChildPermitId($pemitId)
     {
-        $data = array();
+        $data          = array();
         $upPermitArray = array(
             $pemitId);
         while (true) {
             $temp = $this->findAll(array(
                 'uppermit_id' => array(
                     'doType' => 'in',
-                    'value' => $upPermitArray)));
+                    'value'  => $upPermitArray)));
             if (empty($temp)) {
                 break;
             }
@@ -314,7 +312,7 @@ class ModelPermit extends AModel
                 $tmp[] = $value['id'];
             }
             $upPermitArray = $tmp;
-            $data = array_merge($data, $tmp);
+            $data          = array_merge($data, $tmp);
         }
         return $data;
     }
@@ -340,20 +338,20 @@ class ModelPermit extends AModel
             $permitData ['childPermit'] = $this->findAll(array(
                 'uppermit_id' => array(
                     'doType' => 'in',
-                    'value' => $permit['id'])));
+                    'value'  => $permit['id'])));
         }
 
 
         $permitData ['header'] = $this->findAll(array(
             'uppermit_id' => array(
                 'doType' => 'in',
-                'value' => 0)), '', '`obyid` asc');
-        $headerActive = array_shift($permitIdArray);
-        $uppermitIdArray = array();
+                'value'  => 0)), '', '`obyid` asc');
+        $headerActive          = array_shift($permitIdArray);
+        $uppermitIdArray       = array();
         foreach ($permitData ['header'] as $key => $value) {
             if (($value['id'] == $headerActive['id'])) {
                 $permitData['header'][$key]['active'] = true;
-                $uppermitIdArray[] = $value['id'];
+                $uppermitIdArray[]                    = $value['id'];
             } else {
                 $permitData['header'][$key]['active'] = false;
             }
@@ -366,16 +364,16 @@ class ModelPermit extends AModel
 
         $i = 0;
         while (true) {
-            $temp = $this->findAll(array(
+            $temp            = $this->findAll(array(
                 'uppermit_id' => array(
                     'doType' => 'in',
-                    'value' => $uppermitIdArray)), '', '`obyid` asc');
+                    'value'  => $uppermitIdArray)), '', '`obyid` asc');
             $uppermitIdArray = array();
-            $permitList = array();
+            $permitList      = array();
 
             foreach ($temp as $value) {
                 $permitList[$value['uppermit_id']][] = $value;
-                $uppermitIdArray[] = $value['id'];
+                $uppermitIdArray[]                   = $value['id'];
             }
             $uppermitIdData[] = $permitList;
             if ($i > 1) {
@@ -391,10 +389,10 @@ class ModelPermit extends AModel
 
     private function organizationPermit($permitList, $permitIdArray)
     {
-        $temp = array_shift($permitIdArray);
-        $temp1 = array_shift($permitIdArray);
+        $temp   = array_shift($permitIdArray);
+        $temp1  = array_shift($permitIdArray);
         $result = array_shift(array_shift($permitList));
-        $child = array_shift($permitList);
+        $child  = array_shift($permitList);
 
         foreach ($result as $key => $value) {
 

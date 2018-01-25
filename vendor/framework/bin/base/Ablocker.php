@@ -2,9 +2,9 @@
 
 namespace framework\bin\base;
 
-use framework\bin\AController;
 use ReflectionClass;
 use Exception;
+use \RuntimeException;
 
 /**
  * 组件,继承自Acontroller
@@ -41,7 +41,9 @@ abstract class Ablocker extends AController
         self::$base = $base;
     }
 
-    abstract public function run();
+     public function run(){
+
+     }
 
     private function _getBlockTemplate($view)
     {

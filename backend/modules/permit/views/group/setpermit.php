@@ -2,6 +2,7 @@
 
 use backend\common\Pager;
 use backend\common\BackenBaseData;
+use framework\bin\utils\AUtils;
 
 //权限验证准备
 
@@ -17,7 +18,7 @@ $permitAjaxsetbatchpermit = $this->havePermit(array(
 
 $permitHaveopertate = $permitEdit || $permitAjaxsetbatchpermit;
 ?>
-<div class="box" id="contentHtml" baseUrl="<?php echo currentUrl(); ?>">
+<div class="box" id="contentHtml" baseUrl="<?php echo AUtils::currentUrl(); ?>">
     <div class="box-body no-padding">
         <?php if ($this->data['data']['list']): ?>
             <table class="table ">

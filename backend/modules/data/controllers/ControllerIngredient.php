@@ -7,8 +7,7 @@ use backend\common\Pager;
 use communal\models\data\ingredient\ModelIngredient;
 use backend\common\BreadCrumb;
 use backend\common\ReusltData;
-use framework\bin\AUtils;
-
+use framework\bin\utils\AUtils;
 /**
  *  食材管理
  *

@@ -393,7 +393,7 @@ class ADatabaseMysqlPDO implements ADatabase
         $tableName = trim($this->parseTableName($tableName), '`');
         // 获取数据库联接
         $sql = "SELECT
-                ORDINAL_POSITION ,COLUMN_NAME, COLUMN_TYPE, DATA_TYPE,
+                `ORDINAL_POSITION` ,`COLUMN_NAME`, `COLUMN_TYPE`, `DATA_TYPE`,
                 IF(ISNULL(CHARACTER_MAXIMUM_LENGTH), (NUMERIC_PRECISION + NUMERIC_SCALE), CHARACTER_MAXIMUM_LENGTH) AS MAXCHAR,
                 IS_NULLABLE, COLUMN_DEFAULT, COLUMN_KEY, EXTRA, COLUMN_COMMENT
                 FROM

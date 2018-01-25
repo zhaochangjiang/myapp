@@ -2,7 +2,7 @@
 
 namespace backend\modules\permit\blocks\group;
 
-use framework\bin\Ablocker;
+use framework\bin\base\Ablocker;
 use communal\models\admin\permit\ModelGroup;
 
 /**

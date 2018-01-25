@@ -6,10 +6,11 @@
  * @Date: 2017/3/15
  * @Time: 21:59
  */
+
 namespace framework\bin\http;
 
 use framework\bin\utils\ADesEncrypt;
-use RuntimeException;
+use \RuntimeException;
 use framework\App;
 
 class ACurlManager
@@ -31,6 +32,9 @@ class ACurlManager
         }
 
         $data = $this->_grabImport($connectUrl, $gets, $posts);
+
+        print_r($data);
+        exit;
         if (100 == intval($data ['code'])) {
 
             $clientSessionId = session_id();
@@ -41,7 +45,7 @@ class ACurlManager
             App::$app->session->setSession('accessToken', $accessToken);
 
             $data = $this->_grabImport($connectUrl, $gets, $posts);
-            print_r($data);exit;
+
             return $data;
         }
         if (200 == intval($data ['code'])) {
@@ -68,34 +72,28 @@ class ACurlManager
     private function _grabImport($targetUrl, $gets, $posts = array(), $headers = array())
     {
 
-
         // 处理get参数
         foreach ($gets as $k => $v) {
             $targetUrl .= "&$k=$v";
         }
-        $posts['accessToken'] = App::$app->session->getSession('accessToken');
-        // 加入加密code
-        // debug($target_url.'<br />');
+        $accessToken = App::$app->session->getSession('accessToken');
+        if (!empty($accessToken)) {
+            $posts['accessToken'] = $accessToken;
+        }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $targetUrl);
-
         curl_setopt($ch, CURLOPT_HEADER, 0);
-
         if ($headers) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
-
         // 模拟浏览器cookie，提交session_id,不能url rewrite
         curl_setopt($ch, CURLOPT_COOKIE, session_name() . '=' . session_id());
-
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $posts);
         $data = curl_exec($ch);
-
         curl_close($ch);
-
         $result = json_decode($data, true);
         if (empty($result)) {
             return $data;

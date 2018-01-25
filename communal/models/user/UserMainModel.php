@@ -3,9 +3,9 @@
 namespace communal\models\user;
 
 use framework\bin\database\AModel;
-use client\common\ResultClient;
-use client\common\ErrorCode;
 use framework\App;
+use framework\bin\dataFormat\AReturn;
+use framework\bin\dataFormat\ErrorCode;
 
 /**
  * Description of UserMainModel
@@ -26,12 +26,11 @@ class UserMainModel extends AModel
     public function login($params)
     {
 
-        $this->result = ResultClient::getInstance();
+        $this->result = AReturn::getInstance();
 
         $params['password'] = $this->addPassword($params['password']);
 
         $userData = $this->find($params);
-
 
         //如果用户不存在
         if (empty($userData)) {
@@ -40,7 +39,6 @@ class UserMainModel extends AModel
         }
 
         unset($userData['password'], $userData['flag_del']);
-
         $this->result->setResult(ErrorCode::$LOGINSUCCESS);
         $this->result->setData($userData);
 

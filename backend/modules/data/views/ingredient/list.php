@@ -1,7 +1,7 @@
 <?php
 
 use backend\common\Pager;
-use framework\bin\AUtils;
+use framework\bin\utils\AUtils;
 
 //权限验证准备
 $permitDelete = $this->havePermit(array(
@@ -88,7 +88,7 @@ $permitHaveopertate = $permitEdit;
     </div>
     <div class="box-footer clearfix">
         <?php if ($permitEdit): ?>
-            <a class="btn btn-warning pull-left" href="<?php
+            <a class="btn btn-warning pull-right" href="<?php
             echo $this->createUrl(array(
                 $this->controllerString,
                 'edit',

@@ -2,7 +2,7 @@
 
 use backend\common\Pager;
 use backend\common\BackenBaseData;
-
+use framework\bin\utils\AUtils;
 //权限验证准备
 $permitDelete = $this->havePermit(array(
     $this->controllerString,
@@ -67,7 +67,7 @@ $permitHaveopertate = $permitEdit;
                                 $this->moduleString)
                             , array(
                             'uid' => $value['uid']
-                        )) . '\',\'' . currentUrl() . '\');return;" href="javascript:;">删除</a></td>';
+                        )) . '\',\'' . AUtils::currentUrl() . '\');return;" href="javascript:;">删除</a></td>';
                 }
                 echo '<td  class="text-center" >' . $this->outputHtml($value['name'], '-') . '</td>';
                 echo '<td  class="text-center">' . $this->outputHtml(BackenBaseData::outputIsSuperAdmin($value['super_admin']), '-') . '</td>';

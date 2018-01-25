@@ -5,8 +5,7 @@ namespace backend\common;
 use framework\bin\base\AController;
 use communal\models\admin\permit\ModelPermit;
 use framework\App;
-use framework\bin\AUtils;
-
+use framework\bin\utils\AUtils;
 use communal\models\admin\permit\ModelPermitGroup;
 
 /**
@@ -69,6 +68,7 @@ class ControllerBackend extends AController
         //获得用户头像
         $this->data['avater'] = $this->getAvater($this->data['session']);
 
+       // print_r( $this->data['avater']);exit;
         //权限验证
         $this->permitInit();
     }
@@ -81,8 +81,8 @@ class ControllerBackend extends AController
         if (NEEDAUTH === false) {
             return true;
         }
-        $m = strtolower($this->module);
-        $a = strtolower($this->action);
+        $m      = strtolower($this->module);
+        $a      = strtolower($this->action);
         $module = array();
         if (empty($this->permitAllModule)) {
             return false;
@@ -108,9 +108,9 @@ class ControllerBackend extends AController
      */
     public function validateLogin()
     {
+
         if (empty($this->data['session'])) {
             $gotoUrl = $this->createUrl(['passport', 'login'], null, App::$app->parameters->domain['web']);
-
             $this->redirect($gotoUrl);
         }
     }
@@ -154,7 +154,6 @@ class ControllerBackend extends AController
 
     /**
      * 判断当前页面是否有权限
-     * @param type $controller
      * @param type $moduleControllerActionArray
      * @return boolean
      */
@@ -210,23 +209,22 @@ class ControllerBackend extends AController
      */
     protected function getBreadCrumbs($separator = '&raquo;')
     {
-        $breadCrumbString = ' <ol class="breadcrumb">';
-        $count = count($this->breadCrumbs);
+        $breadCrumbString = '<ol class="breadcrumb">';
+        $count            = count($this->breadCrumbs);
         if ($count) {
             $class = $href = '';
-            $i = 0;
+            $i     = 0;
 
 
             foreach ($this->breadCrumbs as $value) {
                 $i++;
-                $class = (!empty($value ['class'])) ? "{$value['class']}" : '';
-                $href = (empty($value ['href'])) ? 'javascript:;' : $value ['href'];
-                $classli = ($i == $count) ? 'active' : '';
+                $class            = (!empty($value ['class'])) ? "{$value['class']}" : '';
+                $href             = (empty($value ['href'])) ? 'javascript:;' : $value ['href'];
+                $classli          = ($i == $count) ? 'active' : '';
                 $breadCrumbString .= $i == 1 ? "<li class=\"{$classli}\"><a class=\"{$class}\" href=\"{$href}\" title=\"{$value['name']}\"><i class=\"fa fa-dashboard\"></i>{$value['name']}</a>" : "<li  class=\"{$classli}\"><a class=\"{$class}\"  href=\"{$href}\" title=\"{$value['name']}\">{$value['name']}</a></li>";
             }
         }
         $breadCrumbString .= '</ol>';
-// xmp($breadCrumbString);
         return $breadCrumbString;
     }
 
@@ -253,11 +251,11 @@ class ControllerBackend extends AController
      */
     public function permitInit()
     {
-        $permitModel = new ModelPermit();
+        $permitModel      = new ModelPermit();
         $this->permitList = $permitModel->getShowPermit($this->moduleString, $this->controllerString, $this->action);
         //如果不是超级管理员
         if (!$this->authSuperAdmin()) {
-            $permitGroup = new ModelPermitGroup();
+            $permitGroup      = new ModelPermitGroup();
             $this->permitList = $permitGroup->permitListNotSuperAdmin($this->permitList, $this->_getSession());
         }
     }
@@ -288,11 +286,11 @@ class ControllerBackend extends AController
      */
     public function getAvater($user)
     {
-
+        $baseUrl = AUtils::baseUrl();
         if ($user['gender'] === 'female') {
-            return 'source/img/avatar2.png';
+            return $baseUrl.'/source/img/avatar2.png';
         }
-        return 'source/img/avatar.png';
+        return $baseUrl.'/source/img/avatar3.png';
     }
 
 }

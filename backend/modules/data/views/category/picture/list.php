@@ -1,6 +1,7 @@
 <?php
 
 use backend\common\Pager;
+use framework\bin\utils\AUtils;
 
 //权限验证准备  
 $permitDelete = $this->havePermit(array(
@@ -41,7 +42,7 @@ $permitHaveopertate = $permitEdit;
                 $this->moduleString), array(
                 'type' => 'add',
                 'uppid' => $this->params['id'],
-                'goto' => base64_encode(currentUrl())
+                'goto' => base64_encode(AUtils::currentUrl())
             ));
             ?>">添加</a>
         <?php endif; ?>

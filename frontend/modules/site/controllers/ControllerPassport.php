@@ -2,10 +2,12 @@
 
 namespace frontend\modules\site\controllers;
 
+use framework\bin\http\ARequestParameter;
 use frontend\common\ControllerFrontend;
 use framework\lib\captcha\CCaptchaAction;
 use frontend\common\FrontendResultContent;
 use framework\App;
+use communal\models\user\UserMainModel;
 
 /**
  * Description of passport
@@ -46,8 +48,8 @@ class ControllerPassport extends ControllerFrontend
     {
 
         $this->data['goto'] = base64_decode($this->params['goto']);
-        $result = parent::httpConnectionByBase(['Passport', 'iFrameRegister'], [], $this->params);
-        $resultData = FrontendResultContent::getInstanceAnother();
+        $result             = parent::httpConnectionByBase(['Passport', 'iFrameRegister'], [], $this->params);
+        $resultData         = FrontendResultContent::getInstanceAnother();
 
         $jsString = '';
 
@@ -71,11 +73,13 @@ class ControllerPassport extends ControllerFrontend
     {
 
         $this->data['goto'] = base64_decode($this->params('goto'));
+        $resultData         = FrontendResultContent::getInstanceAnother();
+
+        // $result = (array)$this->httpConnectionByBase(['Passport', 'iFrameLogin'], [], $this->params);
 
 
-        $resultData = FrontendResultContent::getInstanceAnother();
-
-        $result = (array)$this->httpConnectionByBase(['Passport', 'iFrameLogin'], [], $this->params);
+        $userMainModel = new UserMainModel();
+        $result           = (array)$userMainModel->login($this->params);
 
         $jsString = '';
 
@@ -87,7 +91,6 @@ class ControllerPassport extends ControllerFrontend
             //IFrame表单输出信息
             $this->outPutIframeMessage($resultData);
         }
-
 
         App::$app->session->setSessionArray($result['data']);
 

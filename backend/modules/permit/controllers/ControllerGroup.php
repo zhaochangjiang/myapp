@@ -10,6 +10,7 @@ use Exception;
 use communal\models\admin\permit\ModelGroupUser;
 use communal\models\admin\permit\ModelPermitGroup;
 use communal\models\admin\permit\ModelPermit;
+use framework\bin\utils\AUtils;
 
 class ControllerGroup extends ControllerBackend
 {
@@ -50,7 +51,7 @@ class ControllerGroup extends ControllerBackend
             ),
             array(
                 'name' => $this->pageSmallTitle,
-                'href' => currentUrl()
+                'href' =>AUtils:: currentUrl()
             )
         ), true);
         $this->render();
@@ -94,7 +95,7 @@ class ControllerGroup extends ControllerBackend
         $this->setBreadCrumbs(array(
             array(
                 'name' => $this->pageSmallTitle,
-                'href' => currentUrl()
+                'href' => AUtils::currentUrl()
             )
         ), true);
         $this->render();
@@ -149,7 +150,7 @@ class ControllerGroup extends ControllerBackend
             ),
             array(
                 'name' => $this->pageSmallTitle,
-                'href' => currentUrl()
+                'href' => AUtils::currentUrl()
             )
         ), true);
 

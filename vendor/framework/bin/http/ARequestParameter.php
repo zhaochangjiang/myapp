@@ -12,26 +12,47 @@ use framework\bin\dataFormat\ErrorCode;
 
 class ARequestParameter
 {
-    private static $post;
-    private static $get;
-    private static $request;
-    private static $session;
-    private static $_self;
-    private static $server;
+
+    /**
+     * @var array $_POST
+     */
+    private static $post = [];
+
+    /**
+     * @var array $_GET
+     */
+    private static $get = [];
+    /**
+     * @var array $_REQUEST
+     */
+    private static $request = [];
+
+    /**
+     * @var array
+     */
+    private static $session = [];
+    /**
+     * @var ARequestParameter
+     */
+    private static $_self = null;
+
+    /**
+     * @var array $_SERVER
+     */
+    private static $server = [];
 
     private function __construct()
     {
-        $this->setGet($_GET);
-
-        $this->setPost($_POST);
-        $this->setRequest($_REQUEST);
-        $this->setServer($_SERVER);
+        $this->setGet(empty($_GET) ? [] : $_GET);
+        $this->setPost(empty($_POST) ? [] : $_POST);
+        $this->setRequest(empty($_REQUEST) ? [] : $_REQUEST);
+        $this->setServer(empty($_SERVER) ? [] : $_SERVER);
 
         //清空系统函数
-        $_GET = null;
-        $_POST = null;
+        $_GET     = null;
+        $_POST    = null;
         $_REQUEST = null;
-        $_SERVER = null;
+        $_SERVER  = null;
     }
 
     /**
@@ -56,14 +77,15 @@ class ARequestParameter
      * @author karl.zhao<zhaocj2009@hotmail.com>
      * @Date: ${DATE}
      * @Time: ${TIME}
-     *
-     * @return ARequestParameter *
+     * @return ARequestParameter
      */
     public static function getSingleton()
     {
+
         if (null === self::$_self) {
             self::$_self = new ARequestParameter();
         }
+
         return self::$_self;
     }
 
@@ -103,10 +125,28 @@ class ARequestParameter
         self::$get = $get;
     }
 
+    /**
+     * 向本次请求get参数中添加信息
+     * @param $get
+     */
+    public function addGet($get)
+    {
+        self::$get = array_merge((array)self::$get, (array)$get);
+    }
+
+    /**
+     * 向本次请求get参数中添加信息
+     * @param $request
+     */
+    public function addRequest($request)
+    {
+        self::$request = array_merge((array)self::$request, (array)$request);
+    }
+
     public function getRequestByKey($key)
     {
         if (!isset(self::$request[$key])) {
-            throw new RuntimeException('The $_REQUEST is not exists by key "' . $key . '"', ErrorCode::$PARAMETER_ERROR['message']);
+            return null;
         }
         return self::$request[$key];
     }
@@ -115,7 +155,8 @@ class ARequestParameter
     public function getServerByKey($key)
     {
         if (!isset(self::$server[$key])) {
-            throw new RuntimeException('The $_SERVER is not exists by key "' . $key . '"', ErrorCode::$PARAMETER_ERROR['message']);
+            return null;
+
         }
         return self::$server[$key];
     }

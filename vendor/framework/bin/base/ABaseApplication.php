@@ -7,9 +7,12 @@ use framework\bin\exception\AHttpException;
 use framework\bin\exception\AErrorHandler;
 //use framework\bin\base\AHelper;
 
+use framework\bin\http\ARequest;
+use framework\bin\http\ARequestParameter;
 use framework\bin\session\ASession;
 use framework\bin\urlRewrite\AUrlManager;
-use RuntimeException;
+use \RuntimeException;
+use \Exception;
 
 use ReflectionClass;
 
@@ -140,13 +143,18 @@ class ABaseApplication extends AppBase
         //只是实例化非Static属性
         foreach ($properties as $k => $property) {
             $propertyName = $property->getName();
+
             if (in_array($propertyName, $staticProperties)) {
                 continue;
             }
 
             $this->_initObject($propertyName);
+
         }
+
+
         $this->setBasePath(DIR_SERVER);
+
         return $this;
     }
 
@@ -202,9 +210,6 @@ class ABaseApplication extends AppBase
         set_error_handler(array($errorHandler, self::ERROR_HANDLER));
         set_exception_handler(array($errorHandler, self::EXCEPTION_HANDLER));
         register_shutdown_function(array($errorHandler, self::SHUTDOWN_HANDLER));
-
-
-        return;
     }
 
     /**
@@ -217,30 +222,25 @@ class ABaseApplication extends AppBase
     {
         //捕获异常，设置探针.
         self::handlerException();
-
         if (self::$app === null) {
             self::$app = new self ();
         }
         self::$app->_initConfig($configFile);
 
+
         //初始化基础配置合并命名空间
         self::mergeNameSpacePathMap();
 
         return self::$app->_init();
-
     }
 
     protected function _initConfig($configFile)
     {
-
         if (!file_exists($configFile)) {
-
             throw new RuntimeException("[ ERROR ] The config file:\"{$configFile}\" is not exists!" . PHP_EOL . "[ MESSAGE ] The error is at line:" . __LINE__
                 . ',in file:' . __FILE__, FRAME_THROW_EXCEPTION);
         }
-
         self::$_config = include_once $configFile;
-        return;
     }
 
     /**
@@ -255,6 +255,7 @@ class ABaseApplication extends AppBase
      */
     public function run($controllerString = null, $action = null, $moduleString = null)
     {
+
         // $moduleString     = $controllerString = $action           = '';
         //如果不是 AFunction 中函数C控制的方法
         if ($moduleString === null && $controllerString === null && $action === null) {
@@ -277,7 +278,7 @@ class ABaseApplication extends AppBase
 
         // 判断Method是否存在
         $moduleDeal = new $className($controllerString, $action, $moduleString);
-
+        $moduleDeal->setParams(ARequestParameter::getSingleton()->getRequest());
         $moduleDeal->init();
 
         //加载插件
@@ -423,37 +424,37 @@ class ABaseApplication extends AppBase
 
     /**
      * 自动加载类方法
-     *
+     * @throws  RuntimeException
      * @param string $className 类名称
-     * @return 当是否成功加载类返回true or false
+     * @return 当是否成功加载类返回 boolean
      */
     public static function autoload($className)
     {
-        if (empty($className)) {
-            return true;
-        }
         $flag = true;
-        if (class_exists('\\' . ltrim($className, '\\'))) {
+        if (empty($className)) {
+            return $flag;
+        }
+        $className = ltrim($className, '\\');
+        if (class_exists($className)) {
             return $flag;
         }
 
-        $namespaceDividString = explode('/', str_replace('\\', '/', $className));
-        $classNameBase        = array_pop($namespaceDividString);
-
-        if (count($namespaceDividString) < 1) {
+        $namespaceDivIdString = explode('/', str_replace('\\', '/', $className));
+        $classNameBase        = array_pop($namespaceDivIdString);
+        if (count($namespaceDivIdString) < 1) {
             return $flag;
         }
 
-        $nameSpaceBasePath = array_shift($namespaceDividString);
+        $nameSpaceBasePath = array_shift($namespaceDivIdString);
         if (!isset(self::$nameSpacePathMap['@' . $nameSpaceBasePath])) {
             self::setNameSpacePathMap($nameSpaceBasePath);
         }
 
 
-        //如果命令空间不存在或者类已加载，则不需要重新加载
-        if (empty($classNameBase)) {
-            return $flag;
-        }
+//        //如果命令空间不存在或者类已加载，则不需要重新加载
+//        if (empty($classNameBase)) {
+//            return $flag;
+//        }
 
         $flagClassExists = false;
 
@@ -461,10 +462,9 @@ class ABaseApplication extends AppBase
         if (!empty($classNameBase)) {
             class_exists($classNameBase) ? $flagClassExists = true : '';
         }
-        $includeFile = self::$nameSpacePathMap['@' . $nameSpaceBasePath] . implode(DIRECTORY_SEPARATOR, $namespaceDividString) . DIRECTORY_SEPARATOR . "{$classNameBase}.php";
+        $includeFile = self::$nameSpacePathMap['@' . $nameSpaceBasePath] . implode(DIRECTORY_SEPARATOR, $namespaceDivIdString) . DIRECTORY_SEPARATOR . "{$classNameBase}.php";
 
         if (!file_exists($includeFile)) {
-
             include_once dirname(__FILE__) . '/../exception/AHttpException.php';
             throw new RuntimeException(
                 "[ ERROR ] The file：{$includeFile}  is not exists ."
@@ -490,14 +490,14 @@ class ABaseApplication extends AppBase
     }
 
 
-    /**
-     * 当前代码部署的服务器机房,保留方法
-     * @return string
-     */
-    protected function getMachineRoom()
-    {
-        return isset(self::$app->paramerters->generatorRoom) ? self::$app->paramerters->generatorRoom : 'default';
-    }
+//    /**
+//     * 当前代码部署的服务器机房,保留方法
+//     * @return string
+//     */
+//    protected function getMachineRoom()
+//    {
+//        return isset((self::$app)::paramerters->generatorRoom) ? self::$app->paramerters->generatorRoom : 'default';
+//    }
 
     /**
      * 实例化本类的非static属性

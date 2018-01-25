@@ -16,6 +16,8 @@ use framework\bin\http\ARequestParameter;
 
 class AUrlManager extends AppBase
 {
+
+
     /**
      * 是否重写
      * @var bool
@@ -99,7 +101,7 @@ class AUrlManager extends AppBase
     {
         // 获得当前请求动作是什么
         $controller = new AController();
-        $server = ARequestParameter::getSingleton()->getServer();
+        $server     = ARequestParameter::getSingleton()->getServer();
 
         //如果是URL重写的请求
         if ($this->rewriteMod) {
@@ -112,11 +114,11 @@ class AUrlManager extends AppBase
             }
 
             $actionParamsSeparatorLocate = stripos($baseName, $this->delimiterActionParams);
-
             //判断 basename ="passport_login/t_123123";的情况处理
             if (false !== $actionParamsSeparatorLocate) {
                 $this->moduleAction =
                     substr($baseName, 0, $actionParamsSeparatorLocate);//$moduleActionLength - strlen($this->extendFile));
+                $this->setRequestGetParams(substr($baseName, $actionParamsSeparatorLocate + strlen($this->delimiterActionParams)));
             } else {
                 $this->moduleAction = substr($baseName, 0, stripos($baseName, $this->extendFile));
             }
@@ -130,6 +132,28 @@ class AUrlManager extends AppBase
 
     }
 
+    private function setRequestGetParams($string)
+    {
+        $string = rtrim($string, $this->extendFile);
+        $p      = explode($this->delimiterActionParams, $string);
+        $params = [];
+        foreach ($p as $item) {
+            $this->_orgParam($item,$params);
+        }
+        ARequestParameter::getSingleton()->addGet($params);
+        ARequestParameter::getSingleton()->addRequest($params);
+    }
+
+    private function _orgParam($s,&$params){
+        $s             = explode($this->delimiter, $s);
+        if(count($s)>2){
+            $v= array_pop($s);
+            $params[implode($this->delimiter,$s)]=$v;
+            return;
+        }
+        $params[$s[0]] = isset($s[1]) ? $s[1] : '';
+        return;
+    }
     /**
      * @param $moduleAction
      * @param $params
@@ -201,7 +225,7 @@ class AUrlManager extends AppBase
         }
 
         $ruleStr .= '/';
-        $urlStr .= $this->delimiterActionParams;
+        $urlStr  .= $this->delimiterActionParams;
         foreach ($this->otherParams as $k => $v) {
             if ($v === '') {
                 continue;
@@ -209,23 +233,23 @@ class AUrlManager extends AppBase
 
             // 处理特殊字符
             if (!is_array($v)) {
-                $urlStr .= $k . $this->delimiter . urlencode($v) . $this->delimiterParams;
+                $urlStr  .= $k . $this->delimiter . urlencode($v) . $this->delimiterParams;
                 $ruleStr .= $k . $this->delimiter . urlencode($v) . $this->delimiterParams;
                 continue;
             } elseif ($v ['url']) {
                 empty($v ['doType']) ? $v ['doType'] = 'base64_encode' : '';
-                $urlStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiterParams;
+                $urlStr  .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiterParams;
                 $ruleStr .= $k . $this->delimiter . urlencode($v ['doType']($v ['url'])) . $this->delimiterParams;
                 continue;
             }
 
             foreach ($v as $v1) {
-                $urlStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiterParams;
+                $urlStr  .= $k . '[]' . $this->delimiter . $v1 . $this->delimiterParams;
                 $ruleStr .= $k . '[]' . $this->delimiter . $v1 . $this->delimiterParams;
             }
         }
 
-        $urlStr = substr($urlStr, 0, -1);
+        $urlStr  = substr($urlStr, 0, -1);
         $ruleStr = substr($ruleStr, 0, -1);
 
         foreach ((array)$this->routeRule as $key => $value) {
@@ -287,7 +311,7 @@ class AUrlManager extends AppBase
         }
         $temp = explode($this->delimiterModuleAction, $default);
 
-        $count = count($temp);
+        $count  = count($temp);
         $result = array();
         switch ($count) {
             case 0:
@@ -373,8 +397,8 @@ class AUrlManager extends AppBase
             '-'), $rule);
 
 
-        $regxArr = explode($delimiter, $regx);
-        $routeArr = explode($delimiter, $route);
+        $regxArr   = explode($delimiter, $regx);
+        $routeArr  = explode($delimiter, $route);
         $newRegArr = $regxArr;
         if (FALSE !== strpos($route, ':')) {
             foreach ($routeArr as $key => $value) {
@@ -391,18 +415,18 @@ class AUrlManager extends AppBase
             }
         } else {
             if (strcasecmp($regx, $route) == 0) {
-                $match = true;
+                $match            = true;
                 $this->rewriteUrl = $rule;
             }
             return $match;
         }
 
 
-        $a1 = array(
+        $a1    = array(
             "/(:\d+)/",
             "/\//"
         );
-        $a2 = array(
+        $a2    = array(
             ".+",
             "\/"
         );
@@ -431,45 +455,45 @@ class AUrlManager extends AppBase
 
                     if (FALSE !== strpos($value, '\\d')) {
                         $value = str_replace("\\d", "", $value);
-                        $rule = str_replace("\\d", "", $rule);
+                        $rule  = str_replace("\\d", "", $rule);
                     }
 
                     if (FALSE !== strpos($value, '\\w')) {
                         $value = str_replace("\\w", "", $value);
-                        $rule = str_replace("\\w", "", $rule);
+                        $rule  = str_replace("\\w", "", $rule);
                     }
 
 
                     if (FALSE !== strpos($value, '\\AZ')) {
                         $value = str_replace("\\AZ", "", $value);
-                        $rule = str_replace("\\AZ", "", $rule);
+                        $rule  = str_replace("\\AZ", "", $rule);
                     }
 
 
                     if (FALSE !== strpos($value, '\\AD')) {
                         $value = str_replace("\\AD", "", $value);
-                        $rule = str_replace("\\AD", "", $rule);
+                        $rule  = str_replace("\\AD", "", $rule);
                     }
 
                     if (FALSE !== strpos($value, '\\BD')) {
                         $value = str_replace("\\BD", "", $value);
-                        $rule = str_replace("\\BD", "", $rule);
+                        $rule  = str_replace("\\BD", "", $rule);
                     }
 
 
                     if (FALSE !== strpos($value, '\\CD')) {
                         $value = str_replace("\\CD", "", $value);
-                        $rule = str_replace("\\CD", "", $rule);
+                        $rule  = str_replace("\\CD", "", $rule);
                     }
 
 
                     $omg[$key] = '/' . $value . '/';
 
                     if ($pos = strpos($value, '^')) {//排除
-                        $mk = substr($value, 0, $pos);
+                        $mk        = substr($value, 0, $pos);
                         $omg[$key] = '/' . $mk . '/';
-                        $rule = str_replace($value, $mk, $rule);
-                        $stripArr = explode('|', trim(strstr($value, '^'), '^'));
+                        $rule      = str_replace($value, $mk, $rule);
+                        $stripArr  = explode('|', trim(strstr($value, '^'), '^'));
                         if (!in_array($newRegArr[$key], $stripArr)) {
                             $match = false;
                             break;
@@ -488,7 +512,7 @@ class AUrlManager extends AppBase
 
                         $mk = substr($value, 0, $pos);
 
-                        $rule = str_replace('\\d', '', $rule);
+                        $rule      = str_replace('\\d', '', $rule);
                         $omg[$key] = '/' . $mk . '/';
                     }
 

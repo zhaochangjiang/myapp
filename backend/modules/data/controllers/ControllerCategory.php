@@ -5,10 +5,14 @@ namespace backend\modules\data\controllers;
 use backend\common\ControllerBackend;
 use communal\models\data\category\ModelCategory;
 use backend\common\Pager;
+use framework\bin\utils\AUtils;
 use frontend\common\FrontendResultContent;
 use Exception;
 
-
+/**
+ * @author  karl.zhao <zhaocj2009@hotmail.com>
+ * 类型编辑Controller
+ */
 class ControllerCategory extends ControllerBackend
 {
 
@@ -35,18 +39,18 @@ class ControllerCategory extends ControllerBackend
     {
 //          $string= \communal\common\CommunalTools::createGuid();
 //          echo $string;
-        $this->params = $this->getRequestParams();
-        $model = $this->_getModel();
+        $this->params       = $this->getRequestParams();
+        $model              = $this->_getModel();
         $this->data['data'] = $model->getList($this->params);
 
-        $this->data['pageObject'] = new Pager($this->data['data']['count']);
+        $this->data['pageObject']           = new Pager($this->data['data']['count']);
         $this->data['pageObject']->pageSize = $this->data['data']['pageSize'];
 
         //    xmp($this->data['data']);
         $this->pageTitle = '类型';
         $this->setBreadCrumbs(array(
             'name' => $this->pageTitle,
-            'href' => currentUrl()
+            'href' => AUtils::currentUrl()
         ));
         $this->render();
     }
@@ -72,19 +76,16 @@ class ControllerCategory extends ControllerBackend
         $this->params = $this->getRequestParams();
 
         $this->data['goto'] = base64_decode($this->params['goto']);
-        $jsString = $result = '';
-
-
+        $jsString           = $result = '';
         $this->params['higher_up_id'] = $this->_dealUpId($this->params['uppid']);
-
         $resultData = FrontendResultContent::getInstanceAnother();
-        $model = $this->_getModel();
-        $sku = $model->getSku($this->params);
+        $model      = $this->_getModel();
+        $sku        = $model->getSku($this->params);
 
         $data = array(
             'category_label' => $this->params['category_label'],
-            'sku' => (string)$sku,
-            'higher_up_id' => (string)$this->params['higher_up_id']
+            'sku'            => (string)$sku,
+            'higher_up_id'   => (string)$this->params['higher_up_id']
         );
 
         switch ($this->params['dotype']) {
@@ -137,38 +138,34 @@ class ControllerCategory extends ControllerBackend
      * @Date: ${DATE}
      * @Time: ${TIME}
      *
-     *
      */
     public function actionDelete()
     {
-
-        $this->params = $this->getRequestParams();
-        $this->_getModel()->deleteData($this->params);
-        exit('ok');
-    }
+        $params =[];
+        $params['category_id']=$this->params['category_id'];
+        if(empty($params['category_id'])){
+            echo '请选择类型!';
+            exit;
+        }
+        $this->_getModel()->deleteData($params);
+        echo 'ok';
+        exit;
+     }
 
     /**
-     *
+     * 编辑类型界面
      */
     public function actionEdit()
     {
-
-
-        $this->params = $this->getRequestParams();
-
         $model = $this->_getModel();
-
         $this->data['data'] = $model->fetchOne(array(
             'category_id' => $this->params['category_id']));
 
-        $this->data['goto'] = $this->params['goto'];
-        $this->data['doType'] = $this->params['type'];
+        $this->data['goto']          = $this->params['goto'];
+        $this->data['doType']        = $this->params['type'];
         $this->data['data']['uppid'] = $this->params['uppid'];
-
-
-        $this->pageTitle = '类型编辑';
+        $this->pageTitle      = '类型编辑';
         $this->pageSmallTitle = '权限编辑';
-
         $breadCrumb['name'] = $this->pageTitle;
         $breadCrumb['href'] = $this->createUrl(array(
             $this->controllerString,
@@ -176,7 +173,7 @@ class ControllerCategory extends ControllerBackend
             $this->moduleString));
         $this->setBreadCrumbs($breadCrumb);
         $breadCrumb['name'] = $this->pageTitle;
-        $breadCrumb['href'] = currentUrl();
+        $breadCrumb['href'] = AUtils:: currentUrl();
         $this->setBreadCrumbs($breadCrumb);
         $this->render();
         //          xmp($this->data['data']);

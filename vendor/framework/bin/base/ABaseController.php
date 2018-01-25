@@ -3,7 +3,7 @@
 namespace framework\bin\base;
 
 use framework\App;
-use RuntimeException;
+use \RuntimeException;
 use framework\bin\utils\AUtils;
 use framework\bin\exception\AHttpException;
 
@@ -51,15 +51,18 @@ abstract class ABaseController extends AppBase
     public function __construct($controllerString = null, $action = null, $moduleString = null)
     {
         $this->controllerString = $controllerString;
-        $this->action = $action;
-        $this->moduleString = $moduleString;
+        $this->action           = $action;
+        $this->moduleString     = $moduleString;
 
 
     }
 
     public function redirect($url)
     {
-        header("Location: {$url}");
+        if (!empty($url)) {
+            header("Content-type:text/html;charset=utf-8");
+            echo '<script type="application/javascript">location.href="'.$url.'"</script>';
+        }
     }
 
     /**
@@ -120,13 +123,13 @@ abstract class ABaseController extends AppBase
     public function loadViewCell($template, $isCache = false, $name = '', $lifeTime = 0)
     {
         $template = trim($template, '/');
-        $_key = $template . '_' . $name;
+        $_key     = $template . '_' . $name;
         if ($isCache) {
-            $cache = App:: base()->fileCache;
+            $cache   = App:: base()->fileCache;
             $content = $cache->get($_key);
         }
         // 如果render了模板，则解析
-        $path = App:: getPathOfAlias('application.template');
+        $path     = App:: getPathOfAlias('application.template');
         $template = $path . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR . $template . '.php';
 
         //如果缓存内容为空,
@@ -209,7 +212,7 @@ abstract class ABaseController extends AppBase
     public function getCheck($sql_str, $maxlen = 0)
     {
         $sql_str = $this->getInput($sql_str, $maxlen);
-        $chech = preg_match('/select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/', $sql_str); // 进行过滤
+        $chech   = preg_match('/select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/', $sql_str); // 进行过滤
         if ($chech) {
             echo "非法注入！";
             exit();
@@ -324,7 +327,7 @@ abstract class ABaseController extends AppBase
      */
     public function getAhortNum($number, $need_yuan = false, $need_pre = false)
     {
-        $yuan = $need_yuan ? '元' : '';
+        $yuan   = $need_yuan ? '元' : '';
         $prefix = $need_pre ? '~' : '';
         return $number < 10000 ? $number . $yuan : ($number < 10000000 ? $prefix . sprintf("%.1f", $number / 10000) . "万{$yuan}" : '1千万以上');
     }
@@ -338,14 +341,14 @@ abstract class ABaseController extends AppBase
      */
     public function getHtml($param)
     {
-        $s = $this->getRouteParam($param);
+        $s    = $this->getRouteParam($param);
         $conf = array(
-            'output-xhtml' => true,
+            'output-xhtml'     => true,
             'drop-empty-paras' => FALSE,
-            'join-classes' => TRUE,
-            'show-body-only' => TRUE);
+            'join-classes'     => TRUE,
+            'show-body-only'   => TRUE);
 
-        $str = @tidy_repair_string($s, $conf, 'utf8');
+        $str  = @tidy_repair_string($s, $conf, 'utf8');
         $tree = @tidy_parse_string($str, $conf, 'utf8');
         $html = '';
         $body = @tidy_get_body($str);
@@ -527,7 +530,7 @@ abstract class ABaseController extends AppBase
 //             echo $regx .'|'. $rule . '</br>';
             unset($m[0]);
             $regxArr = array_values($m);
-            $match = true;
+            $match   = true;
         }
 
 
@@ -575,7 +578,7 @@ abstract class ABaseController extends AppBase
             if (strpos($url, '?') !== false) {
 
 // 分组/模块/操作?key1=value1&key2=value2
-                $arr = parse_url($url);
+                $arr   = parse_url($url);
                 $paths = explode('/', $arr ['path']);
                 parse_str($arr ['query'], $queryArr);
             } elseif (strpos($url, '/') !== false) // 分组/模块/操作)
@@ -596,7 +599,7 @@ abstract class ABaseController extends AppBase
                     $next = $paths[$k + 1];
                     if ($v != '' && $next != '' && $k % 2 == 0) {
                         if ($pos = strpos($v, '%5B%5D')) {
-                            $v = substr($v, 0, $pos);
+                            $v         = substr($v, 0, $pos);
                             $var[$v][] = $paths[$k + 1];
                         } else {
 

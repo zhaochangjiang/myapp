@@ -6,6 +6,7 @@ use backend\common\ControllerBackend;
 use communal\models\admin\permit\ModelAdminUser;
 use communal\models\admin\permit\ModelGroupUser;
 use backend\common\Pager;
+use framework\bin\utils\AUtils;
 use frontend\common\FrontendResultContent;
 use Exception;
 
@@ -45,7 +46,7 @@ class ControllerUser extends ControllerBackend
         $this->pageSmallTitle = '后台用户';
         $this->setBreadCrumbs(array(
             'name' => $this->pageSmallTitle,
-            'href' => currentUrl()
+            'href' => AUtils::currentUrl()
         ));
         $this->render();
     }
@@ -90,7 +91,7 @@ class ControllerUser extends ControllerBackend
             $this->moduleString));
         $this->setBreadCrumbs($breadCrumb);
         $breadCrumb['name'] = $this->pageSmallTitle;
-        $breadCrumb['href'] = currentUrl();
+        $breadCrumb['href'] = AUtils::currentUrl();
         $this->setBreadCrumbs($breadCrumb);
         $this->render();
     }

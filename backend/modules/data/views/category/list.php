@@ -1,7 +1,7 @@
 <?php
 
 use backend\modules\data\blocks\category\Search;
-
+use framework\bin\utils\AUtils;
 //权限验证准备
 $permitDelete = $this->havePermit(array(
     $this->controllerString,
@@ -13,8 +13,6 @@ $permitEdit = $this->havePermit(array(
     $this->moduleString));
 $permitHaveopertate = $permitEdit;
 ?>
-
-
 
 <?php $this->loadBlock('Search'); ?>
 <div class="box">
@@ -45,7 +43,7 @@ $permitHaveopertate = $permitEdit;
                                 $this->moduleString)
                             , array(
                             'category_id' => $value['category_id']
-                        )) . '\',\'' . currentUrl() . '\');return;" href="javascript:;">删除</a></td>';
+                        )) . '\',\'' . AUtils::currentUrl() . '\');return;" href="javascript:;">删除</a></td>';
                 }
                 echo '<td  class="text-center" >' . $this->outputHtml($value['category_label'], '-') . '</td>';
                 echo '<td  class="text-center">' . $this->outputHtml($this->zhcut($value['sku'], 12, '...'), '-') . '</td>';
@@ -68,7 +66,7 @@ $permitHaveopertate = $permitEdit;
     </div>
     <div class="box-footer clearfix">
         <?php if ($permitEdit): ?>
-            <a class="btn btn-warning pull-left" href="<?php
+            <a class="btn btn-warning pull-right" href="<?php
             echo $this->createUrl(array(
                 $this->controllerString,
                 'edit',

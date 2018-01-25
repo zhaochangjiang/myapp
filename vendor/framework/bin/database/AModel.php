@@ -15,6 +15,9 @@ use framework\bin\exception\ADBException;
 abstract class AModel
 {
 
+    /**
+     * @var ADatabaseMysqlPDO
+     */
     public $model = null;
     protected $tableName = '';
     protected $_db_config;
@@ -156,7 +159,7 @@ abstract class AModel
     /**
      * 开启数据库事务
      */
-    protected function startAffair()
+    public function startAffair()
     {
         $this->init();
         $this->model->startAffair();
@@ -165,7 +168,7 @@ abstract class AModel
     /**
      * 事务回滚
      */
-    protected function rollBack()
+    public function rollBack()
     {
         $this->init();
         $this->model->rollBack();
@@ -174,7 +177,7 @@ abstract class AModel
     /**
      * 事务提交
      */
-    protected function commit()
+    public function commit()
     {
         $this->init();
         $this->model->commit();

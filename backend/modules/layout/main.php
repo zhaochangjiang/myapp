@@ -1,5 +1,6 @@
 <?php
 use framework\App;
+use framework\bin\utils\AUtils;
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,6 +19,7 @@ use framework\App;
 </head>
 <body class="skin-blue">
 <?php $this->loadViewCellCommon("header"); ?>
+
 <div class="wrapper row-offcanvas row-offcanvas-left">
     <?php $this->loadViewCellCommon("left"); ?>
     <aside class="right-side">
@@ -25,7 +27,6 @@ use framework\App;
             <h1>
                 <?php echo $this->pageTitle; ?>
                 <small><?php echo $this->pageSmallTitle; ?></small>
-
             </h1>
             <?php echo $this->getBreadcrumbs(); ?>
         </section>

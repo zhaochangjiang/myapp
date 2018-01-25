@@ -2,6 +2,7 @@
 
 namespace framework\bin\base;
 
+use \RuntimeException;
 
 /**
  * 容器
