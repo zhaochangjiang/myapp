@@ -5,6 +5,7 @@
  * @Date: 2017/3/15
  * @Time: 23:24
  */
+
 namespace framework\bin\dataFormat;
 
 
@@ -14,6 +15,23 @@ class AReturn
     public $code = 200;//返回的状态码 (建议:尽量不要用0表示，因为PHP对于0 空字符串 null区分的问题)
     public $data = null;//返回的数据
     public $message = '';//中文描述
+
+    /**
+     * @var AReturn;
+     */
+    private static $aReturn;
+
+    /**
+     * @return  AReturn;
+     */
+    public static function getInstance()
+    {
+        if (self::$aReturn === null) {
+            self::$aReturn = new AReturn();
+        }
+        return self::$aReturn;
+    }
+
     /**
      * @return int
      */

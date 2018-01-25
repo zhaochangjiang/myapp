@@ -5,6 +5,7 @@ namespace framework\bin\base;
 use framework\bin\base\AController;
 use ReflectionClass;
 use Exception;
+use \RuntimeException;
 
 /**
  * 组件,继承自Acontroller

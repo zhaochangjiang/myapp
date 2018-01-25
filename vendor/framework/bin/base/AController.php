@@ -10,9 +10,9 @@ namespace framework\bin\base;
 
 use framework\App;
 use framework\bin\dataFormat\AReturn;
-use RuntimeException;
 use framework\bin\utils\AUtils;
 use framework\bin\http\ACurlManager;
+use \RuntimeException;
 
 /**
  * 系统控制器基类
@@ -70,7 +70,13 @@ class AController extends ABaseController
      */
     public function beforeMethod()
     {
-        $this->params = $this->getRequestParams();
+
+    }
+
+
+    public function setParams( $params)
+    {
+        $this->params = $params;
     }
 
     /**
@@ -117,10 +123,10 @@ class AController extends ABaseController
         $pageAction = explode(',', $this->pageCache ['action']);
 
         if ($this->pageCache != null && in_array($this->action, $pageAction)) {
-            $pageCacheClass = new PageRedisCacheClass ();
+            $pageCacheClass           = new PageRedisCacheClass ();
             $pageCacheClass->lifeTime = $this->pageCache ['lifeTime'];
             $pageCacheClass->init();
-            $flag = $pageCacheClass->startCache();
+            $flag                 = $pageCacheClass->startCache();
             $this->pageCacheClass = $pageCacheClass;
             if (!$flag) {
                 exit;
@@ -145,11 +151,11 @@ class AController extends ABaseController
      */
     protected function beginCache($id, $options = array())
     {
-        $pageCacheClass = new PageRedisCacheClass ();
-        $pageCacheClass->id = $id;
+        $pageCacheClass           = new PageRedisCacheClass ();
+        $pageCacheClass->id       = $id;
         $pageCacheClass->lifeTime = $options ['lifeTime'];
         $pageCacheClass->init();
-        $flag = $pageCacheClass->startCache();
+        $flag                         = $pageCacheClass->startCache();
         $this->pageCacheClassFragment = $pageCacheClass;
         return $flag;
     }
@@ -165,7 +171,7 @@ class AController extends ABaseController
      */
     protected function dealNotlogin()
     {
-        $session = ABaseApplication::getSession();
+        $session  = ABaseApplication::getSession();
         $isiframe = $this->getInput('isiframe');
         if (empty($session ['uid'])) { // 判断当前用户是否登录
 // message("你还没有登录");
@@ -190,7 +196,7 @@ class AController extends ABaseController
      */
     protected function createAction($name, $mCallable)
     {
-        $name = $name . 'Action';
+        $name                     = $name . 'Action';
         $this->actionMaps [$name] = is_callable($mCallable) ? $mCallable : create_function('', $mCallable);
     }
 
@@ -265,8 +271,8 @@ class AController extends ABaseController
 
     public function getTemplateDir()
     {
-        $templateDir = $this->applicationDIr . 'modules';
-        $path = ($this->theme != null ? $templateDir . $this->theme : $templateDir) . DIRECTORY_SEPARATOR;
+        $templateDir      = $this->applicationDIr . 'modules';
+        $path             = ($this->theme != null ? $templateDir . $this->theme : $templateDir) . DIRECTORY_SEPARATOR;
         $extendPathString = '';
         if ($this->moduleString) {
             $extendPathString = $this->moduleString . DIRECTORY_SEPARATOR;
@@ -307,9 +313,8 @@ class AController extends ABaseController
     protected function httpConnectionByBase($moduleAction, $gets = array(), $posts = array())
     {
         $aCurlManager = new ACurlManager();
-        $url = $this->createUrl($moduleAction, $gets, App::$app->parameters->domain['client']);
-
-        return $aCurlManager->httpConnection($url, $posts);
+        $url          = $this->createUrl($moduleAction, $gets, App::$app->parameters->domain['client']);
+        return $aCurlManager->httpConnection($url, [], $posts);
     }
 
     /**
@@ -350,7 +355,7 @@ class AController extends ABaseController
     public function render($templateFile = null, $params = array())
     {
         $this->setTemplateFile($templateFile);
-        $layout = $this->_getLayout();
+        $layout   = $this->_getLayout();
         $template = $this->getTemplateFile();
         // 判断模板文件是否存在
         if (!file_exists($template)) {
@@ -365,7 +370,9 @@ class AController extends ABaseController
         require_once $template;
         $this->contentHtml = ob_get_contents();
         ob_end_clean();
-        include_once $layout;
+
+        require_once $layout;
+
         $this->after();
     }
 
@@ -409,7 +416,7 @@ class AController extends ABaseController
         $path = $this->theme != null ? App:: getPathOfAlias('application.theme.' . $this->theme) : App:: getPathOfAlias('application.template');
         if (!empty($templateFile)) {
             $array = explode('.', $templateFile); // 如果render了模板，则解析
-            $n = count($array);
+            $n     = count($array);
             if ($n < 2) {
                 $template = $path . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR . "{
                 $templateFile}.php";
@@ -474,8 +481,8 @@ class AController extends ABaseController
         if ($this->breadCrumbs) {
             $class = $href = '';
             foreach ($this->breadCrumbs as $value) {
-                $class = (!empty($value ['class'])) ? "class=\"{$value['class']}\"" : '';
-                $href = (empty($value ['href'])) ? 'javascript:;' : $value ['href'];
+                $class            = (!empty($value ['class'])) ? "class=\"{$value['class']}\"" : '';
+                $href             = (empty($value ['href'])) ? 'javascript:;' : $value ['href'];
                 $breadCrumbString .= empty($breadCrumbString) ? "<a {$class} href=\"{$href}\" title=\"{$value['name']}\">{$value['name']}</a>" : " <span class=\"yen\"> {$separator} </span> <a {$class} href=\"{$href}\" title=\"{$value['name']}\">{$value['name']}</a>";
             }
         }
@@ -506,9 +513,9 @@ class AController extends ABaseController
     {
         if ($isCache) {
             $fileCache = App:: base()->fileCache;
-            $path = App:: getBasePath() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR;
+            $path      = App:: getBasePath() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR;
             $fileCache->setCacheDir($path);
-            $_key = $template . '_' . $name;
+            $_key    = $template . '_' . $name;
             $content = $fileCache->get($_key);
         }
 
@@ -561,7 +568,7 @@ class AController extends ABaseController
 
         //如果没有设置命名空间，则以默认的目录问准。
         $classNameString = (empty($params['nameSpace'])) ? 'backend\modules\\' . $this->moduleString . '\\blocks\\' . $this->controllerString . '\\Block' . ucfirst($className) : $params['nameSpace'] . '\\Block' . ucfirst($className);
-        $class = new $classNameString();
+        $class           = new $classNameString();
         if (!empty($params['renderTemplate'])) {
             $class->setRenderTemplate($params['renderTemplate']);
         }
@@ -574,8 +581,8 @@ class AController extends ABaseController
     {
 
         $static = App::getBasePath() . '/source/'; //静态资源在服务器上的存储路径，根据自己的情况修改
-        $dir = "{$static}{$type}/"; //合成文件在服务器上的存储路径，根据自己的情况修改
-        $out = "{$dir}{$outName}";
+        $dir    = "{$static}{$type}/"; //合成文件在服务器上的存储路径，根据自己的情况修改
+        $out    = "{$dir}{$outName}";
         if (!is_file($out)) {
             ob_start();
             foreach ($arrFile as $key => $file) {
@@ -618,9 +625,9 @@ class AController extends ABaseController
             $type = 'css';
         }
 
-        $dir = "{$static}{$type}/"; //合成文件在服务器上的存储路径，根据自己的情况修改
+        $dir    = "{$static}{$type}/"; //合成文件在服务器上的存储路径，根据自己的情况修改
         $return = "{$url}{$type}/{$outName}";
-        $out = "{$dir}{$outName}";
+        $out    = "{$dir}{$outName}";
 
         //
         //$time   = $_SERVER['REQUEST_TIME'];
@@ -780,7 +787,7 @@ class AController extends ABaseController
     protected function validate($verifyArray)
     {
         $data = array(
-            'status' => 'success',
+            'status'  => 'success',
             'message' => array());
         if (empty($verifyArray)) {
             return $data;
@@ -788,7 +795,7 @@ class AController extends ABaseController
         $this->params = array();
         foreach ($verifyArray as $k => $v) {
             $getParam = $v ['getParam']; // 获得参数值
-            $len = count($v ['getParam']);
+            $len      = count($v ['getParam']);
             $function = $getParam [0];
             switch ($len) {
                 case 1 :
@@ -804,26 +811,26 @@ class AController extends ABaseController
                     die('$this->verifyArray content is error! ');
                     break;
             }
-            $colum = isset($v ['colum']) ? $v ['colum'] : '';
+            $colum   = isset($v ['colum']) ? $v ['colum'] : '';
             $pregArr = array();
             if (!empty($v ['validatePreg'])) {
                 require_once DIR_FRAMEWORK_LIB . 'Verify.php';
                 $validateName = $v ['validatePreg'];
-                $pregArr = Verify::$$validateName;
-                $colum = $pregArr ['name'];
+                $pregArr      = Verify::$$validateName;
+                $colum        = $pregArr ['name'];
             }
             $data ['message'] [$k] = array(
-                'status' => true,
-                'message' => '',
+                'status'   => true,
+                'message'  => '',
                 'typename' => $k,
-                'colum' => $colum,
-                'isNull' => false);
+                'colum'    => $colum,
+                'isNull'   => false);
             if (!empty($v ['validateIsNull']) && empty($this->params [$k])) { // 如果设置验证空状态
-                $data ['status'] = 'failure';
+                $data ['status']       = 'failure';
                 $data ['message'] [$k] = array(
-                    'status' => false,
+                    'status'  => false,
                     'message' => "请输入{$colum}！",
-                    'isNull' => true);
+                    'isNull'  => true);
             }
 
             if (!empty($v ['validatePreg']) && false !== $data ['message'] [$k] ['status']) { // 如果过需要经过正则验证
@@ -831,8 +838,8 @@ class AController extends ABaseController
                 if (preg_match($pregArr ['preg'], $this->params [$k])) {
                     unset($data ['message'] [$k]);
                 } else {
-                    $data ['status'] = 'failure';
-                    $data ['message'] [$k] ['status'] = false;
+                    $data ['status']                   = 'failure';
+                    $data ['message'] [$k] ['status']  = false;
                     $data ['message'] [$k] ['message'] = "请输入正确格式的{$colum}！";
                 }
             } elseif (empty($v ['validatePreg'])) { // 如果过不需要经过正则验证
@@ -840,7 +847,7 @@ class AController extends ABaseController
             }
 
             if (!empty($v ['otherVerifyfunction']) && false !== $data ['message'] [$k] ['status']) {
-                $function = $v ['otherVerifyfunction'];
+                $function              = $v ['otherVerifyfunction'];
                 $data ['message'] [$k] = $this->$function($this->params [$k], $v);
                 if (!empty($data ['message'] [$k])) {
                     $data ['status'] = 'failure';
@@ -875,7 +882,7 @@ class AController extends ABaseController
             $domain = AUtils::baseUrl();
         }
         $moduleAction = '';
-        $count = count($moduleActionArray);
+        $count        = count($moduleActionArray);
         switch ($count) {
             case 0:
                 break;
@@ -973,9 +980,9 @@ class AController extends ABaseController
             $js_content = '';
             foreach ($urls as $url) {
                 $append_content = file_get_contents($url) . "\r\n";
-                $packer = new JavaScriptPacker($append_content);
+                $packer         = new JavaScriptPacker($append_content);
                 $append_content = $packer->pack();
-                $js_content .= $append_content;
+                $js_content     .= $append_content;
             }
             file_put_contents($js_url, $js_content);
         }
@@ -987,44 +994,31 @@ class AController extends ABaseController
     {
         $this->initEmcrypt();
         // $iv = '0000000000000000';
-        $post = json_encode($post);
+        $post  = json_encode($post);
         $block = mcrypt_get_block_size(CIPHER, MODES);
-        $pad = $block - (strlen($post) % $block);
-        $post .= str_repeat(chr($pad), $pad);
+        $pad   = $block - (strlen($post) % $block);
+        $post  .= str_repeat(chr($pad), $pad);
         return base64_encode(mcrypt_encrypt(CIPHER, MCRYPT_KEY, trim($post), MODES));
     }
 
-    private
-    function initEmcrypt()
+    private function initEmcrypt()
     {
         define('MCRYPT_KEY', '_12WE*E$');
         define('CIPHER', MCRYPT_DES); // MCRYPT_RIJNDAEL_128;
         define('MODES', MCRYPT_MODE_ECB);
     }
 
-    protected
-    function demcrypt($post = '')
+    protected function demcrypt($post = '')
     {
         $this->initEmcrypt();
         $post = base64_decode($post);
         $post = mcrypt_decrypt(CIPHER, MCRYPT_KEY, $post, MODES);
         //var_dump($post);
         $block = mcrypt_get_block_size(CIPHER, MODES);
-        $pad = ord($post [strlen($post) - 1]);
+        $pad   = ord($post [strlen($post) - 1]);
         if ($pad != ord('}'))
             $post = substr($post, 0, strlen($post) - $pad);
         // var_dump($post);
         return json_decode(trim($post), true);
     }
-
-    /**
-     * 获得当前请求的全部参数已一维数组的形式返回
-     */
-    protected function getRequestParams()
-    {
-        $requestParams = array_merge($_GET, $_POST);
-        unset($requestParams['r'], $requestParams['actionName'], $requestParams['actionName'], $requestParams['finalUrl']);
-        return $requestParams;
-    }
-
 }

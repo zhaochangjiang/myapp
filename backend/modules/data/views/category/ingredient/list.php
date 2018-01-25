@@ -1,6 +1,7 @@
 <?php
 
 use backend\common\Pager;
+use framework\bin\utils\AUtils;
 
 //权限验证准备  
 $permitDelete = $this->havePermit(array(

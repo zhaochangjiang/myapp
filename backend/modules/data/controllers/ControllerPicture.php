@@ -6,7 +6,7 @@ use backend\common\ControllerBackend;
 use backend\common\Pager;
 use communal\models\data\picture\ModelPictureCategory;
 use communal\models\data\picture\ModelPicture;
-use framework\bin\AUtils;
+use framework\bin\utils\AUtils;
 
 /**
  * Description of PictureController
@@ -21,13 +21,13 @@ class ControllerPicture extends ControllerBackend
 
         $this->params = $this->getRequestParams();
 
-        $model = new ModelPictureCategory();
+        $model              = new ModelPictureCategory();
         $this->data['data'] = $model->getList($this->params);
 
-        $this->data['pageObject'] = new Pager($this->data['data']['count']);
+        $this->data['pageObject']           = new Pager($this->data['data']['count']);
         $this->data['pageObject']->pageSize = $this->data['data']['pageSize'];
 
-        $this->pageTitle = '基础数据';
+        $this->pageTitle      = '基础数据';
         $this->pageSmallTitle = '图片';
         $this->setBreadCrumbs(array(
             'name' => $this->pageSmallTitle,
@@ -42,7 +42,7 @@ class ControllerPicture extends ControllerBackend
         $this->params = $this->getRequestParams();
 
         $params['uid'] = $this->params['uid'];
-        $model = new ModelPictureCategory();
+        $model         = new ModelPictureCategory();
 
         $result = $model->deleteData($params);
 
@@ -54,7 +54,7 @@ class ControllerPicture extends ControllerBackend
 
     public function actionCategoryEdit()
     {
-        $params = $this->getRequestParams();
+        $params             = $this->getRequestParams();
         $this->data['goto'] = $params['goto'];
 
 
@@ -63,7 +63,7 @@ class ControllerPicture extends ControllerBackend
         $this->data['data'] = $model->fetchOne($params);
 
 
-        $this->pageTitle = '权限设置';
+        $this->pageTitle      = '权限设置';
         $this->pageSmallTitle = '后台用户编辑';
         $this->setBreadCrumbs(array(
             array(
@@ -87,13 +87,13 @@ class ControllerPicture extends ControllerBackend
 
         $this->params = $this->getRequestParams();
 
-        $model = new ModelPicture();
+        $model              = new ModelPicture();
         $this->data['data'] = $model->getList($this->params);
 
-        $this->data['pageObject'] = new Pager($this->data['data']['count']);
+        $this->data['pageObject']           = new Pager($this->data['data']['count']);
         $this->data['pageObject']->pageSize = $this->data['data']['pageSize'];
 
-        $this->pageTitle = '基础数据';
+        $this->pageTitle      = '基础数据';
         $this->pageSmallTitle = '图片';
         $this->setBreadCrumbs(array(
             'name' => $this->pageSmallTitle,
@@ -108,7 +108,7 @@ class ControllerPicture extends ControllerBackend
         $this->params = $this->getRequestParams();
 
         $params['uid'] = $this->params['uid'];
-        $model = new ModelPicture();
+        $model         = new ModelPicture();
 
         $result = $model->deleteData($params);
 
@@ -120,7 +120,7 @@ class ControllerPicture extends ControllerBackend
 
     public function actionEdit()
     {
-        $params = $this->getRequestParams();
+        $params             = $this->getRequestParams();
         $this->data['goto'] = $params['goto'];
 
 
@@ -129,7 +129,7 @@ class ControllerPicture extends ControllerBackend
         $this->data['data'] = $model->fetchOne($params);
 
 
-        $this->pageTitle = '权限设置';
+        $this->pageTitle      = '权限设置';
         $this->pageSmallTitle = '后台用户编辑';
         $this->setBreadCrumbs(array(
             array(
@@ -141,7 +141,7 @@ class ControllerPicture extends ControllerBackend
             ),
             array(
                 'name' => $this->pageSmallTitle,
-                'href' => currentUrl()
+                'href' => AUtils:: currentUrl()
             )
         ), true);
 

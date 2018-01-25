@@ -8,9 +8,8 @@
 
 namespace backend\modules\permit\blocks\data;
 
-use framework\bin\Ablocker;
 use communal\models\admin\permit\ModelPermitGroup;
-
+use framework\bin\base\Ablocker;
 /**
  * Description of newPHPClass
  *

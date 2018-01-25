@@ -21,17 +21,16 @@ class ARequestParameter
 
     private function __construct()
     {
-        $this->setGet($_GET);
-
-        $this->setPost($_POST);
-        $this->setRequest($_REQUEST);
-        $this->setServer($_SERVER);
+        $this->setGet(empty($_GET) ? [] : $_GET);
+        $this->setPost(empty($_POST) ? [] : $_POST);
+        $this->setRequest(empty($_REQUEST) ? [] : $_REQUEST);
+        $this->setServer(empty($_SERVER) ? [] : $_SERVER);
 
         //清空系统函数
-        $_GET = null;
-        $_POST = null;
+        $_GET     = null;
+        $_POST    = null;
         $_REQUEST = null;
-        $_SERVER = null;
+        $_SERVER  = null;
     }
 
     /**
@@ -56,14 +55,15 @@ class ARequestParameter
      * @author karl.zhao<zhaocj2009@hotmail.com>
      * @Date: ${DATE}
      * @Time: ${TIME}
-     *
-     * @return ARequestParameter *
+     * @return ARequestParameter
      */
     public static function getSingleton()
     {
+
         if (null === self::$_self) {
             self::$_self = new ARequestParameter();
         }
+
         return self::$_self;
     }
 
@@ -106,7 +106,7 @@ class ARequestParameter
     public function getRequestByKey($key)
     {
         if (!isset(self::$request[$key])) {
-            throw new RuntimeException('The $_REQUEST is not exists by key "' . $key . '"', ErrorCode::$PARAMETER_ERROR['message']);
+            return null;
         }
         return self::$request[$key];
     }
@@ -115,7 +115,8 @@ class ARequestParameter
     public function getServerByKey($key)
     {
         if (!isset(self::$server[$key])) {
-            throw new RuntimeException('The $_SERVER is not exists by key "' . $key . '"', ErrorCode::$PARAMETER_ERROR['message']);
+            return null;
+
         }
         return self::$server[$key];
     }

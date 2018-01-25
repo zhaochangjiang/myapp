@@ -9,6 +9,7 @@
 
 namespace framework\bin\base;
 
+use \RuntimeException;
 
 abstract class AppBase
 {

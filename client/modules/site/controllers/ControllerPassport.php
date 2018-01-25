@@ -2,7 +2,7 @@
 
 namespace client\modules\site\controllers;
 
-use client\common\ControllerClient;
+use client\commonx\ControllerClient;
 use communal\models\user\UserMainModel;
 
 use framework\App;

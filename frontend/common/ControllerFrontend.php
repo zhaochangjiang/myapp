@@ -57,8 +57,8 @@ class ControllerFrontend extends AController
      * 调用系统接口的工具连接
      * @author karl.zhao<zhaocj2009@126.com>
      * @param String $moduleAction
-     * @param Array|null $gets
-     * @param Array|null $posts
+     * @param array|null $gets
+     * @param array|null $posts
      * @return String
      */
     protected function httpConnectionByBase($moduleAction, $gets = array(), $posts = array())

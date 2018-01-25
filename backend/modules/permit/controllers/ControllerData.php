@@ -9,7 +9,7 @@ use communal\models\admin\permit\ModelPermit;
 use backend\common\Pager;
 use frontend\common\FrontendResultContent;
 use Exception;
-
+use framework\bin\utils\AUtils;
 /**
  * Class ControllerData
  * @package backend\modules\permit\controllers
@@ -64,7 +64,7 @@ class ControllerData extends ControllerBackend
         $this->pageTitle = '权限配置';
         $this->setBreadCrumbs(array(
             'name' => $this->pageTitle,
-            'href' => currentUrl()
+            'href' => AUtils::currentUrl()
         ));
         $this->render();
     }

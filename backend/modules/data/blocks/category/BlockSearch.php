@@ -2,7 +2,8 @@
 
 namespace backend\modules\data\blocks\category;
 
-use framework\bin\Ablocker;
+use framework\bin\base\Ablocker;
+
 
 /**
  * Description of CategorySearch

@@ -14,7 +14,6 @@ class ControllerSite extends ControllerBackend
 
     function actionIndex()
     {
-
         $this->render();
     }
 

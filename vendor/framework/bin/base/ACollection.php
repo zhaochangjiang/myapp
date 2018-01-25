@@ -1,6 +1,7 @@
 <?php
 
 namespace framework\bin\base;
+use \RuntimeException;
 
 /**
  * The Collection class allows you to access a set of data
