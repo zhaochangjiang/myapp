@@ -57,11 +57,15 @@ abstract class ABaseController extends AppBase
 
     }
 
-    public function redirect($url)
+    public function redirect($url,$iframe=0)
     {
         if (!empty($url)) {
             header("Content-type:text/html;charset=utf-8");
-            echo '<script type="application/javascript">location.href="'.$url.'"</script>';
+            $s= '';
+            for($i=0;$i<$iframe;$i++){
+             $s.='parent.';   
+            }
+            echo '<script type="application/javascript">'.$s.'location.href="'.$url.'"</script>';
         }
     }
 

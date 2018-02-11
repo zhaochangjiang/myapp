@@ -27,6 +27,9 @@ class FrontendResultContent extends AReturn
         return self::$_instance;
     }
 
+    /**
+     * @return FrontendResultContent
+     */
     public static function getInstanceAnother()
     {
 

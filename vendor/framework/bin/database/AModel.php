@@ -263,7 +263,6 @@ abstract class AModel
         $this->init();
         if ($tableName !== '') {
             $this->setTableName($tableName);
-            return $this->model->add($field, $tableName, $ignore);
         }
         return $this->model->add($field, $this->getTableName(), $ignore);
     }

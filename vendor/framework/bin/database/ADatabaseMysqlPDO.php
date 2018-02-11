@@ -400,14 +400,13 @@ class ADatabaseMysqlPDO implements ADatabase
                 INFORMATION_SCHEMA.COLUMNS
                 WHERE
                 TABLE_NAME = :tabName AND TABLE_SCHEMA='" . self::$config['dbname'] . "'";
-
         $this->setQueryStr(sprintf($sql, $tableName));
         $sth = self::$link->prepare($sql);
         $sth->bindParam(':tabName', $tableName);
         $sth->execute();
         $result = $sth->fetchAll(constant('PDO::FETCH_ASSOC'));
         $info = array();
-        foreach ($result as $val) {
+        foreach ((array)$result as $val) {
             $info[$val['COLUMN_NAME']] = array(
                 'postion' => $val['ORDINAL_POSITION'],
                 'name' => $val['COLUMN_NAME'],
@@ -421,7 +420,6 @@ class ADatabaseMysqlPDO implements ADatabase
                 'comment' => $val['COLUMN_COMMENT']
             );
         }
-
         // 有错误则抛出异常
         self::haveErrorThrowException();
         return $info;
@@ -816,7 +814,7 @@ class ADatabaseMysqlPDO implements ADatabase
     {
 
         $table_column = self::getFields($table);
-
+      
         $newdata = array();
         foreach ($table_column as $key => $val) {
             if (array_key_exists($key, $data) && ($data[$key]) !== '') {
@@ -919,28 +917,25 @@ class ADatabaseMysqlPDO implements ADatabase
 
         $table = $this->parseTableName($tableName);
         //过滤提交数据
-        $data = $this->filterPost($table, $feild);
-
-        foreach ($data as $key => $val) {
-            if (is_array($val) && strtolower($val[0]) == 'exp') {
-                $val = $val[1]; // 使用表达式 ???
-            } elseif (is_scalar($val)) {
-                $val = self::fieldFormat($val);
-            } else {
-                // 去掉复合对象
-                continue;
-            }
-            $data[$key] = $val;
-        }
-        $fields = array_keys($data);
-        array_walk($fields, array(
+       // $data = $this->filterPost($table, $feild);
+        // foreach ($data as $key => $val) {
+        //     if (is_array($val) && strtolower($val[0]) == 'exp') {
+        //         $val = $val[1]; // 使用表达式 ???
+        //     } elseif (is_scalar($val)) {
+        //         $val = self::fieldFormat($val);
+        //     } else {
+        //         // 去掉复合对象
+        //         continue;
+        //     }
+        //     $data[$key] = $val;
+        // }
+        $fields = array_keys($feild);
+        array_walk($fields, [
             $this,
-            'addSpecialChar'));
-        $fieldsStr = implode(',', $fields);
-        $values = array_values($data);
-        $valuesStr = implode(',', $values);
+            'addSpecialChar']);
+        $fieldsStr = implode(',', $fields); 
+        $valuesStr = '\''.implode('\',\'', $feild).'\'';
         $sql = ($ignore) ? 'INSERT IGNORE  INTO ' . $this->parseTableName($table) . ' (' . $fieldsStr . ') VALUES (' . $valuesStr . ')' : 'INSERT  INTO ' . $this->parseTableName($table) . ' (' . $fieldsStr . ') VALUES (' . $valuesStr . ')';
-
         return self::execute($sql);
     }
 

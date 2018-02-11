@@ -5,6 +5,7 @@ namespace backend\common;
 use framework\bin\base\AController;
 use communal\models\admin\permit\ModelPermit;
 use framework\App;
+use framework\bin\dataFormat\AReturn;
 use framework\bin\utils\AUtils;
 use communal\models\admin\permit\ModelPermitGroup;
 
@@ -68,7 +69,7 @@ class ControllerBackend extends AController
         //获得用户头像
         $this->data['avater'] = $this->getAvater($this->data['session']);
 
-       // print_r( $this->data['avater']);exit;
+        // print_r( $this->data['avater']);exit;
         //权限验证
         $this->permitInit();
     }
@@ -110,8 +111,14 @@ class ControllerBackend extends AController
     {
 
         if (empty($this->data['session'])) {
-            $gotoUrl = $this->createUrl(['passport', 'login'], null, App::$app->parameters->domain['web']);
+
+            $gotoUrl = $this->createUrl(['passport', 'login'], ['goto' => base64_encode(AUtils::currentUrl())], App::$app->parameters->domain['web']);
+            if (stripos($this->action, 'iframe') == 0) {
+                $this->redirect($gotoUrl, 1);
+                return;
+            }
             $this->redirect($gotoUrl);
+            exit;
         }
     }
 
@@ -288,9 +295,19 @@ class ControllerBackend extends AController
     {
         $baseUrl = AUtils::baseUrl();
         if ($user['gender'] === 'female') {
-            return $baseUrl.'/source/img/avatar2.png';
+            return $baseUrl . '/source/img/avatar2.png';
         }
-        return $baseUrl.'/source/img/avatar3.png';
+        return $baseUrl . '/source/img/avatar3.png';
+    }
+
+    /**
+     * @param AReturn $msg
+     * @param string $goto
+     */
+    public function outPutIframeMessage(AReturn $res, $goto = '')
+    {
+        echo $res->getJavascriptContent();
+        exit;
     }
 
 }

@@ -24,6 +24,13 @@ class ControllerCategory extends ControllerBackend
         parent::init();
     }
 
+
+
+    /**
+     * Undocumented function
+     *
+     * @return ModelCategory
+     */
     private function _getModel()
     {
         if (empty($this->model)) {
@@ -37,9 +44,6 @@ class ControllerCategory extends ControllerBackend
      */
     public function actionList()
     {
-//          $string= \communal\common\CommunalTools::createGuid();
-//          echo $string;
-        $this->params       = $this->getRequestParams();
         $model              = $this->_getModel();
         $this->data['data'] = $model->getList($this->params);
 
@@ -57,30 +61,33 @@ class ControllerCategory extends ControllerBackend
 
     /**
      *
-     * @param type $upidArray
-     * @return type
+     * @param array $uPidArray
+     * @return mixed
      */
-    private function _dealUpId($upidArray)
+    private function _dealUpId($uPidArray)
     {
-        foreach ((array)$upidArray as $key => $value) {
+        foreach ((array)$uPidArray as $key => $value) {
             if (empty($value)) {
-                unset($upidArray[$key]);
+                unset($uPidArray[$key]);
             }
         }
-        return array_pop($upidArray);
+        return array_pop($uPidArray);
     }
 
     public function actionIframeEdit()
     {
-
-        $this->params = $this->getRequestParams();
-
-        $this->data['goto'] = base64_decode($this->params['goto']);
-        $jsString           = $result = '';
-        $this->params['higher_up_id'] = $this->_dealUpId($this->params['uppid']);
         $resultData = FrontendResultContent::getInstanceAnother();
-        $model      = $this->_getModel();
-        $sku        = $model->getSku($this->params);
+        $jsString   = '';
+        if (empty($this->params['category_label'])) {
+            $jsString .= 'parent.showerror("请填写类型名称!");';
+            $resultData->setJavascriptContent($jsString);
+            $this->outPutIframeMessage($resultData);
+        }
+        $this->data['goto']           = base64_decode($this->params['goto']);
+        $jsString                     = $result = '';
+        $this->params['higher_up_id'] = $this->_dealUpId($this->params['uppid']);
+        $model                        = $this->_getModel();
+        $sku                          = $model->getSku($this->params);
 
         $data = array(
             'category_label' => $this->params['category_label'],
@@ -116,18 +123,26 @@ class ControllerCategory extends ControllerBackend
                     $resultData->setJavascriptContent($jsString);
                     $this->outPutIframeMessage($resultData);
                 }
-                $result = $model->addData($data);
+                try {
+                    $result = $model->addData($data);
+
+                } catch (Exception $e) {
+                    $jsString = 'parent.showerror("' . $e->getMessage() . '");';
+                    $resultData->setJavascriptContent($jsString);
+                    $this->outPutIframeMessage($resultData);
+                    return;
+                }
                 break;
             default:
                 throw new Exception('操作错误，请联系管理员!');
         }
-
         if (empty($result)) {
             $jsString .= 'parent.showerror("' . $result->message . '");';
             $resultData->setJavascriptContent($jsString);
             $this->outPutIframeMessage($resultData);
         }
         $resultData->setJavascriptContent('', $this->data['goto']);
+
         $this->outPutIframeMessage($resultData);
     }
 
@@ -141,33 +156,33 @@ class ControllerCategory extends ControllerBackend
      */
     public function actionDelete()
     {
-        $params =[];
-        $params['category_id']=$this->params['category_id'];
-        if(empty($params['category_id'])){
+        $params                = [];
+        $params['category_id'] = $this->params['category_id'];
+        if (empty($params['category_id'])) {
             echo '请选择类型!';
             exit;
         }
         $this->_getModel()->deleteData($params);
         echo 'ok';
         exit;
-     }
+    }
 
     /**
      * 编辑类型界面
      */
     public function actionEdit()
     {
-        $model = $this->_getModel();
+        $model              = $this->_getModel();
         $this->data['data'] = $model->fetchOne(array(
             'category_id' => $this->params['category_id']));
 
         $this->data['goto']          = $this->params['goto'];
         $this->data['doType']        = $this->params['type'];
         $this->data['data']['uppid'] = $this->params['uppid'];
-        $this->pageTitle      = '类型编辑';
-        $this->pageSmallTitle = '权限编辑';
-        $breadCrumb['name'] = $this->pageTitle;
-        $breadCrumb['href'] = $this->createUrl(array(
+        $this->pageTitle             = '类型编辑';
+        $this->pageSmallTitle        = '权限编辑';
+        $breadCrumb['name']          = $this->pageTitle;
+        $breadCrumb['href']          = $this->createUrl(array(
             $this->controllerString,
             'list',
             $this->moduleString));

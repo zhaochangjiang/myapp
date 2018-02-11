@@ -50,6 +50,12 @@ class ModelCategory extends AModel
         return $data;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [array] $data
+     * @return bool
+     */
     public function addData($data)
     {
         if (empty($data['category_id'])) {//生成唯一的KEY
@@ -59,9 +65,8 @@ class ModelCategory extends AModel
             'sku' => $data['sku']));
         if (!empty($tmp)) {
             throw new Exception("系统中已存在该属性！");
-        } else {
-            $this->add($data);
-        }
+        } 
+        $this->add($data);
         return true;
     }
 
@@ -72,11 +77,8 @@ class ModelCategory extends AModel
     public function getList($params)
     {
         $params['page'] = (int)$params['page'] < 1 ? 1 : (int)$params['page'];
-
         $result['pageSize'] = 15;
         $condition = array();
-
-
         if (!empty($params['id'])) {
             $condition['uppermit_id'] = $params['id'];
         }
@@ -86,9 +88,7 @@ class ModelCategory extends AModel
         $groupBy = '';
         $feild = '';
         $temp = $this->find($condition, 'count(*) as count', $orderBy, $groupBy);
-
         $result['count'] = $temp['count'];
-
         $result['list'] = $this->findAll($condition, $feild, $orderBy, $limitString, $groupBy);
         return $result;
     }
