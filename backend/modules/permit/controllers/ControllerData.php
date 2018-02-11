@@ -11,7 +11,6 @@ use framework\bin\http\ARequestParameter;
 use frontend\common\FrontendResultContent;
 use Exception;
 use framework\bin\utils\AUtils;
-
 /**
  * Class ControllerData
  * @package backend\modules\permit\controllers
