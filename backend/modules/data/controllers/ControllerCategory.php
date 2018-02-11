@@ -77,6 +77,11 @@ class ControllerCategory extends ControllerBackend
 
         $this->data['goto'] = base64_decode($this->params['goto']);
         $jsString           = $result = '';
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 42b155bc75f96aaad6f18f0afc36a987bcf43ef9
         $this->params['higher_up_id'] = $this->_dealUpId($this->params['uppid']);
         $resultData = FrontendResultContent::getInstanceAnother();
         $model      = $this->_getModel();
@@ -164,6 +169,11 @@ class ControllerCategory extends ControllerBackend
         $this->data['goto']          = $this->params['goto'];
         $this->data['doType']        = $this->params['type'];
         $this->data['data']['uppid'] = $this->params['uppid'];
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 42b155bc75f96aaad6f18f0afc36a987bcf43ef9
         $this->pageTitle      = '类型编辑';
         $this->pageSmallTitle = '权限编辑';
         $breadCrumb['name'] = $this->pageTitle;

@@ -11,7 +11,10 @@ use framework\bin\http\ARequestParameter;
 use frontend\common\FrontendResultContent;
 use Exception;
 use framework\bin\utils\AUtils;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 42b155bc75f96aaad6f18f0afc36a987bcf43ef9
 /**
  * Class ControllerData
  * @package backend\modules\permit\controllers

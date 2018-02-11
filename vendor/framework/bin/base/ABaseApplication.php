@@ -278,6 +278,10 @@ class ABaseApplication extends AppBase
 
         // 判断Method是否存在
         $moduleDeal = new $className($controllerString, $action, $moduleString);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 42b155bc75f96aaad6f18f0afc36a987bcf43ef9
         $moduleDeal->setParams(ARequestParameter::getSingleton()->getRequest());
         $moduleDeal->init();
 
