@@ -138,22 +138,24 @@ class AUrlManager extends AppBase
         $p      = explode($this->delimiterActionParams, $string);
         $params = [];
         foreach ($p as $item) {
-            $this->_orgParam($item,$params);
+            $this->_orgParam($item, $params);
         }
         ARequestParameter::getSingleton()->addGet($params);
         ARequestParameter::getSingleton()->addRequest($params);
     }
 
-    private function _orgParam($s,&$params){
-        $s             = explode($this->delimiter, $s);
-        if(count($s)>2){
-            $v= array_pop($s);
-            $params[implode($this->delimiter,$s)]=$v;
-            return;
+    private function _orgParam($s, &$params)
+    {
+        $s = explode($this->delimiter, $s);
+        if (count($s) > 2) {
+            $v    = array_pop($s);
+            $s[0] = implode($this->delimiter, $s);
+            $s[1] = $v;
         }
-        $params[$s[0]] = isset($s[1]) ? $s[1] : '';
+        $params[$s[0]] = isset($s[1]) ? urldecode($s[1]) : '';
         return;
     }
+
     /**
      * @param $moduleAction
      * @param $params

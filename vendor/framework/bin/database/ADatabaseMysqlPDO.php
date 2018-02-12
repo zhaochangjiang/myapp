@@ -227,8 +227,7 @@ class ADatabaseMysqlPDO implements ADatabase
     public function update($feild, $table, $condition = null, $limit = 0,
                            $order = '')
     {
-        $sets = $this->filterPost($table, $feild);
-        $sql = 'UPDATE ' . $this->parseTableName($table) . ' SET ' . self::parseSets($sets) . self::parseWhere($condition) . self::parseOrder($order) . self::parseLimit($limit);
+        $sql = 'UPDATE ' . $this->parseTableName($table) . ' SET ' . self::parseSets($feild) . self::parseWhere($condition) . self::parseOrder($order) . self::parseLimit($limit);
 
         return self::execute($sql);
     }

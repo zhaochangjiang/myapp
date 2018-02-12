@@ -118,10 +118,9 @@ class AUtils
 
     public static function base64encodeCurrentUrl()
     {
-        if (static::$nowUrl) {
-            return base64_encode(self::$nowUrl);
+        if(empty(static::$nowUrl)){
+            static::$nowUrl = self::currentUrl();
         }
-        static::$nowUrl = self::currentUrl();
         return base64_encode(static::$nowUrl);
     }
 

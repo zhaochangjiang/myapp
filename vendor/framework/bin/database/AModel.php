@@ -334,7 +334,6 @@ abstract class AModel
         $this->init();
         if ($tableName != '') {
             $this->setTableName($tableName);
-            return $this->model->update($field, $tableName, $condition, $limit);
         }
         return $this->model->update($field, $this->getTableName(), $condition, $limit);
     }
